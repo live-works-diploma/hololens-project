@@ -654,11 +654,12 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: Template3D
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
+  metroCertificatePath: C:\Users\watsob\source\repos\HoloLens-Project\HoloLens Object
+    Recognition\Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: DefaultCompany
+  metroCertificateIssuer: DefaultCompany
+  metroCertificateNotAfter: 0023a27c5793db01
   metroApplicationDescription: Template_3D
   wsaImages: {}
   metroTileShortName: HoloLens Object Recognition
