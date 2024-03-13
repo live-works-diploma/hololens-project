@@ -8,7 +8,6 @@ public class Data_Dummy : Data_Base
     [SerializeField] int numberOfEstimatedSensors = 1;
     [SerializeField] int numberOFEstimatedPlants = 5;
     [SerializeField] float maxDistanceToSpawn = 20;
-    [SerializeField] GameObject plantPrefab;
 
     internal override Dictionary<string, List<Dictionary<string, string>>> GetData()
     {
@@ -19,10 +18,11 @@ public class Data_Dummy : Data_Base
         {
             Dictionary<string, string> plant = new();
 
-            plant["height"] = UnityEngine.Random.Range(1, 10).ToString();
             plant["locationX"] = UnityEngine.Random.Range(-(maxDistanceToSpawn), maxDistanceToSpawn).ToString();
-            plant["locationY"] = UnityEngine.Random.Range(-(maxDistanceToSpawn), maxDistanceToSpawn).ToString();
+            plant["locationY"] = "0";
             plant["locationZ"] = UnityEngine.Random.Range(-(maxDistanceToSpawn), maxDistanceToSpawn).ToString();
+
+            plant["height"] = UnityEngine.Random.Range(1, 5).ToString();
             plant["fruiting"] = (UnityEngine.Random.value > 0.5).ToString();
 
             allPlants.Add(plant);

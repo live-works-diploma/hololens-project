@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.FilePathAttribute;
 
 public delegate void RetrievedDataDelegate<T>(List<T> retrievedData);
 
@@ -17,9 +18,30 @@ public abstract class Data_Base : MonoBehaviour
     [SerializeField] float timeInbetweenCalls = 5;
     [SerializeField] float delayBeforeFirstCall = 1;
 
+    int _anchors = 0;
+    /// <summary>
+    /// Acts as an anchor to pause the routine until all dependent processes have finished.
+    /// Increase this counter to pause the routine, and decrease it when the processes are complete to resume.
+    /// </summary>
+    public int anchors
+    {
+        get
+        {
+            return _anchors;
+        }
+        set
+        {
+            _anchors = value;
+            if (_anchors == 0)
+            {
+                StartCoroutine(RetrieveDataRoutine(timeInbetweenCalls));
+            }
+        }
+    }
+
     void Start()
     {
-        StartCoroutine(RetrieveDataRoutine());
+        StartCoroutine(RetrieveDataRoutine(delayBeforeFirstCall));
         StartArg();
     }
 
@@ -28,23 +50,18 @@ public abstract class Data_Base : MonoBehaviour
     /// </summary>
     public void RestartDataRetrieveRoutine()
     {
-        StopCoroutine(RetrieveDataRoutine());
-        StartCoroutine(RetrieveDataRoutine());
+        StopCoroutine(RetrieveDataRoutine(delayBeforeFirstCall));
+        StartCoroutine(RetrieveDataRoutine(delayBeforeFirstCall));
     }
 
     /// <summary>
     /// routine which calls a RetrieveData(), pauses, and then repeats infinitely. To Reset call RestartDataRetrieveRoutine()
     /// </summary>
     /// <returns></returns>
-    IEnumerator RetrieveDataRoutine()
+    IEnumerator RetrieveDataRoutine(float delay)
     {
-        yield return new WaitForSeconds(delayBeforeFirstCall);
-
-        while (true)
-        {
-            RetrieveData(GetData());
-            yield return new WaitForSeconds(timeInbetweenCalls);
-        }
+        yield return new WaitForSeconds(delay);
+        RetrieveData(GetData());        
     }
 
     /// <summary>
@@ -58,7 +75,12 @@ public abstract class Data_Base : MonoBehaviour
         {
             Func<Dictionary<string, string>, Plant> function = data => new Plant
             {
+                locationX = data.ContainsKey("locationX") ? float.Parse(data["locationX"]) : 0,
+                locationY = data.ContainsKey("locationY") ? float.Parse(data["locationY"]) : 0,
+                locationZ = data.ContainsKey("locationZ") ? float.Parse(data["locationZ"]) : 0,
 
+                height = data.ContainsKey("height") ? float.Parse(data["height"]) : 1,
+                fruiting = data.ContainsKey("fruiting") ? bool.Parse(data["fruiting"]) : false,
             };
 
             StartCoroutine(CreateData(allData["plant"], plantDataDelegate, function));
@@ -99,9 +121,11 @@ public abstract class Data_Base : MonoBehaviour
         RetrievedDataDelegate<T> delegateToCall, 
         Func<Dictionary<string, string>, T> howToCreateItem)
     {
+        anchors++;
+
         List<T> allItems = new();
 
-        float maxToCreateAtOnce = 20;
+        float maxToCreateAtOnce = 100;
 
         for (int i = 0; i < data.Count; i++)
         {
@@ -112,12 +136,12 @@ public abstract class Data_Base : MonoBehaviour
             if ((i + 1) % maxToCreateAtOnce == 0)
             {
                 // allowing the process to be broken up
-                print($"iteration: {i}");
                 yield return null;
             }
         }
 
         delegateToCall?.Invoke(allItems);
+        anchors--;
     }
 
     internal virtual void StartArg()
