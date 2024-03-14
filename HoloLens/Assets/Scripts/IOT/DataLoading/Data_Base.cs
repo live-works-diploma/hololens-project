@@ -25,6 +25,7 @@ public abstract class Data_Base : MonoBehaviour
     /// <summary>
     /// Acts as an anchor to pause the routine until all dependent processes have finished.
     /// Increase this counter to pause the routine, and decrease it when the processes are complete to resume.
+    /// Won't resume until anchors is 0
     /// </summary>
     public int anchors
     {
@@ -48,16 +49,22 @@ public abstract class Data_Base : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Func for showing how to create a Plant class
+    /// </summary>
     Func<Dictionary<string, string>, Plant> plantFunc = data => new Plant
     {
         locationX = data.ContainsKey("locationX") ? float.Parse(data["locationX"]) : 0,
         locationY = data.ContainsKey("locationY") ? float.Parse(data["locationY"]) : 0,
         locationZ = data.ContainsKey("locationZ") ? float.Parse(data["locationZ"]) : 0,
 
-        height = data.ContainsKey("height") ? float.Parse(data["height"]) : 1,
+        scale = data.ContainsKey("scale") ? float.Parse(data["scale"]) : 1,
         fruiting = data.ContainsKey("fruiting") ? bool.Parse(data["fruiting"]) : false,
     };
 
+    /// <summary>
+    /// Func for showing how to create a Sensor class
+    /// </summary>
     Func<Dictionary<string, string>, Sensor> sensorFunc = data => new Sensor
     {
         locationX = data.ContainsKey("locationX") ? float.Parse(data["locationX"]) : 0,
@@ -89,8 +96,7 @@ public abstract class Data_Base : MonoBehaviour
     /// <returns></returns>
     IEnumerator RetrieveDataRoutine(float delay)
     {
-        yield return new WaitForSeconds(delay);
-        // RetrieveData(GetData());        
+        yield return new WaitForSeconds(delay);       
         GetData(RetrieveData);
     }
 

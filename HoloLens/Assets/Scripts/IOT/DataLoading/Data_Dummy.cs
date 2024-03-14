@@ -22,7 +22,7 @@ public class Data_Dummy : Data_Base
             plant["locationY"] = "0";
             plant["locationZ"] = UnityEngine.Random.Range(-(maxDistanceToSpawn), maxDistanceToSpawn).ToString();
 
-            plant["height"] = UnityEngine.Random.Range(1, 5).ToString();
+            plant["scale"] = UnityEngine.Random.Range(1, 3).ToString();
             plant["fruiting"] = (UnityEngine.Random.value > 0.5).ToString();
 
             allPlants.Add(plant);

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlantCreation : MonoBehaviour
+public class Creation_Plant : MonoBehaviour
 {
     Data_Base plantCreation;
     List<GameObject> plantsCreated = new();
@@ -40,7 +40,7 @@ public class PlantCreation : MonoBehaviour
             Vector3 location = new Vector3(plant.locationX, plant.locationY, plant.locationZ);
 
             GameObject spawnedPlant = Instantiate(plant.prefab ? plant.prefab : defaultPrefab, location, Quaternion.identity);
-            spawnedPlant.transform.localScale = new Vector3(plant.height, plant.height, plant.height);
+            spawnedPlant.transform.localScale = new Vector3(plant.scale, plant.scale, plant.scale);
 
             plantsCreated.Add(spawnedPlant);
 
