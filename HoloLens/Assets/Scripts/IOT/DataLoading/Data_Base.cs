@@ -7,8 +7,11 @@ using static UnityEditor.FilePathAttribute;
 
 public delegate void RetrievedDataDelegate<T>(List<T> retrievedData);
 
+
 public abstract class Data_Base : MonoBehaviour
 {
+    internal delegate void DataRetrival(Dictionary<string, List<Dictionary<string, string>>> foundData);
+
     [Tooltip("gets invoked when ever there is new data involving plants - passes a List<Plant> in as an argument")]
     public RetrievedDataDelegate<Plant> plantDataDelegate;
 
@@ -32,12 +35,38 @@ public abstract class Data_Base : MonoBehaviour
         set
         {
             _anchors = value;
-            if (_anchors == 0)
+
+            if (_anchors < 0)
+            {
+                print("Error: anchors below 0 - shouldn't happen");
+            }
+
+            if (_anchors <= 0)
             {
                 StartCoroutine(RetrieveDataRoutine(timeInbetweenCalls));
             }
         }
     }
+
+    Func<Dictionary<string, string>, Plant> plantFunc = data => new Plant
+    {
+        locationX = data.ContainsKey("locationX") ? float.Parse(data["locationX"]) : 0,
+        locationY = data.ContainsKey("locationY") ? float.Parse(data["locationY"]) : 0,
+        locationZ = data.ContainsKey("locationZ") ? float.Parse(data["locationZ"]) : 0,
+
+        height = data.ContainsKey("height") ? float.Parse(data["height"]) : 1,
+        fruiting = data.ContainsKey("fruiting") ? bool.Parse(data["fruiting"]) : false,
+    };
+
+    Func<Dictionary<string, string>, Sensor> sensorFunc = data => new Sensor
+    {
+        locationX = data.ContainsKey("locationX") ? float.Parse(data["locationX"]) : 0,
+        locationY = data.ContainsKey("locationY") ? float.Parse(data["locationY"]) : 0,
+        locationZ = data.ContainsKey("locationZ") ? float.Parse(data["locationZ"]) : 0,
+
+        waterLevel = data.ContainsKey("water level") ? float.Parse(data["water level"]) : 0,
+        humidity = data.ContainsKey("humidity") ? float.Parse(data["humidity"]) : 0,
+    };
 
     void Start()
     {
@@ -61,7 +90,8 @@ public abstract class Data_Base : MonoBehaviour
     IEnumerator RetrieveDataRoutine(float delay)
     {
         yield return new WaitForSeconds(delay);
-        RetrieveData(GetData());        
+        // RetrieveData(GetData());        
+        GetData(RetrieveData);
     }
 
     /// <summary>
@@ -73,40 +103,22 @@ public abstract class Data_Base : MonoBehaviour
     {
         if (plantDataDelegate != null)
         {
-            Func<Dictionary<string, string>, Plant> function = data => new Plant
-            {
-                locationX = data.ContainsKey("locationX") ? float.Parse(data["locationX"]) : 0,
-                locationY = data.ContainsKey("locationY") ? float.Parse(data["locationY"]) : 0,
-                locationZ = data.ContainsKey("locationZ") ? float.Parse(data["locationZ"]) : 0,
-
-                height = data.ContainsKey("height") ? float.Parse(data["height"]) : 1,
-                fruiting = data.ContainsKey("fruiting") ? bool.Parse(data["fruiting"]) : false,
-            };
-
-            StartCoroutine(CreateData(allData["plant"], plantDataDelegate, function));
+            StartCoroutine(CreateData(allData["plant"], plantDataDelegate, plantFunc));
         }
 
         if (sensorDataDelegate != null)
         {
-            Func<Dictionary<string, string>, Sensor> function = data => new Sensor
-            {
-                locationX = data.ContainsKey("locationX") ? float.Parse(data["locationX"]) : 0,
-                locationY = data.ContainsKey("locationY") ? float.Parse(data["locationY"]) : 0,
-                locationZ = data.ContainsKey("locationZ") ? float.Parse(data["locationZ"]) : 0,
-
-                waterLevel = data.ContainsKey("water level") ? float.Parse(data["water level"]) : 0,
-                humidity = data.ContainsKey("humidity") ? float.Parse(data["humidity"]) : 0,
-            };
-
-            StartCoroutine(CreateData(allData["sensor"], sensorDataDelegate, function));
+            StartCoroutine(CreateData(allData["sensor"], sensorDataDelegate, sensorFunc));
         }
     }
 
     /// <summary>
     /// abstract method which is called by RetrieveData(). This should return everything about what is needed (Plants and Sensors)
     /// </summary>
-    /// <returns></returns>
-    internal abstract Dictionary<string, List<Dictionary<string, string>>> GetData();
+    /// <param name="foundData">
+    /// the delegate that is called when data has been retrieved. it is like this to avoid any race conditions that may occur and allows flexibility
+    /// </param>
+    internal abstract void GetData(DataRetrival foundData);
 
     /// <summary>
     /// Converts data retrieved from a dictionary into a list of objects of a specified class,

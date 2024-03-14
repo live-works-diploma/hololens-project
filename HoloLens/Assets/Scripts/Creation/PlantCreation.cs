@@ -18,15 +18,12 @@ public class PlantCreation : MonoBehaviour
 
     void CreatePlants(List<Plant> allPlants)
     {
+        plantCreation.anchors++;
         StartCoroutine(CreatePlantsRoutine(allPlants));
     }
 
     IEnumerator CreatePlantsRoutine(List<Plant> allPlants)
     {
-        print($"before: {plantsCreated.Count}");
-
-        plantCreation.anchors++;
-
         for (int i = 0; i < plantsCreated.Count; i++)
         {
             Destroy(plantsCreated[i]);
@@ -54,7 +51,5 @@ public class PlantCreation : MonoBehaviour
         }
 
         plantCreation.anchors--;
-
-        print($"after: {plantsCreated.Count}");
     }
 }

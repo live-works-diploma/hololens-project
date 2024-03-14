@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Data_RaspberryPi : Data_Base
 {
-    internal override Dictionary<string, List<Dictionary<string, string>>> GetData()
+    internal override void GetData(DataRetrival foundData)
     {
         // how the structure of the return statement should look (not finished just for show)
         //{

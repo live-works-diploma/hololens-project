@@ -9,7 +9,7 @@ public class Data_Dummy : Data_Base
     [SerializeField] int numberOFEstimatedPlants = 5;
     [SerializeField] float maxDistanceToSpawn = 20;
 
-    internal override Dictionary<string, List<Dictionary<string, string>>> GetData()
+    internal override void GetData(DataRetrival foundData)
     {
         Dictionary<string, List<Dictionary<string, string>>> allData = new();
         List<Dictionary<string, string>> allPlants = new();
@@ -48,6 +48,6 @@ public class Data_Dummy : Data_Base
 
         allData["sensor"] = allSesnors;
 
-        return allData;
+        foundData?.Invoke(allData);
     }
 }
