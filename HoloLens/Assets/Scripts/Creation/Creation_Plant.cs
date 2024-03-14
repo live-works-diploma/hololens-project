@@ -16,13 +16,13 @@ public class Creation_Plant : MonoBehaviour
         plantCreation.plantDataDelegate += CreatePlants;
     }
 
-    void CreatePlants(List<Plant> allPlants)
+    void CreatePlants(List<CreationData_Plant> allPlants)
     {
         plantCreation.anchors++;
         StartCoroutine(CreatePlantsRoutine(allPlants));
     }
 
-    IEnumerator CreatePlantsRoutine(List<Plant> allPlants)
+    IEnumerator CreatePlantsRoutine(List<CreationData_Plant> allPlants)
     {
         for (int i = 0; i < plantsCreated.Count; i++)
         {
@@ -35,12 +35,14 @@ public class Creation_Plant : MonoBehaviour
 
         for (int i = 0; i < allPlants.Count; i++)
         {
-            Plant plant = allPlants[i];
+            CreationData_Plant plant = allPlants[i];
 
             Vector3 location = new Vector3(plant.locationX, plant.locationY, plant.locationZ);
 
-            GameObject spawnedPlant = Instantiate(plant.prefab ? plant.prefab : defaultPrefab, location, Quaternion.identity);
-            spawnedPlant.transform.localScale = new Vector3(plant.scale, plant.scale, plant.scale);
+            GameObject spawnedPlant = Instantiate(plant.prefab ? plant.prefab : defaultPrefab);
+
+            CreationData spawnedPlantData = spawnedPlant.AddComponent<CreationData_Plant>();
+            spawnedPlantData.SetPositionAndScale(location, plant.scale);
 
             plantsCreated.Add(spawnedPlant);
 

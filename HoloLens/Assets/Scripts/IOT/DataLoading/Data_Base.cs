@@ -12,11 +12,11 @@ public abstract class Data_Base : MonoBehaviour
 {
     internal delegate void DataRetrival(Dictionary<string, List<Dictionary<string, string>>> foundData);
 
-    [Tooltip("gets invoked when ever there is new data involving plants - passes a List<Plant> in as an argument")]
-    public RetrievedDataDelegate<Plant> plantDataDelegate;
+    [Tooltip("gets invoked when ever there is new data involving plants - passes a List<CreationData_Plant> in as an argument")]
+    public RetrievedDataDelegate<CreationData_Plant> plantDataDelegate;
 
-    [Tooltip("gets invoked when ever there is new data involving sensors - passes a List<Sensor> in as an argument")]
-    public RetrievedDataDelegate<Sensor> sensorDataDelegate;
+    [Tooltip("gets invoked when ever there is new data involving sensors - passes a List<CreationData_Sensor> in as an argument")]
+    public RetrievedDataDelegate<CreationData_Sensor> sensorDataDelegate;
 
     [SerializeField] float timeInbetweenCalls = 5;
     [SerializeField] float delayBeforeFirstCall = 1;
@@ -50,9 +50,9 @@ public abstract class Data_Base : MonoBehaviour
     }
 
     /// <summary>
-    /// Func for showing how to create a Plant class
+    /// Func for showing how to create a CreationData_Plant class
     /// </summary>
-    Func<Dictionary<string, string>, Plant> plantFunc = data => new Plant
+    Func<Dictionary<string, string>, CreationData_Plant> plantFunc = data => new CreationData_Plant
     {
         locationX = data.ContainsKey("locationX") ? float.Parse(data["locationX"]) : 0,
         locationY = data.ContainsKey("locationY") ? float.Parse(data["locationY"]) : 0,
@@ -63,9 +63,9 @@ public abstract class Data_Base : MonoBehaviour
     };
 
     /// <summary>
-    /// Func for showing how to create a Sensor class
+    /// Func for showing how to create a CreationData_Sensor class
     /// </summary>
-    Func<Dictionary<string, string>, Sensor> sensorFunc = data => new Sensor
+    Func<Dictionary<string, string>, CreationData_Sensor> sensorFunc = data => new CreationData_Sensor
     {
         locationX = data.ContainsKey("locationX") ? float.Parse(data["locationX"]) : 0,
         locationY = data.ContainsKey("locationY") ? float.Parse(data["locationY"]) : 0,
@@ -101,7 +101,7 @@ public abstract class Data_Base : MonoBehaviour
     }
 
     /// <summary>
-    /// Processes the retrieved data to create instances of Plant and Sensor classes
+    /// Processes the retrieved data to create instances of CreationData_Plant and CreationData_Sensor classes
     /// and calls the delegates associated with each type of data to handle the created instances.
     /// </summary>
     /// <param name="allData">A dictionary containing all the retrieved data.</param>

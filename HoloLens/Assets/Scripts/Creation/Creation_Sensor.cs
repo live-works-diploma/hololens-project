@@ -13,7 +13,7 @@ public class Creation_Sensor : MonoBehaviour
         sensorCreation.sensorDataDelegate += CreateSensors;
     }
 
-    void CreateSensors(List<Sensor> sensorList)
+    void CreateSensors(List<CreationData_Sensor> sensorList)
     {
         sensorCreation.anchors++;
         StartCoroutine(CreateSensorRoutine());
