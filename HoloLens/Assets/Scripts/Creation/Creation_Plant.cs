@@ -41,7 +41,7 @@ public class Creation_Plant : MonoBehaviour
 
             GameObject spawnedPlant = Instantiate(plant.prefab ? plant.prefab : defaultPrefab);
 
-            CreationData spawnedPlantData = spawnedPlant.AddComponent<CreationData_Plant>();
+            ObjectData spawnedPlantData = spawnedPlant.AddComponent<ObjectData>();
             spawnedPlantData.SetPositionAndScale(location, plant.scale);
 
             plantsCreated.Add(spawnedPlant);
