@@ -1,8 +1,10 @@
+using Palmmedia.ReportGenerator.Core.Parser.Analysis;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 
-public class CreationData : MonoBehaviour
+public class CreationData : MonoBehaviour, IFillData
 {
     public float locationX = 0;
     public float locationY = 0;
@@ -10,15 +12,17 @@ public class CreationData : MonoBehaviour
 
     public GameObject prefab;
 
-    public void SetPositionAndScale(Vector3 position, float scale)
+    public void FillData(Dictionary<string, string> data)
     {
-        transform.position = position;
-        transform.localScale = Vector3.one * scale;
+        locationX = data.ContainsKey("locationX") ? float.Parse(data["locationX"]) : 0;
+        locationY = data.ContainsKey("locationY") ? float.Parse(data["locationY"]) : 1;
+        locationZ = data.ContainsKey("locationZ") ? float.Parse(data["locationZ"]) : 0;
+
+        FillDataArgs(data);
     }
 
-    internal void ResetPosition()
+    internal virtual void FillDataArgs(Dictionary<string, string> data)
     {
-        Vector3 newLocation = new Vector3(locationX, locationY, locationZ);
-        gameObject.transform.position = newLocation;
+
     }
 }

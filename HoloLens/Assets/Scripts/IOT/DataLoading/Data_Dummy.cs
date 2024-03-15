@@ -37,10 +37,11 @@ public class Data_Dummy : Data_Base
             Dictionary<string, string> sensor = new();
 
             sensor["locationX"] = UnityEngine.Random.Range(-(maxDistanceToSpawn), maxDistanceToSpawn).ToString();
-            sensor["locationY"] = UnityEngine.Random.Range(-(maxDistanceToSpawn), maxDistanceToSpawn).ToString();
+            sensor["locationY"] = "-3";
             sensor["locationZ"] = UnityEngine.Random.Range(-(maxDistanceToSpawn), maxDistanceToSpawn).ToString();
 
             sensor["wind level"] = UnityEngine.Random.Range(0, 20).ToString();
+            sensor["water level"] = UnityEngine.Random.Range(0, 20).ToString();
             sensor["humidity"] = UnityEngine.Random.Range(0, 5).ToString();
 
             allSesnors.Add(sensor);

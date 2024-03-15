@@ -5,8 +5,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEditor.FilePathAttribute;
 
-public delegate void RetrievedDataDelegate<T>(List<T> retrievedData);
 
+public delegate void RetrievedDataDelegate<T>(List<T> retrievedData) where T : CreationData;
 
 public abstract class Data_Base : MonoBehaviour
 {
@@ -49,32 +49,6 @@ public abstract class Data_Base : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Func for showing how to create a CreationData_Plant class
-    /// </summary>
-    Func<Dictionary<string, string>, CreationData_Plant> plantFunc = data => new CreationData_Plant
-    {
-        locationX = data.ContainsKey("locationX") ? float.Parse(data["locationX"]) : 0,
-        locationY = data.ContainsKey("locationY") ? float.Parse(data["locationY"]) : 0,
-        locationZ = data.ContainsKey("locationZ") ? float.Parse(data["locationZ"]) : 0,
-
-        scale = data.ContainsKey("scale") ? float.Parse(data["scale"]) : 1,
-        fruiting = data.ContainsKey("fruiting") ? bool.Parse(data["fruiting"]) : false,
-    };
-
-    /// <summary>
-    /// Func for showing how to create a CreationData_Sensor class
-    /// </summary>
-    Func<Dictionary<string, string>, CreationData_Sensor> sensorFunc = data => new CreationData_Sensor
-    {
-        locationX = data.ContainsKey("locationX") ? float.Parse(data["locationX"]) : 0,
-        locationY = data.ContainsKey("locationY") ? float.Parse(data["locationY"]) : 0,
-        locationZ = data.ContainsKey("locationZ") ? float.Parse(data["locationZ"]) : 0,
-
-        waterLevel = data.ContainsKey("water level") ? float.Parse(data["water level"]) : 0,
-        humidity = data.ContainsKey("humidity") ? float.Parse(data["humidity"]) : 0,
-    };
-
     void Start()
     {
         StartCoroutine(RetrieveDataRoutine(delayBeforeFirstCall));
@@ -109,12 +83,12 @@ public abstract class Data_Base : MonoBehaviour
     {
         if (plantDataDelegate != null)
         {
-            StartCoroutine(CreateData(allData["plant"], plantDataDelegate, plantFunc));
+            StartCoroutine(CreateData<CreationData_Plant>(allData["plant"], plantDataDelegate));
         }
 
         if (sensorDataDelegate != null)
         {
-            StartCoroutine(CreateData(allData["sensor"], sensorDataDelegate, sensorFunc));
+            StartCoroutine(CreateData<CreationData_Sensor>(allData["sensor"], sensorDataDelegate));
         }
     }
 
@@ -135,9 +109,7 @@ public abstract class Data_Base : MonoBehaviour
     /// <param name="delegateToCall">The delegate to be invoked with the list of objects.</param>
     /// <param name="howToCreateItem">A function that specifies how to create an object from a dictionary entry.</param>
     /// <returns>An enumerator for coroutine execution.</returns>
-    IEnumerator CreateData<T>(List<Dictionary<string, string>> data, 
-        RetrievedDataDelegate<T> delegateToCall, 
-        Func<Dictionary<string, string>, T> howToCreateItem)
+    IEnumerator CreateData<T>(List<Dictionary<string, string>> data, RetrievedDataDelegate<T> delegateToCall) where T : CreationData, IFillData, new()
     {
         anchors++;
 
@@ -147,7 +119,8 @@ public abstract class Data_Base : MonoBehaviour
 
         for (int i = 0; i < data.Count; i++)
         {
-            T item = howToCreateItem(data[i]);
+            T item = new T();
+            item.FillData(data[i]);
 
             allItems.Add(item);
 

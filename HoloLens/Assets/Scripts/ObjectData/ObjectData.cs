@@ -10,15 +10,13 @@ public class ObjectData : MonoBehaviour
 
     void Start()
     {
-        SetPositionAndScale(gameObject.transform.position, gameObject.transform.localScale.y);
+        SetPositionAndScale(gameObject.transform.position, gameObject.transform.localScale);
     }
 
-    public virtual void SetPositionAndScale(Vector3 position, float scale)
+    public virtual void SetPositionAndScale(Vector3 position, Vector3 scale)
     {
-        Vector3 newScale = Vector3.one * scale;
-
         positionLastSet = position;
-        scaleLastSet = newScale;
+        scaleLastSet = scale;
 
         ResetPosition();
     }
