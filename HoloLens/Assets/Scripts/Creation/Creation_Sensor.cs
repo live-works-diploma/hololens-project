@@ -17,13 +17,14 @@ public class Creation_Sensor : MonoBehaviour
         sensorCreation.sensorDataDelegate += CreateSensors;
     }
 
-    void CreateSensors(List<CreationData_Sensor> sensorList)
+    void CreateSensors(List<Sensor> sensorList)
     {
+        print("create sensor");
         sensorCreation.anchors++;
         StartCoroutine(CreateSensorRoutine(sensorList));
     }
 
-    IEnumerator CreateSensorRoutine(List<CreationData_Sensor> sensorList)
+    IEnumerator CreateSensorRoutine(List<Sensor> sensorList)
     {
         for (int i = 0; i < this.sensorList.Count; i++)
         {
@@ -34,7 +35,7 @@ public class Creation_Sensor : MonoBehaviour
 
         for (int i = 0; i < sensorList.Count; i++)
         {
-            CreationData_Sensor sensor = sensorList[i] as CreationData_Sensor;
+            Sensor sensor = sensorList[i] as Sensor;
 
             Vector3 location = new Vector3(sensor.locationX, sensor.locationY, sensor.locationZ);
 

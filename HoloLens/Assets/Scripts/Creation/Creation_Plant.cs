@@ -16,13 +16,14 @@ public class Creation_Plant : MonoBehaviour
         plantCreation.plantDataDelegate += CreatePlants;
     }
 
-    void CreatePlants(List<CreationData_Plant> allPlants)
+    void CreatePlants(List<Plant> allPlants)
     {
+        print("create plant");
         plantCreation.anchors++;
         StartCoroutine(CreatePlantsRoutine(allPlants));
     }
 
-    IEnumerator CreatePlantsRoutine(List<CreationData_Plant> allPlants)
+    IEnumerator CreatePlantsRoutine(List<Plant> allPlants)
     {
         for (int i = 0; i < plantsCreated.Count; i++)
         {
@@ -35,7 +36,7 @@ public class Creation_Plant : MonoBehaviour
 
         for (int i = 0; i < allPlants.Count; i++)
         {
-            CreationData_Plant plant = allPlants[i];
+            Plant plant = allPlants[i];
 
             Vector3 location = new Vector3(plant.locationX, plant.locationY, plant.locationZ);
 

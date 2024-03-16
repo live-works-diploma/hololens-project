@@ -6,4 +6,6 @@ using UnityEngine;
 public interface IFillData
 {
     void FillData(Dictionary<string, string> dataNeeded);
+
+    Dictionary<string, string> FillDefaultData(float maxDistanceToSpawn = 30);
 }

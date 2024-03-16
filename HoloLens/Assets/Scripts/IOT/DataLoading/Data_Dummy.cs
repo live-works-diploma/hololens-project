@@ -12,43 +12,24 @@ public class Data_Dummy : Data_Base
     internal override void GetData(DataRetrival foundData)
     {
         Dictionary<string, List<Dictionary<string, string>>> allData = new();
-        List<Dictionary<string, string>> allPlants = new();
 
-        for (int i = 0; i < numberOFEstimatedPlants; i++)
-        {
-            Dictionary<string, string> plant = new();
-
-            plant["locationX"] = UnityEngine.Random.Range(-(maxDistanceToSpawn), maxDistanceToSpawn).ToString();
-            plant["locationY"] = "0";
-            plant["locationZ"] = UnityEngine.Random.Range(-(maxDistanceToSpawn), maxDistanceToSpawn).ToString();
-
-            plant["scale"] = UnityEngine.Random.Range(1, 3).ToString();
-            plant["fruiting"] = (UnityEngine.Random.value > 0.5).ToString();
-
-            allPlants.Add(plant);
-        }
-
-        allData["plant"] = allPlants;
-
-        List<Dictionary<string, string>> allSesnors = new();
-
-        for (int i = 0; i < numberOfEstimatedSensors; i++)
-        {
-            Dictionary<string, string> sensor = new();
-
-            sensor["locationX"] = UnityEngine.Random.Range(-(maxDistanceToSpawn), maxDistanceToSpawn).ToString();
-            sensor["locationY"] = "-3";
-            sensor["locationZ"] = UnityEngine.Random.Range(-(maxDistanceToSpawn), maxDistanceToSpawn).ToString();
-
-            sensor["wind level"] = UnityEngine.Random.Range(0, 20).ToString();
-            sensor["water level"] = UnityEngine.Random.Range(0, 20).ToString();
-            sensor["humidity"] = UnityEngine.Random.Range(0, 5).ToString();
-
-            allSesnors.Add(sensor);
-        }
-
-        allData["sensor"] = allSesnors;
+        allData["Plant"] = GenerateData<Plant>(numberOFEstimatedPlants);
+        allData["Sensor"] = GenerateData<Sensor>(numberOfEstimatedSensors);
 
         foundData?.Invoke(allData);
+    }
+
+    List<Dictionary<string, string>> GenerateData<T>(float number) where T : IFillData, new()
+    {
+        List<Dictionary<string, string>> listOfAllData = new();
+
+        T instance = new();
+
+        for (int i = 0; i < number; i ++)
+        {
+            listOfAllData.Add(instance.FillDefaultData());
+        }
+
+        return listOfAllData;
     }
 }

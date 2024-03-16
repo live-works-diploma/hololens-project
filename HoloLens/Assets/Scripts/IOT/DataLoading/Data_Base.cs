@@ -1,22 +1,27 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using static UnityEditor.FilePathAttribute;
 
 
-public delegate void RetrievedDataDelegate<T>(List<T> retrievedData) where T : CreationData;
+
 
 public abstract class Data_Base : MonoBehaviour
 {
     internal delegate void DataRetrival(Dictionary<string, List<Dictionary<string, string>>> foundData);
 
-    [Tooltip("gets invoked when ever there is new data involving plants - passes a List<CreationData_Plant> in as an argument")]
-    public RetrievedDataDelegate<CreationData_Plant> plantDataDelegate;
+    public delegate void RetrievedDataDelegate<T>(List<T> retrievedData) where T : IFillData;
+    // public delegate void RetrievedDataDelegate(List<IFillData> retrievedData);
 
-    [Tooltip("gets invoked when ever there is new data involving sensors - passes a List<CreationData_Sensor> in as an argument")]
-    public RetrievedDataDelegate<CreationData_Sensor> sensorDataDelegate;
+    [Tooltip("gets invoked when ever there is new data involving plants - passes a List<Plant> in as an argument")]
+    public RetrievedDataDelegate<Plant> plantDataDelegate;
+
+    [Tooltip("gets invoked when ever there is new data involving sensors - passes a List<Sensor> in as an argument")]
+    public RetrievedDataDelegate<Sensor> sensorDataDelegate;
 
     [SerializeField] float timeInbetweenCalls = 5;
     [SerializeField] float delayBeforeFirstCall = 1;
@@ -44,6 +49,7 @@ public abstract class Data_Base : MonoBehaviour
 
             if (_anchors <= 0)
             {
+                print("reset");
                 StartCoroutine(RetrieveDataRoutine(timeInbetweenCalls));
             }
         }
@@ -75,21 +81,16 @@ public abstract class Data_Base : MonoBehaviour
     }
 
     /// <summary>
-    /// Processes the retrieved data to create instances of CreationData_Plant and CreationData_Sensor classes
+    /// Processes the retrieved data to create instances of Plant and Sensor classes
     /// and calls the delegates associated with each type of data to handle the created instances.
     /// </summary>
     /// <param name="allData">A dictionary containing all the retrieved data.</param>
     void RetrieveData(Dictionary<string, List<Dictionary<string, string>>> allData)
     {
-        if (plantDataDelegate != null)
-        {
-            StartCoroutine(CreateData<CreationData_Plant>(allData["plant"], plantDataDelegate));
-        }
+        anchors += 2;
 
-        if (sensorDataDelegate != null)
-        {
-            StartCoroutine(CreateData<CreationData_Sensor>(allData["sensor"], sensorDataDelegate));
-        }
+        StartCoroutine(CreateData(allData["Plant"], plantDataDelegate));     
+        StartCoroutine(CreateData(allData["Sensor"], sensorDataDelegate));     
     }
 
     /// <summary>
@@ -106,20 +107,16 @@ public abstract class Data_Base : MonoBehaviour
     /// </summary>
     /// <typeparam name="T">The class of objects to create a list of.</typeparam>
     /// <param name="data">A list of dictionaries containing the data for creating the objects.</param>
-    /// <param name="delegateToCall">The delegate to be invoked with the list of objects.</param>
-    /// <param name="howToCreateItem">A function that specifies how to create an object from a dictionary entry.</param>
     /// <returns>An enumerator for coroutine execution.</returns>
-    IEnumerator CreateData<T>(List<Dictionary<string, string>> data, RetrievedDataDelegate<T> delegateToCall) where T : CreationData, IFillData, new()
+    IEnumerator CreateData<T>(List<Dictionary<string, string>> data, RetrievedDataDelegate<T> toCall) where T : IFillData, new()
     {
-        anchors++;
-
         List<T> allItems = new();
 
         float maxToCreateAtOnce = 100;
 
         for (int i = 0; i < data.Count; i++)
         {
-            T item = new T();
+            T item = new();
             item.FillData(data[i]);
 
             allItems.Add(item);
@@ -131,7 +128,9 @@ public abstract class Data_Base : MonoBehaviour
             }
         }
 
-        delegateToCall?.Invoke(allItems);
+        string name = typeof(T).Name;
+
+        toCall?.Invoke(allItems);
         anchors--;
     }
 
