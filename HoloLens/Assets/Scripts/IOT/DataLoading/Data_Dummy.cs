@@ -19,7 +19,7 @@ public class Data_Dummy : Data_Base
         foundData?.Invoke(allData);
     }
 
-    List<Dictionary<string, string>> GenerateData<T>(float number) where T : IFillData, new()
+    List<Dictionary<string, string>> GenerateData<T>(float number) where T : IDataHandler, new()
     {
         List<Dictionary<string, string>> listOfAllData = new();
 
@@ -27,7 +27,7 @@ public class Data_Dummy : Data_Base
 
         for (int i = 0; i < number; i ++)
         {
-            listOfAllData.Add(instance.FillDefaultData());
+            listOfAllData.Add(instance.CreateDefaultData());
         }
 
         return listOfAllData;

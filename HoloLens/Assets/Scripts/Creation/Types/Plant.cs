@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Plant : CreationData
 {
+    [Header("Plant Data")]
     public float scale = 1;
     public bool fruiting = false;
 
@@ -13,11 +14,19 @@ public class Plant : CreationData
         fruiting = data.ContainsKey("fruiting") ? bool.Parse(data["fruiting"]) : false;
     }
 
-    internal override Dictionary<string, string> FillDefaultDataArgs(Dictionary<string, string> dataAlreadyCreated)
+    internal override Dictionary<string, string> CreateDefaultDataArgs(Dictionary<string, string> dataAlreadyCreated)
     {
         dataAlreadyCreated["scale"] = Random.Range(1, 10).ToString();
         dataAlreadyCreated["fruiting"] = (Random.value > 0.5f).ToString();
 
         return dataAlreadyCreated;
+    }
+
+    internal override Dictionary<string, string> TurnDataIntoDictionaryArgs(Dictionary<string, string> classContents)
+    {
+        classContents["scale"] = scale.ToString();
+        classContents["fruiting"] = fruiting.ToString();
+
+        return classContents;
     }
 }

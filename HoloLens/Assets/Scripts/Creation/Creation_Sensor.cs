@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Creation_Sensor : MonoBehaviour
+public class Creation_Sensor : MonoBehaviour, ICreation
 {
     public GameObject sensorCanvasPrefab;
 
@@ -14,14 +14,29 @@ public class Creation_Sensor : MonoBehaviour
     {
         sensorCreation = GetComponent<Data_Base>();
 
-        sensorCreation.sensorDataDelegate += CreateSensors;
+        sensorCreation.AddListener(this, "Sensor");
     }
 
-    void CreateSensors(List<Sensor> sensorList)
-    {
-        print("create sensor");
-        sensorCreation.anchors++;
-        StartCoroutine(CreateSensorRoutine(sensorList));
+    public IEnumerator CreateDataRoutine(List<Dictionary<string, string>> allData)
+    {        
+        int maxToCreate = 30;
+
+        List<Sensor> sensors = new List<Sensor>();
+
+        for (int i = 0; i < allData.Count; i++)
+        {
+            Sensor sensor = new Sensor();
+            sensor.FillData(allData[i]);
+
+            sensors.Add(sensor);
+
+            if ((i + 1) % maxToCreate == 0)
+            {
+                yield return null;
+            }
+        }
+
+        StartCoroutine(CreateSensorRoutine(sensors));
     }
 
     IEnumerator CreateSensorRoutine(List<Sensor> sensorList)
@@ -35,11 +50,14 @@ public class Creation_Sensor : MonoBehaviour
 
         for (int i = 0; i < sensorList.Count; i++)
         {
-            Sensor sensor = sensorList[i] as Sensor;
+            Sensor sensor = sensorList[i];
 
             Vector3 location = new Vector3(sensor.locationX, sensor.locationY, sensor.locationZ);
 
-            GameObject createdSensor = Instantiate(sensorCanvasPrefab, location, sensorCanvasPrefab.transform.rotation);       
+            GameObject createdSensor = Instantiate(sensorCanvasPrefab, location, sensorCanvasPrefab.transform.rotation);   
+
+            Sensor sensorComp = createdSensor.AddComponent<Sensor>();
+            sensorComp.FillData(sensorList[i].TurnDataIntoDictionary());
 
             ObjectData_Canvas sensorDataCanvas = createdSensor.GetComponent<ObjectData_Canvas>();
             sensorDataCanvas.SetPositionAndScale(location, sensorCanvasPrefab.transform.localScale);
@@ -60,7 +78,8 @@ public class Creation_Sensor : MonoBehaviour
             }
         }
 
-        yield return null;
         sensorCreation.anchors--;
     }
+
+    
 }

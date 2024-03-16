@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Creation_Plant : MonoBehaviour
+public class Creation_Plant : MonoBehaviour, ICreation
 {
     Data_Base plantCreation;
     List<GameObject> plantsCreated = new();
@@ -13,14 +13,29 @@ public class Creation_Plant : MonoBehaviour
     {
         plantCreation = GetComponent<Data_Base>();
 
-        plantCreation.plantDataDelegate += CreatePlants;
+        plantCreation.AddListener(this, "Plant");
     }
 
-    void CreatePlants(List<Plant> allPlants)
+    public IEnumerator CreateDataRoutine(List<Dictionary<string, string>> allData)
     {
-        print("create plant");
-        plantCreation.anchors++;
-        StartCoroutine(CreatePlantsRoutine(allPlants));
+        int maxToCreate = 30;
+
+        List<Plant> plants = new List<Plant>();
+
+        for (int i = 0; i < allData.Count; i++)
+        {
+            Plant plant = new Plant();
+            plant.FillData(allData[i]);
+
+            plants.Add(plant);
+
+            if ((i + 1) % maxToCreate == 0)
+            {
+                yield return null;
+            }
+        }
+
+        StartCoroutine(CreatePlantsRoutine(plants));
     }
 
     IEnumerator CreatePlantsRoutine(List<Plant> allPlants)
@@ -42,6 +57,9 @@ public class Creation_Plant : MonoBehaviour
 
             GameObject spawnedPlant = Instantiate(plant.prefab ? plant.prefab : defaultPrefab);
 
+            Plant plantComp = spawnedPlant.AddComponent<Plant>();
+            plantComp.FillData(allPlants[i].TurnDataIntoDictionary());
+
             ObjectData spawnedPlantData = spawnedPlant.AddComponent<ObjectData>();
             spawnedPlantData.SetPositionAndScale(location, Vector3.one * plant.scale);
 
@@ -55,4 +73,6 @@ public class Creation_Plant : MonoBehaviour
 
         plantCreation.anchors--;
     }
+
+    
 }

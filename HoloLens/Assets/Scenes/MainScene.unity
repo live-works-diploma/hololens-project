@@ -473,10 +473,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b036998f891e0af4caa55d3c0840c112, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeInbetweenCalls: 0
+  timeInbetweenCalls: 2
   delayBeforeFirstCall: 1
-  numberOfEstimatedSensors: 5
-  numberOFEstimatedPlants: 5
+  numberOfEstimatedSensors: 0
+  numberOFEstimatedPlants: 20
   maxDistanceToSpawn: 20
 --- !u!4 &1881264178
 Transform:

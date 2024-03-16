@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 
-public class CreationData : IFillData
+public class CreationData : MonoBehaviour, IDataHandler
 {
+    [Header("Creation Data")]
     public float locationX = 0;
     public float locationY = 0;
     public float locationZ = 0;
 
-    public GameObject prefab;
+    [HideInInspector] public GameObject prefab;
 
     public void FillData(Dictionary<string, string> data)
     {
@@ -23,7 +24,7 @@ public class CreationData : IFillData
 
     internal virtual void FillDataArgs(Dictionary<string, string> data) { }
 
-    public Dictionary<string, string> FillDefaultData(float maxDistanceToSpawn = 30)
+    public Dictionary<string, string> CreateDefaultData(float maxDistanceToSpawn = 30)
     {
         Dictionary<string, string> defaultData = new();
 
@@ -31,13 +32,27 @@ public class CreationData : IFillData
         defaultData["locationY"] = "0";
         defaultData["locationZ"] = Random.Range(-(maxDistanceToSpawn), maxDistanceToSpawn).ToString();
 
-        return FillDefaultDataArgs(defaultData);
+        return CreateDefaultDataArgs(defaultData);
     }
 
-    internal virtual Dictionary<string, string> FillDefaultDataArgs(Dictionary<string, string> defaultData) 
+    internal virtual Dictionary<string, string> CreateDefaultDataArgs(Dictionary<string, string> defaultData) 
     {
         return defaultData;
     }
 
-    
+    public Dictionary<string, string> TurnDataIntoDictionary()
+    {
+        Dictionary<string, string> classContents = new();
+
+        classContents["locationX"] = locationX.ToString();
+        classContents["locationY"] = locationY.ToString();
+        classContents["locationZ"] = locationZ.ToString();
+
+        return TurnDataIntoDictionaryArgs(classContents);
+    }
+
+    internal virtual Dictionary<string, string> TurnDataIntoDictionaryArgs(Dictionary<string, string> classContents)
+    {
+        return classContents;
+    }
 }
