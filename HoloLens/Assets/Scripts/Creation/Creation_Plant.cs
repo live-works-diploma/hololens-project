@@ -18,6 +18,8 @@ public class Creation_Plant : MonoBehaviour, ICreation
 
     public IEnumerator CreateDataRoutine(List<Dictionary<string, string>> allData)
     {
+        plantCreation.anchors++;
+
         int maxToCreate = 30;
 
         List<Plant> plants = new List<Plant>();

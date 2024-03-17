@@ -18,7 +18,9 @@ public class Creation_Sensor : MonoBehaviour, ICreation
     }
 
     public IEnumerator CreateDataRoutine(List<Dictionary<string, string>> allData)
-    {        
+    {
+        sensorCreation.anchors++;
+
         int maxToCreate = 30;
 
         List<Sensor> sensors = new List<Sensor>();
