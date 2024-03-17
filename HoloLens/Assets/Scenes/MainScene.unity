@@ -475,8 +475,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timeInbetweenCalls: 2
   delayBeforeFirstCall: 1
-  numberOfEstimatedSensors: 0
-  numberOFEstimatedPlants: 20
+  numberOfEstimatedSensors: 10
+  numberOFEstimatedPlants: 10
   maxDistanceToSpawn: 20
 --- !u!4 &1881264178
 Transform:

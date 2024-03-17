@@ -75,6 +75,8 @@ public abstract class Data_Base : MonoBehaviour
 
     void RetrieveData(Dictionary<string, List<Dictionary<string, string>>> allData)
     {
+        anchors++;
+
         foreach (var key in allData.Keys)
         {
             List<ICreation> data = listeners[key];
@@ -86,6 +88,8 @@ public abstract class Data_Base : MonoBehaviour
                 StartCoroutine(data[i].CreateDataRoutine(allData[key]));
             }
         }
+
+        anchors--;
     }
 
     internal abstract void GetData(DataRetrival foundData);
