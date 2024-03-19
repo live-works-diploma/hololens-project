@@ -6,7 +6,9 @@ using UnityEngine;
 public class Data_Dummy : Data_Base
 {
     [SerializeField] int numberOfEstimatedSensors = 1;
+    [SerializeField] float sensorHeightAlter = 1.5f;
     [SerializeField] int numberOFEstimatedPlants = 5;
+    [SerializeField] float plantHeightAlter = 3;
     [SerializeField] float maxDistanceToSpawn = 20;
 
     /// <summary>
@@ -17,8 +19,8 @@ public class Data_Dummy : Data_Base
     {
         Dictionary<string, List<Dictionary<string, string>>> allData = new()
         {
-            ["Plant"] = GenerateData<Plant>(numberOFEstimatedPlants),
-            ["Sensor"] = GenerateData<Sensor>(numberOfEstimatedSensors)
+            ["Plant"] = GenerateData<Plant>(numberOFEstimatedPlants, plantHeightAlter),
+            ["Sensor"] = GenerateData<Sensor>(numberOfEstimatedSensors, sensorHeightAlter)
         };
 
         foundData?.Invoke(allData);
@@ -31,7 +33,7 @@ public class Data_Dummy : Data_Base
     /// <typeparam name="T">The type of class you wish to generate random data for. Needs to have the IDataHandler interface for it to work.</typeparam>
     /// <param name="number">The amount of randomly generated instances you want (in dictionary format)</param>
     /// <returns>The list of randomly generated instances in dictionary format.</returns>
-    List<Dictionary<string, string>> GenerateData<T>(float number) where T : IDataHandler, new()
+    List<Dictionary<string, string>> GenerateData<T>(float number, float heightDifference) where T : IDataHandler, new()
     {
         List<Dictionary<string, string>> listOfAllData = new();
 
@@ -39,7 +41,7 @@ public class Data_Dummy : Data_Base
 
         for (int i = 0; i < number; i ++)
         {
-            listOfAllData.Add(instance.CreateDefaultData());
+            listOfAllData.Add(instance.CreateDefaultData(heightDifference, maxDistanceToSpawn));
         }
 
         return listOfAllData;

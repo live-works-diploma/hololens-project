@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.FilePathAttribute;
 
 public class ObjectData : MonoBehaviour
 {
@@ -11,6 +10,7 @@ public class ObjectData : MonoBehaviour
     void Start()
     {
         SetPositionAndScale(gameObject.transform.position, gameObject.transform.localScale);
+        StartArg();
     }
 
     public virtual void SetPositionAndScale(Vector3 position, Vector3 scale)
@@ -18,12 +18,17 @@ public class ObjectData : MonoBehaviour
         positionLastSet = position;
         scaleLastSet = scale;
 
-        ResetPosition();
+        gameObject.transform.position = position;
+        gameObject.transform.localScale = scale;
     }
 
-    public virtual void ResetPosition()
-    {        
-        gameObject.transform.position = positionLastSet;
-        gameObject.transform.localScale = scaleLastSet;
+    public virtual void ResetPosition(GameObject objectToReset)
+    {
+        objectToReset.transform.position = gameObject.transform.position;
+    }
+
+    internal virtual void StartArg()
+    {
+
     }
 }

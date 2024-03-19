@@ -10,6 +10,9 @@ public class ObjectData_Canvas : ObjectData_Tracking
     public GameObject fieldPrefab;
     public GameObject whereToAddFields;
 
+    public GameObject placeToKeepButton;
+    public GameObject button;
+
     public void AssignTitle(string title)
     {
         if (title == null)
@@ -50,4 +53,22 @@ public class ObjectData_Canvas : ObjectData_Tracking
         }
     }
 
+    internal override void StartArg()
+    {
+        StartCoroutine(PositionButtonRoutine());
+    }
+
+    IEnumerator PositionButtonRoutine()
+    {
+        while (true)
+        {
+            Quaternion rotation = placeToKeepButton.transform.rotation;
+            Vector3 position = placeToKeepButton.transform.position;
+
+            button.transform.position = position;
+            button.transform.rotation = rotation;
+
+            yield return null;
+        }
+    }
 }

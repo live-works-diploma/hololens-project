@@ -20,7 +20,7 @@ public interface IDataHandler
     /// </summary>
     /// <param name="maxDistanceToSpawn"></param>
     /// <returns></returns>
-    public Dictionary<string, string> CreateDefaultData(float maxDistanceToSpawn = 30);
+    public Dictionary<string, string> CreateDefaultData(float heightAlter, float maxDistanceToSpawn = 30);
 
     public Dictionary<string, string> TurnDataIntoDictionary();
 }

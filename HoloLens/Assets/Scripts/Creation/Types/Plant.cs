@@ -16,7 +16,7 @@ public class Plant : CreationData
 
     internal override Dictionary<string, string> CreateDefaultDataArgs(Dictionary<string, string> dataAlreadyCreated)
     {
-        dataAlreadyCreated["scale"] = Random.Range(1, 10).ToString();
+        dataAlreadyCreated["scale"] = Random.Range(1f, 2f).ToString();
         dataAlreadyCreated["fruiting"] = (Random.value > 0.5f).ToString();
 
         return dataAlreadyCreated;

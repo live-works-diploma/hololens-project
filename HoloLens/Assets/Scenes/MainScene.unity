@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -314,7 +314,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 941766143}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -365,7 +365,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 941766143}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.7118, y: -5, z: 0.17}
+  m_LocalPosition: {x: 1.7118, y: 0, z: 0.17}
   m_LocalScale: {x: 11.728498, y: 11.728498, z: 11.728498}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -389,7 +389,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2351505567455720332, guid: 4d7e2f87fefe0ba468719b15288b46e7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2351505567455720332, guid: 4d7e2f87fefe0ba468719b15288b46e7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -473,11 +473,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b036998f891e0af4caa55d3c0840c112, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeInbetweenCalls: 2
+  timeInbetweenCalls: Infinity
   delayBeforeFirstCall: 1
-  numberOfEstimatedSensors: 10
-  numberOFEstimatedPlants: 10
-  maxDistanceToSpawn: 20
+  numberOfEstimatedSensors: 3
+  sensorHeightAlter: 1.5
+  numberOFEstimatedPlants: 3
+  plantHeightAlter: 3
+  maxDistanceToSpawn: 5
 --- !u!4 &1881264178
 Transform:
   m_ObjectHideFlags: 0

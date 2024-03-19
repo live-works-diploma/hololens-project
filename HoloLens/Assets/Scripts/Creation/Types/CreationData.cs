@@ -1,4 +1,3 @@
-using Palmmedia.ReportGenerator.Core.Parser.Analysis;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.IO.LowLevel.Unsafe;
@@ -6,6 +5,8 @@ using UnityEngine;
 
 public class CreationData : MonoBehaviour, IDataHandler
 {
+    public float heightDifference = 3;
+
     [Header("Creation Data")]
     public float locationX = 0;
     public float locationY = 0;
@@ -16,7 +17,7 @@ public class CreationData : MonoBehaviour, IDataHandler
     public void FillData(Dictionary<string, string> data)
     {
         locationX = data.ContainsKey("locationX") ? float.Parse(data["locationX"]) : 0;
-        locationY = data.ContainsKey("locationY") ? float.Parse(data["locationY"]) : 1;
+        locationY = data.ContainsKey("locationY") ? float.Parse(data["locationY"]) : 0;
         locationZ = data.ContainsKey("locationZ") ? float.Parse(data["locationZ"]) : 0;
 
         FillDataArgs(data);
@@ -24,12 +25,12 @@ public class CreationData : MonoBehaviour, IDataHandler
 
     internal virtual void FillDataArgs(Dictionary<string, string> data) { }
 
-    public Dictionary<string, string> CreateDefaultData(float maxDistanceToSpawn = 30)
+    public Dictionary<string, string> CreateDefaultData(float heightAlter, float maxDistanceToSpawn = 30)
     {
         Dictionary<string, string> defaultData = new();
 
         defaultData["locationX"] = Random.Range(-(maxDistanceToSpawn), maxDistanceToSpawn).ToString();
-        defaultData["locationY"] = "0";
+        defaultData["locationY"] = heightAlter.ToString();
         defaultData["locationZ"] = Random.Range(-(maxDistanceToSpawn), maxDistanceToSpawn).ToString();
 
         return CreateDefaultDataArgs(defaultData);
@@ -54,5 +55,10 @@ public class CreationData : MonoBehaviour, IDataHandler
     internal virtual Dictionary<string, string> TurnDataIntoDictionaryArgs(Dictionary<string, string> classContents)
     {
         return classContents;
+    }
+
+    public Vector3 GetPosition()
+    {
+        return new Vector3(locationX, locationY, locationZ);
     }
 }

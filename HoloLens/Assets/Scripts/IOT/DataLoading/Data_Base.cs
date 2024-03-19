@@ -5,9 +5,6 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEditor.FilePathAttribute;
-
-
 
 
 public abstract class Data_Base : MonoBehaviour
@@ -42,11 +39,8 @@ public abstract class Data_Base : MonoBehaviour
 
             if (_anchors <= 0)
             {
-                print("reset");
                 StartCoroutine(RetrieveDataRoutine(timeInbetweenCalls));
             }
-
-            print(_anchors);
         }
     }
 
