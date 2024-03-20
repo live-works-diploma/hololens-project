@@ -10,7 +10,7 @@ public class Usage_Plant : MonoBehaviour, IExampleUsage
     {
         dataRetrieval = GetComponent<IDRHandler<IDataHandler>>();
 
-        dataRetrieval.AddListener(ListenerReturn, "Plant");
+        dataRetrieval.AddListener<Plant>(ListenerReturn);
     }
 
     void ListenerReturn(List<IDataHandler> foundData)

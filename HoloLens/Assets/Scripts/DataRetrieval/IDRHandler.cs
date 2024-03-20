@@ -6,7 +6,7 @@ using UnityEngine;
 public interface IDRHandler<T> where T : class
 {
     delegate void VoidDelegate(List<T> foundData);
-    void AddListener(VoidDelegate methodToCallWhenFoundData, string nameToListenFor);
+    void AddListener<type>(VoidDelegate methodToCallWhenFoundData);
     void RetrieveBuiltData() { }
     void SendData();
 }
