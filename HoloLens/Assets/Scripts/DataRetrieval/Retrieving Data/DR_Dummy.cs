@@ -42,20 +42,12 @@ public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
     {
         await Task.Delay(100);  // just to see what happens
 
-        string foundDataJson = RetrieveJson(howToCreateDefaultData, howToTurnIntoDictionary);
+        string foundDataJson = await RetrieveJson(howToCreateDefaultData, howToTurnIntoDictionary);
 
-        return BuildData(foundDataJson, howToBuildTask);
+        return IJsonHandler<T>.BuildData(foundDataJson, howToBuildTask, expectedTypes);
     }
 
-    /// <summary>
-    /// Creates a list of instances based off the expected types and add its to a dictionary. The dictionary key is the name of the instance type. It then turns it into a 
-    /// json string.
-    /// </summary>
-    /// <param name="howToBuildDefaultTask">Takes in the type and builds default data based off it. Then returns the new instance.</param>
-    /// <param name="howToTurnIntoDictionary">Takes in an instance and converts it to dictionary format. Then returns that Dictionary.</param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
-    string RetrieveJson(Func<Type, T> howToBuildDefaultTask, Func<T, Dictionary<string, string>> howToTurnIntoDictionary)
+    public async Task<string> RetrieveJson(Func<Type, T> howToBuildDefaultTask, Func<T, Dictionary<string, string>> howToTurnIntoDictionary)
     {
         Dictionary<string, List<Dictionary<string, string>>> allInstances = new Dictionary<string, List<Dictionary<string, string>>>();
 
@@ -80,34 +72,4 @@ public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 
         return JsonConvert.SerializeObject(allInstances);
     }
-
-    /// <summary>
-    /// Takes in a json string and then converts that string into a of instances. This list is added to a dictionary where the key is the is the name of the type of instance.
-    /// </summary>
-    /// <param name="json">The json string which contains the data found</param>
-    /// <param name="howToBuildTask">Takes in the data and type for the instance and creates a new instance. It then returns that instance and adds it to a list.</param>
-    /// <returns>All the instances found.</returns>
-    Dictionary<string, List<T>> BuildData(string json, Func<Dictionary<string, string>, Type, T> howToBuildTask)
-    {
-        Dictionary<string, List<Dictionary<string, string>>> foundData = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, string>>>>(json);
-
-        Dictionary<string, List<T>> builtData = new Dictionary<string, List<T>>();
-
-        foreach (var key in foundData.Keys)
-        {
-            List<T> instancesFound = new List<T>();
-
-            for (int i = 0; i < foundData[key].Count; i++)
-            {
-                T instance = howToBuildTask(foundData[key][i], expectedTypes[key]);
-                instancesFound.Add(instance);
-            }
-
-            builtData[key] = instancesFound;
-        }
-
-        return builtData;
-    }
-
-    
 }

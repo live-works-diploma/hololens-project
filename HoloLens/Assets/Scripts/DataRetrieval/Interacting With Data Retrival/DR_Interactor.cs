@@ -37,7 +37,7 @@ public class DR_Interactor : MonoBehaviour, IDRHandler<IDataHandler>
 
     void Start()
     {
-        dataRetrieval = new DR_Dummy<IDataHandler>();    // switch instance created to whatever you want aslong as it implements IDataRetrival interface (use DR_Dummy as example)
+        dataRetrieval = new DR_Azure<IDataHandler>();    // switch instance created to whatever you want aslong as it implements IDataRetrival interface (use DR_Dummy as example)
         dataRetrieval.SetExpectedTypes(typesToListenFor);
         typesToListenFor["Sensor"] = typeof(Sensor);
 
