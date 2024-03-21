@@ -11,10 +11,14 @@ public class ExampleUsage : MonoBehaviour
         dataRetrieval = GetComponent<IDRHandler<IDataHandler>>();
 
         dataRetrieval.AddListener<Plant>(ListenerReturn);
+        dataRetrieval.AddListener<Sensor>(ListenerReturn);
     }
 
     void ListenerReturn(List<IDataHandler> foundData)
     {
-        print(foundData.Count);
+        for (int i = 0; i < foundData.Count; i++)
+        {
+            print($"type: {foundData[i].GetType().Name}");
+        }
     }
 }

@@ -37,15 +37,14 @@ public class DR_Interactor : MonoBehaviour, IDRHandler<IDataHandler>
 
     void Start()
     {
-        dataRetrieval = new DR_Dummy<IDataHandler>()    // switch instance created to whatever you want aslong as it implements IDataRetrival interface (use DR_Dummy as example)
-        {
-            expectedTypes = typesToListenFor,  // this is only for generating default data, dont need to implement when using real data
-        };
+        dataRetrieval = new DR_Dummy<IDataHandler>();    // switch instance created to whatever you want aslong as it implements IDataRetrival interface (use DR_Dummy as example)
+        dataRetrieval.SetExpectedTypes(typesToListenFor);
+        typesToListenFor["Sensor"] = typeof(Sensor);
 
         StartCoroutine(CheckForDataRoutine());
     }
 
-    public void AddListener<type>(IDRHandler<IDataHandler>.VoidDelegate methodToCallWhenFoundData)
+    public void AddListener<type>(IDRHandler<IDataHandler>.VoidDelegate methodToCallWhenFoundData) where type : IDataHandler
     {
         string nameToListenFor = typeof(type).Name;
         
@@ -53,6 +52,11 @@ public class DR_Interactor : MonoBehaviour, IDRHandler<IDataHandler>
         AssignTypes<type>(nameToListenFor);
     }
 
+    /// <summary>
+    /// Takes in the name of a listener and adds a method to the delegate associated with that name so classes can listen for wanted data.
+    /// </summary>
+    /// <param name="name">Name of the type that is being listened for</param>
+    /// <param name="methodToCallWhenFoundData">The method you wish to be called when data on an instance is found.</param>
     void AssignListener(string name, IDRHandler<IDataHandler>.VoidDelegate methodToCallWhenFoundData)
     {
         if (!listeners.ContainsKey(name))
@@ -63,18 +67,32 @@ public class DR_Interactor : MonoBehaviour, IDRHandler<IDataHandler>
         listeners[name] += methodToCallWhenFoundData;
     }
 
+    /// <summary>
+    /// Adds a new expected type so when new data comes in there will be a type associated with a string.
+    /// </summary>
+    /// <typeparam name="T">The type you are listening in for. It needs to implement IDataHandler since this class is set up for it or will cause errors.</typeparam>
+    /// <param name="name"></param>
     void AssignTypes<T>(string name)
     {
         typesToListenFor[name] = typeof(T);
     }
 
+    /// <summary>
+    /// The routine which checks for any data. Not finished
+    /// </summary>
+    /// <returns></returns>
     IEnumerator CheckForDataRoutine()
     {
         yield return null;
-        RetrieveBuiltData();
+        RetrieveBuiltData(dataRetrieval);
     }
 
-    void RetrieveBuiltData()
+    /// <summary>
+    /// Calls a method on dataRetrieval which starts the process for looking for data.
+    /// </summary>
+    /// <param name="dataRetrieval">The class which searches for data.</param>
+    /// <exception cref="Exception"></exception>
+    void RetrieveBuiltData(IDataRetrieval<IDataHandler> dataRetrieval)
     {
         if (dataRetrieval == null)
         {
@@ -84,6 +102,12 @@ public class DR_Interactor : MonoBehaviour, IDRHandler<IDataHandler>
         dataRetrieval.Retrieve(PopulateData, buildClassFromData, howToBreakDownClass, buildRandomGeneratedClass);
     }
 
+    /// <summary>
+    /// Gets passed in for RetrieveBuiltData which takes the found data and invokes the delegates listening for data. Iterates through each of the types and passes only the
+    /// needed data through.
+    /// </summary>
+    /// <param name="foundData"></param>
+    /// <exception cref="Exception"></exception>
     void PopulateData(Dictionary<string, List<IDataHandler>> foundData)
     {
         foreach (var key in foundData.Keys)
@@ -105,6 +129,10 @@ public class DR_Interactor : MonoBehaviour, IDRHandler<IDataHandler>
         }
     }
 
+    /// <summary>
+    /// An easy way to turn on or off messages.
+    /// </summary>
+    /// <param name="message"></param>
     void PrintMessage(string message)
     {
         if (!allowPrintStatements)
