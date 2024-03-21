@@ -10,7 +10,6 @@ public class DR_Azure<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 {
     public async void Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData, Func<Dictionary<string, string>, Type, T> howToBuildTask, Func<T, Dictionary<string, string>> howToTurnIntoDictionary = null, Func<Type, T> buildDefaultData = null)
     {
-        // used by class which has an instance of this class
         string json = await RetrieveJson(null, null);
         Dictionary<string, List<T>> builtData = IJsonHandler<T>.BuildData(json, howToBuildTask, expectedTypes);
 
