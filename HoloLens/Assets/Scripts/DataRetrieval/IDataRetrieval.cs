@@ -5,13 +5,10 @@ using UnityEngine;
 
 public interface IDataRetrieval<T> where T : class
 {
-    delegate void VoidDelegate(string json);
+    delegate void VoidDelegate(Dictionary<string, List<T>> wantedTypes);
 
-    void Retrieve(VoidDelegate callWhenFoundData, Func<T, Dictionary<string, string>> howToTurnIntoDictionary, Func<Dictionary<string, string>, Type, T> howToBuildTask);
-    void Retrieve(VoidDelegate callWhenFoundData, Func<T, Dictionary<string, string>> howToTurnIntoDictionary, Func<Type, T> buildDefaultData);
-        
-         
-        
-
-    void Send(string json);
+    void Retrieve(VoidDelegate callWhenFoundData, 
+        Func<Dictionary<string, string>, Type, T> howToBuildTask, 
+        Func<T, Dictionary<string, string>> howToTurnIntoDictionary = null, 
+        Func<Type, T> buildDefaultData = null);
 }

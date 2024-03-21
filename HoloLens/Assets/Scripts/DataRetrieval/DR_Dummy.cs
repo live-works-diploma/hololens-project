@@ -6,34 +6,36 @@ using System.Threading.Tasks;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
-public class DR_Dummy<T> : IDataRetrieval<T> where T : class
+public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 {
-    [HideInInspector] public List<Type> expectedTypes = new List<Type>();
+    [HideInInspector] public Dictionary<string, Type> expectedTypes = new Dictionary<string, Type>();
     [SerializeField] int amountOfInstancesToCreatePerType = 5;
 
-    public void Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData, Func<T, Dictionary<string, string>> howToTurnIntoDictionary, Func<Dictionary<string, string>, Type, T> howToBuildTask)
+    public async void Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData, Func<Dictionary<string, string>, Type, T> howToBuildTask,Func<T, Dictionary<string, string>> howToTurnIntoDictionary = null,  Func<Type, T> buildDefaultData = null)
     {
-        throw new Exception("I'm sorry for confusion, you need to use build default data for this class");
+        callWhenFoundData?.Invoke(await Search(howToBuildTask, buildDefaultData, howToTurnIntoDictionary));
     }
 
-    public async void Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData, Func<T, Dictionary<string, string>> howToTurnIntoDictionary, Func<Type, T> buildDefaultData)
-    {
-        callWhenFoundData?.Invoke(await Search(buildDefaultData, howToTurnIntoDictionary));
-    }
-
-    async Task<string> Search(Func<Type, T> howToBuildTask, Func<T, Dictionary<string, string>> howToTurnIntoDictionary)
+    async Task<Dictionary<string, List<T>>> Search( Func<Dictionary<string, string>, Type, T> howToBuildTask, Func<Type, T> howToCreateDefaultData = null, Func<T, Dictionary<string, string>> howToTurnIntoDictionary = null)
     {
         await Task.Delay(100);  // just to see what happens
 
+        string foundDataJson = RetrieveJson(howToCreateDefaultData, howToTurnIntoDictionary);
+
+        return BuildData(foundDataJson, howToBuildTask);
+    }
+
+    string RetrieveJson(Func<Type, T> howToBuildTask, Func<T, Dictionary<string, string>> howToTurnIntoDictionary)
+    {
         Dictionary<string, List<Dictionary<string, string>>> allInstances = new Dictionary<string, List<Dictionary<string, string>>>();
 
-        for (int i = 0; i < expectedTypes.Count; i++)
+        foreach (var type in expectedTypes.Keys)
         {
             List<Dictionary<string, string>> typeInstances = new List<Dictionary<string, string>>();
 
-            for (int _ = 0; _ < amountOfInstancesToCreatePerType; _++)
+            for (int i = 0; i < amountOfInstancesToCreatePerType; i++)
             {
-                T instance = howToBuildTask(expectedTypes[i]);
+                T instance = howToBuildTask(expectedTypes[type]);
 
                 if (instance == null)
                 {
@@ -43,16 +45,31 @@ public class DR_Dummy<T> : IDataRetrieval<T> where T : class
                 typeInstances.Add(howToTurnIntoDictionary(instance));
             }
 
-            allInstances[expectedTypes[i].Name] = typeInstances;
+            allInstances[expectedTypes[type].Name] = typeInstances;
         }
 
         return JsonConvert.SerializeObject(allInstances);
     }
 
-    public void Send(string json)
+    Dictionary<string, List<T>> BuildData(string json, Func<Dictionary<string, string>, Type, T> howToBuildTask)
     {
-        
-    }
+        Dictionary<string, List<Dictionary<string, string>>> foundData = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, string>>>>(json);
 
-    
+        Dictionary<string, List<T>> builtData = new Dictionary<string, List<T>>();
+
+        foreach (var key in foundData.Keys)
+        {
+            List<T> instancesFound = new List<T>();
+
+            for (int i = 0; i < foundData[key].Count; i++)
+            {
+                T instance = howToBuildTask(foundData[key][i], expectedTypes[key]);
+                instancesFound.Add(instance);
+            }
+
+            builtData[key] = instancesFound;
+        }
+
+        return builtData;
+    }    
 }

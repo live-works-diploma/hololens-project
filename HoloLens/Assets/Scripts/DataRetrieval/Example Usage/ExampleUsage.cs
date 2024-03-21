@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Usage_Plant : MonoBehaviour, IExampleUsage
+public class ExampleUsage : MonoBehaviour
 {
     IDRHandler<IDataHandler> dataRetrieval;
 

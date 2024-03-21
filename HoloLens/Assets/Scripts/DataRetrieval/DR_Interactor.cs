@@ -21,7 +21,7 @@ public class DR_Interactor : MonoBehaviour, IDRHandler<IDataHandler>
         return instance;
     };
 
-    Func<Type, IDataHandler> buildRandomGeneratedClass = (type) =>
+    Func<Type, IDataHandler> buildRandomGeneratedClass = type =>
     {
         // data isnt used its just so it accepts it as an arg for dummy data since prob will need data for real class
         IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
@@ -37,16 +37,9 @@ public class DR_Interactor : MonoBehaviour, IDRHandler<IDataHandler>
 
     void Start()
     {
-        List<Type> expectedTypes = new List<Type>();
-
-        foreach (var type in typesToListenFor.Keys)
-        {
-            expectedTypes.Add(typesToListenFor[type]);
-        }
-
         dataRetrieval = new DR_Dummy<IDataHandler>()    // switch instance created to whatever you want aslong as it implements IDataRetrival interface (use DR_Dummy as example)
         {
-            expectedTypes = expectedTypes,  // this is only for generating default data, dont need to implement when using real data
+            expectedTypes = typesToListenFor,  // this is only for generating default data, dont need to implement when using real data
         };
 
         StartCoroutine(CheckForDataRoutine());
@@ -88,13 +81,11 @@ public class DR_Interactor : MonoBehaviour, IDRHandler<IDataHandler>
             throw new Exception("data retrieval hasn't been assigned");
         }
 
-        dataRetrieval.Retrieve(PopulateData, howToBreakDownClass, buildRandomGeneratedClass);
+        dataRetrieval.Retrieve(PopulateData, buildClassFromData, howToBreakDownClass, buildRandomGeneratedClass);
     }
 
-    void PopulateData(string json)
+    void PopulateData(Dictionary<string, List<IDataHandler>> foundData)
     {
-        Dictionary<string, List<Dictionary<string, string>>> foundData = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, string>>>>(json);      
-        
         foreach (var key in foundData.Keys)
         {
             if (!listeners.ContainsKey(key))
@@ -110,20 +101,8 @@ public class DR_Interactor : MonoBehaviour, IDRHandler<IDataHandler>
 
             Type type = typesToListenFor[key];
 
-            List<IDataHandler> newInstances = new List<IDataHandler>();
-
-            for (int i = 0; i < foundData[key].Count; i++)
-            {
-                newInstances.Add(buildClassFromData(foundData[key][i], type));
-            }
-
-            listeners[key]?.Invoke(newInstances);
+            listeners[key]?.Invoke(foundData[key]);
         }
-    }
-
-    public void SendData()
-    {
-        throw new NotImplementedException();
     }
 
     void PrintMessage(string message)
