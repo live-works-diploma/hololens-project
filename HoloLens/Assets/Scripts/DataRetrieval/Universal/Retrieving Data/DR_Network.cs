@@ -37,7 +37,7 @@ public class DR_Network<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 
     async Task<Dictionary<string, List<T>>> ConvertJson(string json)
     {
-        return IJsonHandler<T>.BuildData(json, howToBuildTask, expectedTypes); ;
+        return IJsonHandler<T>.BuildData(json, howToBuildTask, expectedTypes);
     }
 
     public async Task<string> RetrieveJson()

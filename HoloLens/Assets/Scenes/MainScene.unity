@@ -426,10 +426,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 968355005}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ad134145ac94bc429454548c47ba01f, type: 3}
+  m_Script: {fileID: 11500000, guid: 1a5020955d7d18840886b531d6151a41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkData: {fileID: 11400000, guid: 0f77de37acf51ab43bafe6e17299e9e2, type: 2}
+  azureData: {fileID: 11400000, guid: 420844e41377934428647ab91dd96dd7, type: 2}
 --- !u!1001 &1124562309
 PrefabInstance:
   m_ObjectHideFlags: 0

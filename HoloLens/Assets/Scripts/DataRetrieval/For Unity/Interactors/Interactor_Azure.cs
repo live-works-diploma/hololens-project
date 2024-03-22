@@ -24,7 +24,7 @@ public class Interactor_Azure : MonoBehaviour, IInteractor<IDataHandler>
             return instance;
         };
 
-        DR_Azure<IDataHandler> dataRetriever = new DR_Azure<IDataHandler>(howToBuildTask);
+        DR_Azure<IDataHandler> dataRetriever = new DR_Azure<IDataHandler>(howToBuildTask, azureData.azureUrl, azureData.authentication, azureData.accessToken);
 
         return dataRetriever;
     }
