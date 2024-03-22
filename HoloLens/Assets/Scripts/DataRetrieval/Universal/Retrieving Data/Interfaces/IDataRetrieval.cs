@@ -33,10 +33,7 @@ public interface IDataRetrieval<T> where T : class
     /// Shows the class how to create default data for an instance. It passes in the type of instance and returns an instance populated with the default data. Is only needed
     /// when creating default data. 
     /// </param>
-    void Retrieve(VoidDelegate callWhenFoundData, 
-        Func<Dictionary<string, string>, Type, T> howToBuildTask, 
-        Func<T, Dictionary<string, string>> howToTurnIntoDictionary = null, 
-        Func<Type, T> buildDefaultData = null);
+    void Retrieve(VoidDelegate callWhenFoundData);
 
     /// <summary>
     /// A way to tell the class which types are expected. It uses these types to create default data and create new instances of the type with default / found data

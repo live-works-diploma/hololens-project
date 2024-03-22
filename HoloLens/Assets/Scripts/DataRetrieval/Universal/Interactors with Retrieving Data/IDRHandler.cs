@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -30,12 +31,5 @@ public interface IDRHandler<T> where T : class
     /// <param name="methodToCallWhenFoundData">The method you wish to be invoked when the data you are looking for is created.</param>
     void AddListener<type>(VoidDelegate methodToCallWhenFoundData) where type : T;
 
-    /// <summary>
-    /// Used to call a method on another script which gets the needed data.
-    /// </summary>
-    /// <exception cref="NotImplementedException">The class that uses this interface hasn't set up any code for this method to work.</exception>
-    void RetrieveBuiltData() 
-    { 
-        throw new NotImplementedException();
-    }
+    void SearchForData();
 }

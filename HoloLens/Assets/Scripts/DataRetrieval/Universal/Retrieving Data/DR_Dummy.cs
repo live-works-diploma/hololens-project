@@ -18,7 +18,11 @@ using UnityEngine;
 /// </typeparam>
 public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 {
-    [SerializeField] int amountOfInstancesToCreatePerType = 5;
+    Func<Dictionary<string, string>, Type, T> howToBuildTask;
+    Func<T, Dictionary<string, string>> howToTurnIntoDictionary;
+    Func<Type, T> howToBuildDefaultTask;
+
+    public int amountOfInstancesToCreatePerType = 5;
 
     Dictionary<string, Type> expectedTypes = new Dictionary<string, Type>();
     public void SetExpectedTypes(Dictionary<string, Type> typesToListenFor)
@@ -26,28 +30,33 @@ public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
         this.expectedTypes = typesToListenFor;
     }
 
-    public async void Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData, Func<Dictionary<string, string>, Type, T> howToBuildTask,Func<T, Dictionary<string, string>> howToTurnIntoDictionary = null,  Func<Type, T> buildDefaultData = null)
+    public DR_Dummy(Func<Dictionary<string, string>, Type, T> howToBuildTask, Func<T, Dictionary<string, string>> howToTurnIntoDictionary, Func<Type, T> howToBuildDefaultTask)
     {
-        callWhenFoundData?.Invoke(await Search(howToBuildTask, buildDefaultData, howToTurnIntoDictionary));
+        if (howToBuildTask == null || howToBuildDefaultTask == null || howToTurnIntoDictionary == null)
+        {
+            throw new Exception("Funcs can't be null");
+        }
+
+        this.howToBuildDefaultTask = howToBuildDefaultTask;
+        this.howToTurnIntoDictionary = howToTurnIntoDictionary;
+        this.howToBuildTask = howToBuildTask;
     }
 
-    /// <summary>
-    /// Calls a method which retrieves the json string and then builds the instances based off that string. It returns the instances with in the correct format.
-    /// </summary>
-    /// <param name="howToBuildTask">Takes in the data and type for an instances and makes you build the instance yourself. Then returns that instance.</param>
-    /// <param name="howToCreateDefaultData">Takes in a type and makes you create an instance based off that type. Doesn't force there to be default data just an instance.</param>
-    /// <param name="howToTurnIntoDictionary">Takes in an instance and turns it into Dictionary format so it can be serialized.</param>
-    /// <returns>Each instance. The key is the name of the instance type and the list is each instance related to that type. It returns all instances as type T.</returns>
-    async Task<Dictionary<string, List<T>>> Search(Func<Dictionary<string, string>, Type, T> howToBuildTask, Func<Type, T> howToCreateDefaultData = null, Func<T, Dictionary<string, string>> howToTurnIntoDictionary = null)
+    public async void Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData)
+    {
+        callWhenFoundData?.Invoke(await Search());
+    }
+
+    async Task<Dictionary<string, List<T>>> Search()
     {
         await Task.Delay(100);  // just to see what happens
 
-        string foundDataJson = await RetrieveJson(howToCreateDefaultData, howToTurnIntoDictionary);
+        string foundDataJson = await RetrieveJson();
 
         return IJsonHandler<T>.BuildData(foundDataJson, howToBuildTask, expectedTypes);
     }
 
-    public async Task<string> RetrieveJson(Func<Type, T> howToBuildDefaultTask, Func<T, Dictionary<string, string>> howToTurnIntoDictionary)
+    public async Task<string> RetrieveJson()
     {
         Dictionary<string, List<Dictionary<string, string>>> allInstances = new Dictionary<string, List<Dictionary<string, string>>>();
 

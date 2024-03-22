@@ -8,15 +8,38 @@ using UnityEngine.Networking;
 
 public class DR_Azure<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 {
-    public async void Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData, Func<Dictionary<string, string>, Type, T> howToBuildTask, Func<T, Dictionary<string, string>> howToTurnIntoDictionary = null, Func<Type, T> buildDefaultData = null)
+    Func<Dictionary<string, string>, Type, T> howToBuildTask;
+
+    Dictionary<string, Type> expectedTypes = new Dictionary<string, Type>();
+    public void SetExpectedTypes(Dictionary<string, Type> typesToListenFor)
     {
-        string json = await RetrieveJson(null, null);
+        expectedTypes = typesToListenFor;
+    }
+
+    public DR_Azure(Func<Dictionary<string, string>, Type, T> howToBuildTask)
+    {
+        if (howToBuildTask == null)
+        {
+            throw new Exception("How to build task can't be null");
+        }
+
+        this.howToBuildTask = howToBuildTask;
+    }
+
+    public async void Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData)
+    {
+        if (howToBuildTask == null)
+        {
+            throw new Exception("How to build task can't be null");
+        }
+
+        string json = await RetrieveJson();
         Dictionary<string, List<T>> builtData = IJsonHandler<T>.BuildData(json, howToBuildTask, expectedTypes);
 
         callWhenFoundData?.Invoke(builtData);
     }
 
-    public async Task<string> RetrieveJson(Func<Type, T> howToBuildTask, Func<T, Dictionary<string, string>> howToTurnIntoDictionary)
+    public async Task<string> RetrieveJson()
     {
         string azureUrl = "Your Azure Function URL";
         using UnityWebRequest website = UnityWebRequest.Get(azureUrl);
@@ -36,11 +59,5 @@ public class DR_Azure<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
         }
 
         return website.downloadHandler.text;
-    }
-
-    Dictionary<string, Type> expectedTypes = new Dictionary<string, Type>();
-    public void SetExpectedTypes(Dictionary<string, Type> typesToListenFor)
-    {
-        expectedTypes = typesToListenFor;
     }
 }
