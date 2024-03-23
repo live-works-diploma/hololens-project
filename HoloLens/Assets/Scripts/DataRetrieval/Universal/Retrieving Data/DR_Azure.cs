@@ -6,6 +6,8 @@ using System.Diagnostics;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using System.Linq;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 public class DR_Azure<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 {
@@ -31,6 +33,9 @@ public class DR_Azure<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
         {
             throw new Exception("How to build task can't be null");
         }
+
+        blobServiceClient = new BlobServiceClient(connectionString);
+        containerClient = blobServiceClient.GetBlobContainerClient(containerName);
 
         this.howToBuildTask = howToBuildTask;
 
@@ -78,15 +83,27 @@ public class DR_Azure<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 
         List<string> allJsonStrings = new List<string>();
 
+        Debug.WriteLine(allBlobs.Length);
+
         for (int i = 0; i < allBlobs.Length; i++)
         {
             BlobClient blobClient = containerClient.GetBlobClient(allBlobs[i].Name);
             BlobProperties properties = blobClient.GetProperties();
 
-            if (properties.ContentType == $"application/{wantedTypeOfData}")
+            Debug.WriteLine(properties.ContentType);
+
+            try
             {
-                string jsonContent = blobClient.DownloadContent().Value.ToString();
+                // Attempt to parse the content as JSON
+                string jsonContent = blobClient.DownloadContent().Value.Content.ToString();
+                JObject.Parse(jsonContent); // Attempt to parse as JSON
+
+                // If parsing is successful, add to the list of JSON strings
                 allJsonStrings.Add(jsonContent);
+            }
+            catch (JsonReaderException)
+            {
+                // Content is not valid JSON, handle accordingly
             }
         }
 
