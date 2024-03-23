@@ -1,16 +1,17 @@
-using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using UnityEngine;
-using UnityEngine.Networking;
+using System.IO;
+using System.Diagnostics;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using System.Linq;
 
 public class DR_Azure<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 {
-    string azureUrl;
-    string authentication;
-    string accessToken;
+    string connectionString;
+    string containerName;
+    string wantedTypeOfData = "json";
 
     Func<Dictionary<string, string>, Type, T> howToBuildTask;
 
@@ -20,7 +21,11 @@ public class DR_Azure<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
         expectedTypes = typesToListenFor;
     }
 
-    public DR_Azure(Func<Dictionary<string, string>, Type, T> howToBuildTask, string azureUrl, string authentication, string accessToken)
+    BlobServiceClient blobServiceClient;
+    BlobContainerClient containerClient;
+
+    public DR_Azure(Func<Dictionary<string, string>, Type, T> howToBuildTask,
+        string connectionString, string containerName)
     {
         if (howToBuildTask == null)
         {
@@ -29,9 +34,8 @@ public class DR_Azure<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 
         this.howToBuildTask = howToBuildTask;
 
-        this.azureUrl = azureUrl;
-        this.authentication = authentication;
-        this.accessToken = accessToken;
+        this.connectionString = connectionString;
+        this.containerName = containerName;
     }
 
     public async void Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData)
@@ -49,23 +53,64 @@ public class DR_Azure<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 
     public async Task<string> RetrieveJson()
     {
-        using (UnityWebRequest website = UnityWebRequest.Get(azureUrl))
+        return await GetMostRecentJsonData();
+    }
+
+    async Task<string> GetMostRecentJsonData()
+    {
+        Debug.WriteLine("Getting most recent Blob");
+        List<string> allBlobs = await GetAllJsonData(blobServiceClient, containerClient, connectionString, containerName, wantedTypeOfData);
+
+        if (allBlobs.Count == 0)
         {
-            website.SetRequestHeader(authentication, accessToken);
+            throw new Exception("There was no data found in the string (unless the code has been edited this means you have connected to " +
+                "azure but it didnt find anything in json format)");
+        }
 
-            website.SendWebRequest();
+        return allBlobs[0];
+    }
 
-            while (!website.isDone)
+    public static async Task<List<string>> GetAllJsonData(BlobServiceClient blobServiceClient, BlobContainerClient containerClient, string connectionString, string containerName, string wantedTypeOfData = "json")
+    {
+        Debug.WriteLine("Getting all Blobs");
+
+        var allBlobs = await GetAllBlobItems(blobServiceClient, containerClient, connectionString, containerName);
+
+        List<string> allJsonStrings = new List<string>();
+
+        for (int i = 0; i < allBlobs.Length; i++)
+        {
+            BlobClient blobClient = containerClient.GetBlobClient(allBlobs[i].Name);
+            BlobProperties properties = blobClient.GetProperties();
+
+            if (properties.ContentType == $"application/{wantedTypeOfData}")
             {
-                await Task.Delay(0); // Yield the coroutine briefly
+                string jsonContent = blobClient.DownloadContent().Value.ToString();
+                allJsonStrings.Add(jsonContent);
             }
+        }
 
-            if (website.result != UnityWebRequest.Result.Success)
-            {
-                throw new Exception($"error connecting to Azure: {website.error}");
-            }
+        return allJsonStrings;
+    }
 
-            return website.downloadHandler.text;
+    public static async Task<BlobItem[]> GetAllBlobItems(BlobServiceClient blobServiceClient, BlobContainerClient containerClient, string connectionString, string containerName)
+    {
+        try
+        {
+            // Connect to Azure Blob Storage
+            blobServiceClient = new BlobServiceClient(connectionString);
+
+            Debug.WriteLine("Connected to Azure Blob Storage");
+
+            // Get a reference to the specified container
+            containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            BlobItem[] blobs = containerClient.GetBlobs().OrderByDescending(blob => blob.Properties.LastModified).ToArray();
+
+            return blobs;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Failed to connect to Azure Blob Storage: {ex.Message}");
         }
     }
 }

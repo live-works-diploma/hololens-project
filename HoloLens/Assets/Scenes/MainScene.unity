@@ -381,7 +381,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 968355008}
-  - component: {fileID: 968355006}
+  - component: {fileID: 968355010}
   - component: {fileID: 968355009}
   m_Layer: 0
   m_Name: GameObject
@@ -390,18 +390,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &968355006
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 968355005}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00d19fb012452e145bec796560cac799, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &968355008
 Transform:
   m_ObjectHideFlags: 0
@@ -430,6 +418,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   azureData: {fileID: 11400000, guid: 420844e41377934428647ab91dd96dd7, type: 2}
+--- !u!114 &968355010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968355005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00d19fb012452e145bec796560cac799, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1124562309
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -6,7 +6,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Azure", menuName = "Connection Info/Azure")]
 public class AzureData : ScriptableObject
 {
-    public string azureUrl = "";
-    public string authentication = "";
-    public string accessToken = "";
+    public string connectionString;
+    public string containerName;
 }
