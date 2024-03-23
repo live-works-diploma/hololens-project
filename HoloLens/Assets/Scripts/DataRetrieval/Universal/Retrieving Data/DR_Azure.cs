@@ -8,12 +8,13 @@ using Azure.Storage.Blobs.Models;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using System.Threading;
 
 public class DR_Azure<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 {
     string connectionString;
     string containerName;
-    string wantedTypeOfData = "json";
+    double howLongToWaitForConnection = 10;
 
     Func<Dictionary<string, string>, Type, T> howToBuildTask;
 
@@ -64,7 +65,7 @@ public class DR_Azure<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
     async Task<string> GetMostRecentJsonData()
     {
         Debug.WriteLine("Getting most recent Blob");
-        List<string> allBlobs = await GetAllJsonData(blobServiceClient, containerClient, connectionString, containerName, wantedTypeOfData);
+        List<string> allBlobs = await GetAllJsonData(blobServiceClient, containerClient, connectionString, containerName, howLongToWaitForConnection);
 
         if (allBlobs.Count == 0)
         {
@@ -75,7 +76,8 @@ public class DR_Azure<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
         return allBlobs[0];
     }
 
-    public static async Task<List<string>> GetAllJsonData(BlobServiceClient blobServiceClient, BlobContainerClient containerClient, string connectionString, string containerName, string wantedTypeOfData = "json")
+    public static async Task<List<string>> GetAllJsonData(BlobServiceClient blobServiceClient, BlobContainerClient containerClient, 
+        string connectionString, string containerName, double howLongToWaitForConnection)
     {
         Debug.WriteLine("Getting all Blobs");
 
@@ -94,16 +96,24 @@ public class DR_Azure<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 
             try
             {
-                // Attempt to parse the content as JSON
-                string jsonContent = blobClient.DownloadContent().Value.Content.ToString();
-                JObject.Parse(jsonContent); // Attempt to parse as JSON
+                // Set up a CancellationTokenSource with a 10-second timeout
+                var cts = new CancellationTokenSource();
+                cts.CancelAfter(TimeSpan.FromSeconds(howLongToWaitForConnection));
 
-                // If parsing is successful, add to the list of JSON strings
+                // Use DownloadContentAsync with CancellationToken to add a timeout
+                var response = await blobClient.DownloadContentAsync(cancellationToken: cts.Token);
+
+                string jsonContent = response.Value.Content.ToString();
+                JObject.Parse(jsonContent);
                 allJsonStrings.Add(jsonContent);
             }
-            catch (JsonReaderException)
+            catch (OperationCanceledException e)
             {
-                // Content is not valid JSON, handle accordingly
+                throw new Exception($"Failed connecting to Azure for time reasons: {e}");
+            }
+            catch (JsonReaderException e)
+            {
+                Debug.WriteLine($"Couldn't turn data into a json: {e}");
             }
         }
 
