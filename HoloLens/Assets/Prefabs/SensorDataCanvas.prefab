@@ -84,7 +84,7 @@ GameObject:
   - component: {fileID: 4942856195860374893}
   - component: {fileID: 4942856195860374892}
   - component: {fileID: 4942856195860374895}
-  - component: {fileID: 4942856195860374881}
+  - component: {fileID: 2484242410712314428}
   m_Layer: 0
   m_Name: SensorDataCanvas
   m_TagString: Untagged
@@ -178,7 +178,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RaycastTriggerInteraction: 1
---- !u!114 &4942856195860374881
+--- !u!114 &2484242410712314428
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -187,16 +187,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4942856195860374894}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d21f5ae21d370747a43947e33c6acc8, type: 3}
+  m_Script: {fileID: 11500000, guid: b88e7f714004ec24195750d42fca1035, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  track: 1
-  title: {fileID: 4942856196038726187}
   fieldPrefab: {fileID: 8930270098211552320, guid: ba86cdd6ea1a01842be7610d96aa6624, type: 3}
-  whereToAddFields: {fileID: 232206814430881391}
-  placeToKeepButton: {fileID: 882820508505461849}
-  button: {fileID: 3505874323105278780}
+  title: {fileID: 4942856196038726187}
+  locationToCreateFields: {fileID: 232206814430881391}
 --- !u!1 &4942856196038726197
 GameObject:
   m_ObjectHideFlags: 0
@@ -815,7 +811,7 @@ PrefabInstance:
     - target: {fileID: 8376646494505211226, guid: c6b351a67ceb69140b199996bbbea156, type: 3}
       propertyPath: <OnClicked>k__BackingField.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 4942856195860374881}
+      objectReference: {fileID: 0}
     - target: {fileID: 8376646494505211226, guid: c6b351a67ceb69140b199996bbbea156, type: 3}
       propertyPath: <OnClicked>k__BackingField.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -933,10 +929,5 @@ PrefabInstance:
 --- !u!224 &3505874323105278755 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8376646494505211229, guid: c6b351a67ceb69140b199996bbbea156, type: 3}
-  m_PrefabInstance: {fileID: 4942856196863000190}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &3505874323105278780 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8376646494505211202, guid: c6b351a67ceb69140b199996bbbea156, type: 3}
   m_PrefabInstance: {fileID: 4942856196863000190}
   m_PrefabAsset: {fileID: 0}

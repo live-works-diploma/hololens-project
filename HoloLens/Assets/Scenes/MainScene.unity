@@ -217,6 +217,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!1 &643368552
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 643368553}
+  m_Layer: 0
+  m_Name: StartingLocation
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &643368553
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 643368552}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -98.45483, y: -21.60519, z: 164.26956}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &779984370
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -381,7 +412,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 968355008}
-  - component: {fileID: 968355010}
+  - component: {fileID: 968355009}
+  - component: {fileID: 968355011}
+  - component: {fileID: 968355012}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -404,7 +437,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &968355010
+--- !u!114 &968355009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968355005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a093fb11e7e90fa419f3cfcb600caba4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sensorPrefab: {fileID: 4942856195860374894, guid: c36fa145b116c2347bcb5c8439e3e257, type: 3}
+  startingLocation: {fileID: 643368552}
+  fieldPrefab: {fileID: 0}
+--- !u!114 &968355011
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -416,6 +464,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00d19fb012452e145bec796560cac799, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &968355012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968355005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a5020955d7d18840886b531d6151a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  azureData: {fileID: 11400000, guid: 420844e41377934428647ab91dd96dd7, type: 2}
+  initialDelay: 500
+  delayInbetweenCalls: 5000
 --- !u!1001 &1124562309
 PrefabInstance:
   m_ObjectHideFlags: 0

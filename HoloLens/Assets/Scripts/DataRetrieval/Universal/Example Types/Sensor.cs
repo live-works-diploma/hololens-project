@@ -4,16 +4,26 @@ using UnityEngine;
 
 public class Sensor : IDataHandler
 {
-    [Header("Sensor Data")]
-    public float waterLevel = 0;
-    public float windLevel = 0;
-    public float humidity = 0;
+    string _name;
+    public string name 
+    { 
+        get
+        {
+            return _name;
+        } 
+        set
+        {
+            _name = value;
+        }
+    }
+
+    Dictionary<string, string> sensorData = new();
 
     public void FillData(Dictionary<string, string> data)
     {
-        waterLevel = data.ContainsKey("water level") ? float.Parse(data["water level"]) : 0;
-        windLevel = data.ContainsKey("wind level") ? float.Parse(data["wind level"]) : 0;
-        humidity = data.ContainsKey("humidity") ? float.Parse(data["humidity"]) : 0;
+        name = data.ContainsKey("name") ? data["name"] : "not set";
+        data.Remove("name");
+        sensorData = data;
     }
 
     public Dictionary<string, string> CreateDefaultData(float heightAlter, string name, float maxDistanceToSpawn = 30)
@@ -21,21 +31,15 @@ public class Sensor : IDataHandler
         Dictionary<string, string> data = new Dictionary<string, string>();
 
         data["name"] = name;
-        data["wind level"] = Random.Range(0, 20).ToString();
-        data["water level"] = Random.Range(0, 20).ToString();
-        data["humidity"] = Random.Range(0, 5).ToString();
+        data["wind level"] = Random.Range(0f, 20f).ToString();
+        data["water level"] = Random.Range(0f, 10f).ToString();
+        data["humidity"] = Random.Range(0f, 5f).ToString();
 
         return data;
     }
 
     public Dictionary<string, string> TurnDataIntoDictionary()
     {
-        Dictionary<string, string> data = new Dictionary<string, string>();
-
-        data["water level"] = waterLevel.ToString();
-        data["wind level"] = windLevel.ToString();
-        data["humidity"] = humidity.ToString();
-
-        return data;
+        return sensorData;
     }
 }

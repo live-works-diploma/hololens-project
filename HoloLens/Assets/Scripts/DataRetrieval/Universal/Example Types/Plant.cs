@@ -8,8 +8,22 @@ public class Plant : IDataHandler
     public float scale = 1;
     public bool fruiting = false;
 
+    string _name;
+    public string name 
+    { 
+        get
+        {
+            return _name;
+        }
+        set
+        {
+            _name = value;
+        }
+    }
+
     public void FillData(Dictionary<string, string> data)
     {
+        name = data.ContainsKey("name") ? data["name"] : "unknown";
         scale = data.ContainsKey("scale") ? float.Parse(data["scale"]) : 1;
         fruiting = data.ContainsKey("fruiting") ? bool.Parse(data["fruiting"]) : false;
     }
@@ -29,6 +43,7 @@ public class Plant : IDataHandler
     {
         Dictionary<string, string> data = new Dictionary<string, string>();
 
+        data["name"] = name;
         data["scale"] = scale.ToString();
         data["fruiting"] = fruiting.ToString();
 

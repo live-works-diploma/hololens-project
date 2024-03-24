@@ -102,6 +102,11 @@ public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandl
         anchors++;
         foreach (var key in foundData.Keys)
         {
+            if (!Application.isPlaying)
+            {
+                return;
+            }
+
             if (!listeners.ContainsKey(key))
             {
                 continue;

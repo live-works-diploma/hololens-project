@@ -60,4 +60,6 @@ public interface IDataHandler
             };
         }
     }
+
+    public string name { get; set; }
 }

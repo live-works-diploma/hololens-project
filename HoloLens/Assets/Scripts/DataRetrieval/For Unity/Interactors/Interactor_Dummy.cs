@@ -9,6 +9,7 @@ public class Interactor_Dummy : MonoBehaviour, IInteractor<IDataHandler>
 
     public int initialDelay = 500;
     public int delayInbetweenCalls = 5000;
+    public int numberOfInstancesPerType = 1;
 
     void Start()
     {
@@ -21,6 +22,9 @@ public class Interactor_Dummy : MonoBehaviour, IInteractor<IDataHandler>
 
     DR_Dummy<IDataHandler> CreateDataRetrieval()
     {
-        return new DR_Dummy<IDataHandler>(IDataHandler.howToBuildTask, IDataHandler.howToTurnIntoDictionary, IDataHandler.howToBuildDefaultTask);
+        return new DR_Dummy<IDataHandler>(IDataHandler.howToBuildTask, IDataHandler.howToTurnIntoDictionary, IDataHandler.howToBuildDefaultTask)
+        {
+            amountOfInstancesToCreatePerType = numberOfInstancesPerType
+        };
     }
 }
