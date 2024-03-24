@@ -20,7 +20,7 @@ public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 {
     Func<Dictionary<string, string>, Type, T> howToBuildTask;
     Func<T, Dictionary<string, string>> howToTurnIntoDictionary;
-    Func<Type, T> howToBuildDefaultTask;
+    Func<Type, string, T> howToBuildDefaultTask;
 
     public int amountOfInstancesToCreatePerType = 5;
 
@@ -30,7 +30,7 @@ public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
         this.expectedTypes = typesToListenFor;
     }
 
-    public DR_Dummy(Func<Dictionary<string, string>, Type, T> howToBuildTask, Func<T, Dictionary<string, string>> howToTurnIntoDictionary, Func<Type, T> howToBuildDefaultTask)
+    public DR_Dummy(Func<Dictionary<string, string>, Type, T> howToBuildTask, Func<T, Dictionary<string, string>> howToTurnIntoDictionary, Func<Type, string, T> howToBuildDefaultTask)
     {
         if (howToBuildTask == null || howToBuildDefaultTask == null || howToTurnIntoDictionary == null)
         {
@@ -66,7 +66,7 @@ public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 
             for (int i = 0; i < amountOfInstancesToCreatePerType; i++)
             {
-                T instance = howToBuildDefaultTask(expectedTypes[type]);
+                T instance = howToBuildDefaultTask(expectedTypes[type], $"{type}: {i}");
 
                 if (instance == null)
                 {

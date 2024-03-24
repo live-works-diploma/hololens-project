@@ -5,8 +5,6 @@ from app.default_data import Default
 import time
 
 def main():
-    how_long_to_sleep_for = 5
-
     connection_string = "DefaultEndpointsProtocol=https;AccountName=iotdataretrieval;AccountKey=5rsT9GWrQGLKLlFOMvqUBCA72W74RQqWnBUU6X/WD2zkTOsRB/GeggJG956laWukPZeijH1+ChIw+AStkd7rCg==;EndpointSuffix=core.windows.net"
     container_name = "sensordata"
 
@@ -14,14 +12,16 @@ def main():
     json = Json()
     default_data = Default()
 
-    while True:
-        print("Sending Data...")
-        created_data = default_data.CreateDefaultData()
-        data = json.ConvertToJson(created_data)
-        azure.Send(data, f"test_sensor_data_{time.time()}")
-        
-        # sleep(how_long_to_sleep_for)
-        break
+    created_data = default_data.CreateDefaultData()
+    print(f"Created Data: {created_data}")
+
+    json_data = json.ConvertToJson(created_data)
+    print(f"Json Data: {json_data}")
+
+    name_of_data = f"test_sensor_data_{time.time()}"
+    print(f"Name of Data: {name_of_data}")
+
+    azure.Send(json_data, name_of_data)
 
 
 if __name__ == ("__main__"):

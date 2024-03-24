@@ -8,11 +8,29 @@ using UnityEngine;
 public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandler : class
 {
     public bool allowPrintStatements = true;
+    public int delayBetweenCalls = 5000;
 
     IDataRetrieval<DataHandler> dataRetrieval;
 
     Dictionary<string, IDRHandler<DataHandler>.VoidDelegate> listeners = new();
     Dictionary<string, Type> typesToListenFor = new();
+
+    int _anchors = 0;
+    public int anchors
+    {
+        get
+        {
+            return _anchors;
+        }
+        set
+        {
+            _anchors = value;
+            if (_anchors == 0)
+            {
+                SearchForData(delayBetweenCalls);
+            }
+        }
+    }
 
     public DRInteractor(IDataRetrieval<DataHandler> dataRetrival)
     {
@@ -53,32 +71,25 @@ public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandl
         typesToListenFor[name] = typeof(T);
     }
 
-    public async void SearchForData()
+    public async void SearchForData(int delay)
     {
-        await FindData(dataRetrieval);
-        Debug.Log("finished finding data");
+        if (!Application.isPlaying)
+        {
+            return;
+        }
+
+        await FindData(dataRetrieval, delay);
     }
 
-    async Task FindData(IDataRetrieval<DataHandler> dataRetrieval, int initialDelay = 500, int delayInbetweenCalls = 10000, bool repeatCall = true)
+    async Task FindData(IDataRetrieval<DataHandler> dataRetrieval, int delay = 500)
     {
         if (dataRetrieval == null)
         {
             throw new Exception("data retrieval hasn't been assigned");
         }
 
-        await Task.Delay(initialDelay);
-
-        while (true)
-        {
-            dataRetrieval.Retrieve(PopulateData);
-
-            if (!repeatCall)
-            {
-                break;
-            }
-
-            await Task.Delay(delayInbetweenCalls);
-        }
+        await Task.Delay(delay);
+        dataRetrieval.Retrieve(PopulateData);   
     }
 
     /// <summary>
@@ -89,6 +100,7 @@ public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandl
     /// <exception cref="Exception"></exception>
     void PopulateData(Dictionary<string, List<DataHandler>> foundData)
     {
+        anchors++;
         foreach (var key in foundData.Keys)
         {
             if (!listeners.ContainsKey(key))
@@ -106,6 +118,7 @@ public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandl
 
             listeners[key]?.Invoke(foundData[key]);
         }
+        anchors--;
     }
 
     /// <summary>

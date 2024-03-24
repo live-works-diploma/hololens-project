@@ -31,5 +31,7 @@ public interface IDRHandler<T> where T : class
     /// <param name="methodToCallWhenFoundData">The method you wish to be invoked when the data you are looking for is created.</param>
     void AddListener<type>(VoidDelegate methodToCallWhenFoundData) where type : T;
 
-    void SearchForData();
+    void SearchForData(int delay);
+
+    int anchors { get; set; }
 }

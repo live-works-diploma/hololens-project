@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Threading;
 
-public class DR_Azure<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
+public class DR_AzureBlob<T> : IDataRetrieval<T>, IJsonHandler<T>, IAzure where T : class
 {
     string connectionString;
     string containerName;
@@ -27,7 +27,7 @@ public class DR_Azure<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
     BlobServiceClient blobServiceClient;
     BlobContainerClient containerClient;
 
-    public DR_Azure(Func<Dictionary<string, string>, Type, T> howToBuildTask,
+    public DR_AzureBlob(Func<Dictionary<string, string>, Type, T> howToBuildTask,
         string connectionString, string containerName)
     {
         if (howToBuildTask == null)

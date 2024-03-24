@@ -16,10 +16,11 @@ public class Sensor : IDataHandler
         humidity = data.ContainsKey("humidity") ? float.Parse(data["humidity"]) : 0;
     }
 
-    public Dictionary<string, string> CreateDefaultData(float heightAlter, float maxDistanceToSpawn = 30)
+    public Dictionary<string, string> CreateDefaultData(float heightAlter, string name, float maxDistanceToSpawn = 30)
     {
-        Dictionary<string, string> data = new Dictionary<string, string>(); 
+        Dictionary<string, string> data = new Dictionary<string, string>();
 
+        data["name"] = name;
         data["wind level"] = Random.Range(0, 20).ToString();
         data["water level"] = Random.Range(0, 20).ToString();
         data["humidity"] = Random.Range(0, 5).ToString();

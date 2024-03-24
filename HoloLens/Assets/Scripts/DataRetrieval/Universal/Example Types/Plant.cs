@@ -14,10 +14,11 @@ public class Plant : IDataHandler
         fruiting = data.ContainsKey("fruiting") ? bool.Parse(data["fruiting"]) : false;
     }
 
-    public Dictionary<string, string> CreateDefaultData(float heightAlter, float maxDistanceToSpawn = 30)
+    public Dictionary<string, string> CreateDefaultData(float heightAlter, string name, float maxDistanceToSpawn = 30)
     {
         Dictionary<string, string> data = new Dictionary<string, string>();
 
+        data["name"] = name;
         data["scale"] = Random.Range(1f, 2f).ToString();
         data["fruiting"] = (Random.value > 0.5f).ToString();
 
