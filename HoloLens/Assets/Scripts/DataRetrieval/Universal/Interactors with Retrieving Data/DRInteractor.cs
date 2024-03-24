@@ -7,7 +7,6 @@ using UnityEngine;
 
 public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandler : class
 {
-    public bool allowPrintStatements = true;
     public int delayBetweenCalls = 5000;
 
     IDataRetrieval<DataHandler> dataRetrieval;
@@ -105,7 +104,6 @@ public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandl
         {
             if (!listeners.ContainsKey(key))
             {
-                PrintMessage($"found key without any listeners for it: {key}");
                 continue;
             }
 
@@ -119,19 +117,5 @@ public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandl
             listeners[key]?.Invoke(foundData[key]);
         }
         anchors--;
-    }
-
-    /// <summary>
-    /// An easy way to turn on or off messages.
-    /// </summary>
-    /// <param name="message"></param>
-    void PrintMessage(string message)
-    {
-        if (!allowPrintStatements)
-        {
-            return;
-        }
-
-        Debug.Log(message);
     }
 }

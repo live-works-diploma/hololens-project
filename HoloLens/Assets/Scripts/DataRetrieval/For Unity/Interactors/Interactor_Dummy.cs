@@ -8,10 +8,14 @@ public class Interactor_Dummy : MonoBehaviour, IInteractor<IDataHandler>
     public DRInteractor<IDataHandler> dataRetrieval { get; set; }
 
     public int initialDelay = 500;
+    public int delayInbetweenCalls = 5000;
 
     void Start()
     {
-        dataRetrieval = new DRInteractor<IDataHandler>(CreateDataRetrieval());
+        dataRetrieval = new DRInteractor<IDataHandler>(CreateDataRetrieval())
+        {
+            delayBetweenCalls = delayInbetweenCalls
+        };
         dataRetrieval.SearchForData(initialDelay);
     }
 
