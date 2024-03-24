@@ -33,7 +33,7 @@ public interface IDataHandler
             {
                 IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
                 instance.FillData(data);
-
+                
                 return instance;
             };
         }

@@ -11,7 +11,7 @@ public class SensorControl : MonoBehaviour
     public TextMeshProUGUI title;
     public GameObject locationToCreateFields;
 
-    Dictionary<string, string> fieldsCreated = new();
+    Dictionary<string, TextMeshProUGUI> fieldsCreated = new();
 
     public void CreateFields(Dictionary<string, string> sensorData, string name)
     {
@@ -21,6 +21,11 @@ public class SensorControl : MonoBehaviour
 
         foreach (var field in sensorData.Keys)
         {
+            if (field == "name")
+            {
+                continue;
+            }
+
             Vector3 whereToAddFields = locationToCreateFields.transform.position;
 
             Vector3 position = new Vector3(whereToAddFields.x, whereToAddFields.y, whereToAddFields.z);
@@ -40,7 +45,21 @@ public class SensorControl : MonoBehaviour
             createdChildren[0].text = field;
             createdChildren[1].text = sensorData[field];
 
-            fieldsCreated[field] = sensorData[field];
+            fieldsCreated[field] = createdChildren[1];
+        }
+    }
+
+    public void UpdateFields(Dictionary<string, string> sensorData, string name)
+    {
+        foreach (var field in sensorData.Keys)
+        {
+            if (field == "name")
+            {
+                continue;
+            }
+
+            TextMeshProUGUI textField = fieldsCreated[field];
+            textField.text = sensorData[field];
         }
     }
 }

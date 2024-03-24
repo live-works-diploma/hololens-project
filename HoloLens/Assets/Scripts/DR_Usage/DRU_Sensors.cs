@@ -31,16 +31,15 @@ public class DRU_Sensors : MonoBehaviour
         for (int i = 0; i < foundItems.Count; i++)
         {
             string sensorName = foundItems[i].name;
+            Dictionary<string, string> sensorData = IDataHandler.howToTurnIntoDictionary(foundItems[i]);
 
             if (sensorsCreated.ContainsKey(sensorName))
             {
+                UpdateSensor(sensorName, sensorData);
                 continue;
             }
-            else
-            {
-                Dictionary<string, string> sensorData = IDataHandler.howToTurnIntoDictionary(foundItems[i]);
-                CreateSensor(sensorName, sensorData);
-            }
+
+            CreateSensor(sensorName, sensorData);         
         }
 
         interactor.AlterAnchors(-1);
@@ -48,7 +47,10 @@ public class DRU_Sensors : MonoBehaviour
 
     void CreateSensor(string name, Dictionary<string, string> sensorData)
     {
-        GameObject newSensor = Instantiate(sensorPrefab);
+        Vector3 newStartingLocation = startingLocation.transform.position;
+        newStartingLocation.x = 1.325f * sensorsCreated.Count;
+
+        GameObject newSensor = Instantiate(sensorPrefab, newStartingLocation, startingLocation.transform.rotation, startingLocation.transform);
         newSensor.name = name;
 
         SensorControl sensorControl = newSensor.GetComponent<SensorControl>();
@@ -57,8 +59,11 @@ public class DRU_Sensors : MonoBehaviour
         sensorsCreated[name] = newSensor;
     }
 
-    void UpdateSensor(string name)
+    void UpdateSensor(string name, Dictionary<string, string> sensorData)
     {
+        GameObject createdSensor = sensorsCreated[name];
 
+        SensorControl sensorControl = createdSensor.GetComponent<SensorControl>();
+        sensorControl.UpdateFields(sensorData, name);
     }
 }

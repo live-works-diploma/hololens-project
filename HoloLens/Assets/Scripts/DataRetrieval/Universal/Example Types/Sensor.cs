@@ -21,8 +21,7 @@ public class Sensor : IDataHandler
 
     public void FillData(Dictionary<string, string> data)
     {
-        name = data.ContainsKey("name") ? data["name"] : "not set";
-        data.Remove("name");
+        name = data["name"];
         sensorData = data;
     }
 
