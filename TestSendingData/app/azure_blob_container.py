@@ -1,7 +1,7 @@
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 # pip install azure-storage-blob
 
-class Azure:
+class AzureBlobContainer:
     def __init__(self, connection_string: str, container_name: str) -> None:
         self.connection_string = connection_string
         self.container_name = container_name

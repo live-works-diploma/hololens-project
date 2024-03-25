@@ -23,6 +23,13 @@ class Default:
 
         return data
     
+    def create_default_instance(self):
+        data = {}
+
+        data.setdefault("Sensor", []).extend(["water level", "ph level"])
+
+        return data
+    
 
 def CreateDefaultValue(min_value: float, max_value: float) -> float:
     random_number = random.uniform(min_value, max_value)

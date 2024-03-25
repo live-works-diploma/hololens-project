@@ -19,7 +19,7 @@ namespace DatabaseFunctions
         {
             _logger = logger;
             _databaseControl = new DatabaseControl();
-            _connectionString = "Server=tcp:northmetro-tafe-server.database.windows.net,1433;Initial Catalog=northmetro-tafe-iotsensors;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=\"Active Directory Default\";";
+            _connectionString = "Server=tcp:iot-test-server.database.windows.net,1433;Initial Catalog=iot-sensor-data;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=\"Active Directory Default\";";
         }
 
         [Function("DatabaseInteraction")]
