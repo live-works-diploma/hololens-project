@@ -473,12 +473,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 968355005}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13e04c7b599e0f547916470e8375eace, type: 3}
+  m_Script: {fileID: 11500000, guid: 3eaa51dbc66f3164f92cb9f4b65652b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialDelay: 500
-  delayInbetweenCalls: 5000
-  numberOfInstancesPerType: 3
+  azureAccount: {fileID: 11400000, guid: 3307a9dfebbe8614f8082490369ff637, type: 2}
 --- !u!1001 &1124562309
 PrefabInstance:
   m_ObjectHideFlags: 0

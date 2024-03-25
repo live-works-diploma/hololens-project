@@ -14,6 +14,7 @@ public class AzureDBAccess : ScriptableObject
 
     public string BuildConnectionString(int timeToWaitForConnection = 30)
     {
-        return $"Server=tcp:{serverName}.database.windows.net,1433;Initial Catalog={databaseName};Persist Security Info={persistentSecurityInfo};User ID={userId};Password={password};MultipleActiveResultSets={multipleActiveResultSets};Encrypt={encrypt};TrustServerCertificate={trustServerCertificate};Connection Timeout={timeToWaitForConnection};";       
+        // return $"Server=tcp:{serverName}.database.windows.net,1433;Initial Catalog={databaseName};Persist Security Info={persistentSecurityInfo};User ID={userId};Password={password};MultipleActiveResultSets={multipleActiveResultSets};Encrypt={encrypt};TrustServerCertificate={trustServerCertificate};Connection Timeout={timeToWaitForConnection};";       
+        return $"Server=tcp:northmetro-tafe-server.database.windows.net,1433;Initial Catalog=northmetro-tafe-iotsensors;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=\"Active Directory Default\";";       
     }
 }
