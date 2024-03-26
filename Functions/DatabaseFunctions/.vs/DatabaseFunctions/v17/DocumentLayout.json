@@ -5,6 +5,14 @@
     {
       "AbsoluteMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|d:\\dip stage 2\\hololens-project\\functions\\databasefunctions\\databasefunctions\\function1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|solutionrelative:databasefunctions\\function1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|d:\\dip stage 2\\hololens-project\\functions\\databasefunctions\\databasefunctions\\models\\databasecontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|solutionrelative:databasefunctions\\models\\databasecontrol.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|d:\\dip stage 2\\hololens-project\\functions\\databasefunctions\\databasefunctions\\models\\databasecontroladv.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|solutionrelative:databasefunctions\\models\\databasecontroladv.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -14,11 +22,37 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DatabaseControlAdv.cs",
+              "DocumentMoniker": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Models\\DatabaseControlAdv.cs",
+              "RelativeDocumentMoniker": "DatabaseFunctions\\Models\\DatabaseControlAdv.cs",
+              "ToolTip": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Models\\DatabaseControlAdv.cs",
+              "RelativeToolTip": "DatabaseFunctions\\Models\\DatabaseControlAdv.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAA+AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-26T17:24:34.767Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DatabaseControl.cs",
+              "DocumentMoniker": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Models\\DatabaseControl.cs",
+              "RelativeDocumentMoniker": "DatabaseFunctions\\Models\\DatabaseControl.cs",
+              "ToolTip": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Models\\DatabaseControl.cs",
+              "RelativeToolTip": "DatabaseFunctions\\Models\\DatabaseControl.cs",
+              "ViewState": "AQIAAEwAAAAAAAAAAAAYwIcAAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-26T16:58:21.68Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -28,7 +62,7 @@
               "RelativeDocumentMoniker": "DatabaseFunctions\\Function1.cs",
               "ToolTip": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Function1.cs",
               "RelativeToolTip": "DatabaseFunctions\\Function1.cs",
-              "ViewState": "AQIAACoAAAAAAAAAAAAowBUAAADiAAAA",
+              "ViewState": "AQIAAAgAAAAAAAAAAAAkwBoAAAAgAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-03-25T20:32:06.912Z",
               "EditorCaption": ""

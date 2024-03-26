@@ -26,7 +26,7 @@ class Default:
     def create_default_instance(self):
         data = {}
 
-        data.setdefault("Sensor", []).extend(["water level", "ph level"])
+        data["Sensor"] = ["WaterLevel", "PhLevel"]
 
         return data
     
@@ -37,13 +37,13 @@ def CreateDefaultValue(min_value: float, max_value: float) -> float:
 
 
 create_plant_data = lambda name : {
-    "name": name,
+    "name": f"{name}",
     "scale": f"{CreateDefaultValue(0.5, 2)}",
     "fruiting": "true" if CreateDefaultValue(0, 1) > 0.5 else "false",
 }
 
 create_sensor_data = lambda name : {
-    "name": name,
+    "name": f"{name}",
     "water level": f"{CreateDefaultValue(0.1, 3)}",
     "ph level": f"{CreateDefaultValue(2, 10)}",
 }
