@@ -39,7 +39,10 @@ namespace DatabaseFunctions
             if (req.Method == "GET")
             {
                 _logger.LogInformation("Triggered GET method.");
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                // string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+                string requestBody = req.Query["jsonString"];
+                _logger.LogInformation($"request body: {requestBody}");
+
                 List<string> expectedTypes = new List<string>();
                 
                 bool success = true; 

@@ -21,7 +21,7 @@ public class Sensor : IDataHandler
 
     public void FillData(Dictionary<string, string> data)
     {
-        name = data["name"];
+        name = data["Name"];
         sensorData = data;
     }
 
@@ -29,7 +29,7 @@ public class Sensor : IDataHandler
     {
         Dictionary<string, string> data = new Dictionary<string, string>();
 
-        data["name"] = name;
+        data["Name"] = name;
         data["wind level"] = Random.Range(0f, 20f).ToString();
         data["water level"] = Random.Range(0f, 10f).ToString();
         data["humidity"] = Random.Range(0f, 5f).ToString();

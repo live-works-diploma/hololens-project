@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace DatabaseFunctions.NewFolder
@@ -56,8 +58,8 @@ namespace DatabaseFunctions.NewFolder
 
                             allInstances.Add(instance);
                         }
-
-                        foundData[tableName] = allInstances;
+                        string strippedKey = Regex.Match(tableName, @"\[dbo\]\.\[(.*?)\]").Groups[1].Value;
+                        foundData[strippedKey] = allInstances;
                     }
                 }
                 catch (Exception ex)
@@ -72,27 +74,16 @@ namespace DatabaseFunctions.NewFolder
 
             for (int i = 0; i < tableNames.Count; i++)
             {
-                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
-                {
-                    connection.Open();
-                    success = retrieveFromDatabase(tableNames[i], connection);
-                    if (!success)
-                    {
-                        break;
-                    }
-                }
+                (success, failMessage) = await AccessDatabase(logger, tableNames[i], builder, retrieveFromDatabase);
             }
 
             if (success)
             {
-                string jsonData = JsonConvert.SerializeObject(foundData);   
-                await responce.WriteAsJsonAsync(jsonData);
+                await responce.WriteAsJsonAsync(foundData);
             }
 
             return (success, failMessage);
         }
-
-
 
         public async Task<(bool success, string failMessage)> SaveToDatabase(SqlConnectionStringBuilder builder, Dictionary<string, List<Dictionary<string, string>>> contentToSave)
         {

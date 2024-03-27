@@ -72,7 +72,7 @@ def GetDatabaseData(key: str):
     TableNames = json_converter.ConvertToJson(expected_types)
 
     data = client.retrieve_data_from_database(TableNames)
-    print(data)
+    print(f"data found: {data}")
     
 
 def CreateDatabaseTables(key: str):
@@ -110,7 +110,7 @@ if __name__ == "__main__":
     # Call the function with logging
     try:
         # CreateDatabaseTables(master_key)
-        # CreateDatabaseDefaultData(master_key)
-        GetDatabaseData(master_key)
+        CreateDatabaseDefaultData(default_key)
+        # GetDatabaseData(default_key)
     except Exception as e:
         logging.error(f"Error occurred: {e}")

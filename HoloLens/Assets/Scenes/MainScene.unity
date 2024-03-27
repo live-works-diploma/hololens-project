@@ -413,7 +413,6 @@ GameObject:
   m_Component:
   - component: {fileID: 968355008}
   - component: {fileID: 968355009}
-  - component: {fileID: 968355011}
   - component: {fileID: 968355012}
   m_Layer: 0
   m_Name: GameObject
@@ -452,18 +451,6 @@ MonoBehaviour:
   sensorPrefab: {fileID: 4942856195860374894, guid: c36fa145b116c2347bcb5c8439e3e257, type: 3}
   startingLocation: {fileID: 643368552}
   fieldPrefab: {fileID: 0}
---- !u!114 &968355011
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 968355005}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00d19fb012452e145bec796560cac799, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &968355012
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Interactor_AzureDB : MonoBehaviour, IInteractor<IDataHandler>
 {
     public DRInteractor<IDataHandler> dataRetrieval { get; set; }
-    public AzureDBAccess azureAccount;
+    public AzureFunctionAccess azureAccount;
 
     private void Start()
     {
@@ -17,7 +17,11 @@ public class Interactor_AzureDB : MonoBehaviour, IInteractor<IDataHandler>
     {
         return new DR_AzureDB<IDataHandler>()
         {
-            connectionString = azureAccount.BuildConnectionString()
+            functionKey = azureAccount.functionKey,
+            functionUrl = azureAccount.functionUrl,
+            defaultKey = azureAccount.defaultKey,
+
+            howToBuildTask = IDataHandler.howToBuildTask,
         };
     }
 }

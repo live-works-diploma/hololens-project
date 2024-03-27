@@ -41,6 +41,17 @@ namespace DatabaseFunctions.NewFolder
                 $"{columns[0]} VARCHAR(100) PRIMARY KEY"
             };
 
+            try
+            {
+                columnsWithTypes.Add($"{columns[0]} VARCHAR(100) PRIMARY KEY");
+            }
+            catch (Exception ex)
+            {
+                failMessage = "There was no column to make the primary key";
+                success = false;
+                return (success, failMessage);
+            }
+
             // Add the remaining columns
             for (int i = 1; i < columns.Count; i++)
             {
