@@ -10,13 +10,14 @@ namespace DatabaseFunctions.NewFolder
 {
     public class DatabaseControlAdv
     {
-        public async Task<bool> CreateTables(ILogger logger, SqlConnectionStringBuilder builder, Dictionary<string, List<string>> tablesAndFields)
+        public async Task<(bool success, string failMessage)> CreateTables(ILogger logger, SqlConnectionStringBuilder builder, Dictionary<string, List<string>> tablesAndFields)
         {
             bool success = true;
+            string failMessage = "";
 
             foreach (var table in tablesAndFields)
             {
-                success = await CreateNewTable(logger, builder, table.Key, table.Value);
+                (success, failMessage) = await CreateNewTable(logger, builder, table.Key, table.Value);
 
                 if (!success)
                 {
@@ -25,27 +26,32 @@ namespace DatabaseFunctions.NewFolder
                 }
             }
 
-            return success;
+            return (success, failMessage);
         }
 
-        async Task<bool> CreateNewTable(ILogger logger, SqlConnectionStringBuilder builder, string tableName, List<string> columns)
+        async Task<(bool success, string failMessage)> CreateNewTable(ILogger logger, SqlConnectionStringBuilder builder, string tableName, List<string> columns)
         {
             bool success = true;
+            string failMessage = "";
 
             // Modify the columns list to include column names and types
 
-            List<string> columnsWithTypes =
-            [
-                "Id INT IDENTITY(1,1) PRIMARY KEY", .. columns.Select(column => $"{column} VARCHAR(100)")
-            ];
+            List<string> columnsWithTypes = new List<string>()
+            {
+                $"{columns[0]} VARCHAR(100) PRIMARY KEY"
+            };
 
-            string columnString = String.Join(", ", columnsWithTypes);
+            // Add the remaining columns
+            for (int i = 1; i < columns.Count; i++)
+            {
+                columnsWithTypes.Add($"{columns[i]} VARCHAR(100)");
+            }
 
-            logger.LogError($"column string: {columnString}");
-
+            string columnString = String.Join(", ", columnsWithTypes);            
             string query = $"CREATE TABLE {tableName} ({columnString})";
 
-            logger.LogError($"query string: {query}");
+            logger.LogInformation($"column string: {columnString}");
+            logger.LogInformation($"query string: {query}");
 
             Func<string, SqlConnection, bool> createNewTable = (tableName, connection) =>
             {
@@ -61,15 +67,16 @@ namespace DatabaseFunctions.NewFolder
                 catch (Exception ex)
                 {
                     success = false;
-                    logger.LogError($"Error creating new table: {ex.Message}");
+                    failMessage = "Error creating new table: {ex.Message}";
+                    logger.LogError(failMessage);
                 }
 
                 return success;
             };
 
-            success = await DatabaseControl.AccessDatabase(logger, tableName, builder, createNewTable);
+            (success, failMessage) = await DatabaseControl.AccessDatabase(logger, tableName, builder, createNewTable);
 
-            return success;
+            return (success, failMessage);
         }
     }
 }

@@ -45,6 +45,7 @@ namespace DatabaseFunctions
                 bool success = true; 
                 string failMessage = "Unknown - most likely can't connect to database";
 
+                // trying to convert to json
                 try
                 {
                     expectedTypes = JsonConvert.DeserializeObject<List<string>>(requestBody) ?? new List<string>();
@@ -54,14 +55,19 @@ namespace DatabaseFunctions
                     _logger.LogError($"Error deserializing request body: {requestBody}");
                     failMessage = ex.Message;
                     success = false;
-
                 }
 
                 if (success)
                 {
+                    for (int i = 0; i < expectedTypes.Count; i++)
+                    {
+                        expectedTypes[i] = $"[dbo].[{expectedTypes[i]}]";
+                    }
+
+                    // trying to get from the database using the expected types as a table name
                     try
                     {
-                        success = await _databaseControl.GetFromDatabase(builder, expectedTypes);
+                        (success, failMessage) = await _databaseControl.GetFromDatabase(response, builder, expectedTypes);
                     }
                     catch (Exception ex)
                     {
@@ -80,13 +86,13 @@ namespace DatabaseFunctions
             else if (req.Method == "POST")
             {
                 _logger.LogInformation("Triggered POST method.");
-                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-                
+                string requestBody = await new StreamReader(req.Body).ReadToEndAsync();                
 
                 bool success = true;
                 string failMessage = "Unknown - most likely can't connect to database";
                 Dictionary<string, List<Dictionary<string, string>>> contentToSave = new Dictionary<string, List<Dictionary<string, string>>>();
 
+                // trying to deserialize the content
                 try
                 {
                     contentToSave = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, string>>>>(requestBody) ?? contentToSave;
@@ -100,9 +106,10 @@ namespace DatabaseFunctions
 
                 if (success)
                 {
+                    // trying to save the content to the database
                     try
                     {
-                        success = await _databaseControl.SaveToDatabase(builder, contentToSave);
+                        (success, failMessage) = await _databaseControl.SaveToDatabase(builder, contentToSave);
                     }
                     catch (Exception ex)
                     {
@@ -136,6 +143,7 @@ namespace DatabaseFunctions
             string body = await new StreamReader(req.Body).ReadToEndAsync();
             Dictionary<string, List<string>> tableAndFields = new Dictionary<string, List<string>>();         
 
+            // trying to deserialize the content
             try
             {
                 tableAndFields = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(body) ?? tableAndFields;
@@ -149,9 +157,10 @@ namespace DatabaseFunctions
 
             if (success)
             {
+                // trying to save each table to the database
                 try
                 {
-                    success = await databaseAdvControl.CreateTables(_logger, builder, tableAndFields);
+                    (success, failMessage) = await databaseAdvControl.CreateTables(_logger, builder, tableAndFields);
                 }
                 catch (Exception ex)
                 {

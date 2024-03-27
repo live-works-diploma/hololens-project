@@ -62,8 +62,16 @@ def GetDatabaseData(key: str):
     function_key = "6edFuUYY4CJIFSuP9M0TuvzWdFew2iJW-UaA2I_pTIiOAzFuWlCZow=="
 
     client = AzureFunctions(function_url, function_key, key)
+    json_converter = Json()
 
-    data = client.retrieve_data_from_database()
+    expected_types = [
+        "Sensor",
+        "Plant"
+    ]
+
+    TableNames = json_converter.ConvertToJson(expected_types)
+
+    data = client.retrieve_data_from_database(TableNames)
     print(data)
     
 
@@ -102,7 +110,7 @@ if __name__ == "__main__":
     # Call the function with logging
     try:
         # CreateDatabaseTables(master_key)
-        CreateDatabaseDefaultData(master_key)
-        # GetDatabaseData(default_key)
+        # CreateDatabaseDefaultData(master_key)
+        GetDatabaseData(master_key)
     except Exception as e:
         logging.error(f"Error occurred: {e}")

@@ -1,4 +1,5 @@
 ﻿using Azure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,11 +23,12 @@ namespace DatabaseFunctions.NewFolder
             this.logger = logger;
         }
 
-        public async Task<bool> GetFromDatabase(SqlConnectionStringBuilder builder, List<string> tableNames)
+        public async Task<(bool success, string failMessage)> GetFromDatabase(HttpResponseData responce, SqlConnectionStringBuilder builder, List<string> tableNames)
         {
             Dictionary<string, List<Dictionary<string, string>>> foundData = new Dictionary<string, List<Dictionary<string, string>>>();
 
             bool success = true;
+            string failMessage = "";
 
             Func<string, SqlConnection, bool> retrieveFromDatabase = (tableName, connection) =>
             {
@@ -36,9 +39,7 @@ namespace DatabaseFunctions.NewFolder
                     using (SqlCommand command = new SqlCommand(query, connection))
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        bool success = true;
-
-                        logger.LogInformation("Connected through connection.");
+                        logger.LogInformation("Connected to database.");
 
                         List<Dictionary<string, string>> allInstances = new List<Dictionary<string, string>>();
 
@@ -49,7 +50,7 @@ namespace DatabaseFunctions.NewFolder
                             for (int i = 0; i < reader.FieldCount; i++)
                             {
                                 string columnName = reader.GetName(i);
-                                string columnValue = reader.GetValue(i).ToString() ?? "not set";
+                                string columnValue = reader.IsDBNull(i) ? null : reader.GetValue(i).ToString();
                                 instance[columnName] = columnValue;
                             }
 
@@ -61,7 +62,8 @@ namespace DatabaseFunctions.NewFolder
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError($"Error Sending Command to Database: {ex.Message}");
+                    failMessage = $"Error executing query: {ex.Message}";
+                    logger.LogError(failMessage);
                     success = false;
                 }
 
@@ -70,23 +72,32 @@ namespace DatabaseFunctions.NewFolder
 
             for (int i = 0; i < tableNames.Count; i++)
             {
-                success = await AccessDatabase(logger, tableNames[i], builder, retrieveFromDatabase);
-
-                if (!success)
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                 {
-                    break;
+                    connection.Open();
+                    success = retrieveFromDatabase(tableNames[i], connection);
+                    if (!success)
+                    {
+                        break;
+                    }
                 }
             }
 
-            string jsonData = JsonConvert.SerializeObject(foundData);
+            if (success)
+            {
+                string jsonData = JsonConvert.SerializeObject(foundData);   
+                await responce.WriteAsJsonAsync(jsonData);
+            }
 
-            return success;
+            return (success, failMessage);
         }
 
 
-        public async Task<bool> SaveToDatabase(SqlConnectionStringBuilder builder, Dictionary<string, List<Dictionary<string, string>>> contentToSave)
+
+        public async Task<(bool success, string failMessage)> SaveToDatabase(SqlConnectionStringBuilder builder, Dictionary<string, List<Dictionary<string, string>>> contentToSave)
         {
             bool success = true;
+            string failMessage = "";
 
             Func<string, SqlConnection, bool> saveToDatabase = (tableName, connection) =>
             {
@@ -96,9 +107,11 @@ namespace DatabaseFunctions.NewFolder
 
                 for (int i = 0; i < content.Count; i++)
                 {
-                    string columns = string.Join(",", content[i].Keys.Select(k => $"@{k}"));
+                    string columns = string.Join(",", content[i].Keys.Select(k => $"[{k}]"));
                     string values = string.Join(",", content[i].Keys.Select(k => $"@{k}"));
-                    string query = $"INSERT INTO @{tableName} ({columns}) VALUES ({values})";
+                    string query = $"INSERT INTO [{tableName}] ({columns}) VALUES ({values})";
+
+                    logger.LogInformation($"query for entering into database: {query}");
 
                     try
                     {
@@ -115,7 +128,8 @@ namespace DatabaseFunctions.NewFolder
                     catch (Exception ex)
                     {
                         success = false;
-                        logger.LogError($"Error sending command to database: {ex.Message}");
+                        failMessage = $"Error sending command to database: {ex.Message}";
+                        logger.LogError(failMessage);
                     }
                 }
 
@@ -124,7 +138,7 @@ namespace DatabaseFunctions.NewFolder
 
             foreach (var type in contentToSave.Keys)
             {
-                success = await AccessDatabase(logger, type, builder, saveToDatabase);
+                (success, failMessage) = await AccessDatabase(logger, type, builder, saveToDatabase);
 
                 if (!success)
                 {
@@ -132,12 +146,13 @@ namespace DatabaseFunctions.NewFolder
                 }
             }
 
-            return success;
+            return (success, failMessage);
         }
 
-        public static async Task<bool> AccessDatabase(ILogger logger, string tableName, SqlConnectionStringBuilder builder, Func<string, SqlConnection, bool> whatToDoWithDatabaseConnection)
+        public static async Task<(bool success, string failMessage)> AccessDatabase(ILogger logger, string tableName, SqlConnectionStringBuilder builder, Func<string, SqlConnection, bool> whatToDoWithDatabaseConnection)
         {
             bool success = true;
+            string failMessage = "";
 
             try
             {
@@ -155,10 +170,11 @@ namespace DatabaseFunctions.NewFolder
             catch (Exception ex)
             {
                 success = false;
-                logger.LogError($"Error Accessing database: {ex.Message}");
+                failMessage = $"Error Accessing database: {ex.Message}";
+                logger.LogError(failMessage);
             }
 
-            return success;
+            return (success, failMessage);
         }
     }   
 }

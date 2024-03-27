@@ -24,14 +24,18 @@ class AzureFunctions:
                 print(f"Response text: {e.response.text}")
             return False
         
-    def retrieve_data_from_database(self) -> dict:
+    def retrieve_data_from_database(self, expected_types: str) -> dict:
         """Retrieves data from the database."""
         
-        headers = {"x-functions-key": self.function_key}
+        headers = {
+                "Content-Type": "application/json",
+                "x-functions-key": self.access_key
+            }
         
         try:
-            response = requests.get(self.function_url, headers=headers)
+            response = requests.get(self.function_url, headers=headers, json=expected_types)
             response.raise_for_status()
+            print(response)
             return response.json()
         except requests.exceptions.RequestException as e:
             print(f"Error retrieving data from database: {e}")

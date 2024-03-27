@@ -9,7 +9,6 @@ class Default:
         data: dict[str, list[dict[str, str]]] = dict()
 
         types_of_data_to_send: dict = {
-            "Plant": create_plant_data,
             "Sensor": create_sensor_data,
         }
 
@@ -26,7 +25,7 @@ class Default:
     def create_default_instance(self):
         data = {}
 
-        data["Sensor"] = ["WaterLevel", "PhLevel"]
+        data["Sensor"] = ["Name", "WaterLevel", "PhLevel"]
 
         return data
     
@@ -37,14 +36,14 @@ def CreateDefaultValue(min_value: float, max_value: float) -> float:
 
 
 create_plant_data = lambda name : {
-    "name": f"{name}",
-    "scale": f"{CreateDefaultValue(0.5, 2)}",
-    "fruiting": "true" if CreateDefaultValue(0, 1) > 0.5 else "false",
+    "Name": f"{name}",
+    "Scale": f"{CreateDefaultValue(0.5, 2)}",
+    "Fruiting": "true" if CreateDefaultValue(0, 1) > 0.5 else "false",
 }
 
 create_sensor_data = lambda name : {
-    "name": f"{name}",
-    "water level": f"{CreateDefaultValue(0.1, 3)}",
-    "ph level": f"{CreateDefaultValue(2, 10)}",
+    "Name": f"{name}",
+    "WaterLevel": f"{CreateDefaultValue(0.1, 3)}",
+    "PhLevel": f"{CreateDefaultValue(2, 10)}",
 }
 
