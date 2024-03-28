@@ -1,4 +1,3 @@
-from app.azure_blob_container import AzureBlobContainer
 from app.azure_database import AzureFunctions
 from app.json import Json
 from app.default_data import Default
@@ -11,29 +10,6 @@ import time
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
-
-
-def CreateBlobDefaultData():
-    """Connects to azure blob container directly and adds a new json containing data."""
-
-    connection_string = "DefaultEndpointsProtocol=https;AccountName=iotdataretrieval;AccountKey=5rsT9GWrQGLKLlFOMvqUBCA72W74RQqWnBUU6X/WD2zkTOsRB/GeggJG956laWukPZeijH1+ChIw+AStkd7rCg==;EndpointSuffix=core.windows.net"
-    container_name = "sensordata"
-
-    azure = AzureBlobContainer(connection_string, container_name, "")
-    json = Json()
-    default_data = Default()
-
-    created_data = default_data.CreateDefaultData()
-    logging.info(f"Created Data: {created_data}")
-
-    json_data = json.ConvertToJson(created_data)
-    logging.info(f"Json Data: {json_data}")
-
-    name_of_data = f"test_sensor_data_{time.time()}"
-    logging.info(f"Name of Data: {name_of_data}")
-
-    azure.Send(json_data, name_of_data)
-
 
 def CreateDatabaseDefaultData(key: str):
     """Connects to a function, adds default data then sends that data up and allows the function to add it to the database."""

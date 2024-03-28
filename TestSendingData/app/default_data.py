@@ -15,9 +15,8 @@ class Default:
 
         for name in types_of_data_to_send:
             instances: list[dict[str, str]] = []
-
-            for i in range(number_of_instances):
-                instances.append(types_of_data_to_send[name](f"{name}: {i+1}"))
+            
+            instances.append(types_of_data_to_send[name](f"abcd"))
 
             data[name] = instances
 

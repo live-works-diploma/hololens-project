@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+
 
 public class Interactor_AzureDB : MonoBehaviour, IInteractor<IDataHandler>
 {
     public DRInteractor<IDataHandler> dataRetrieval { get; set; }
     public AzureFunctionAccess azureAccount;
+    public TextMeshProUGUI errorText;
+
 
     private void Start()
     {
@@ -22,6 +26,11 @@ public class Interactor_AzureDB : MonoBehaviour, IInteractor<IDataHandler>
             defaultKey = azureAccount.defaultKey,
 
             howToBuildTask = IDataHandler.howToBuildTask,
+
+            error = error =>
+            {
+                errorText.text = error;
+            }
         };
     }
 }

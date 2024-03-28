@@ -1,5 +1,6 @@
 import requests
 
+
 class AzureFunctions:
     def __init__(self, function_url: str, function_key: str, access_key: str) -> None:
         self.function_url = function_url

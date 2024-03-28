@@ -654,11 +654,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: HololensDummyData
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: Assets\WSATestCertificate.pfx
+  metroCertificatePath: Assets/WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: DefaultCompany
   metroCertificateIssuer: DefaultCompany
-  metroCertificateNotAfter: 001acc3dcf98db01
+  metroCertificateNotAfter: 0002fdd0e99fdb01
   metroApplicationDescription: Template_3D
   wsaImages: {}
   metroTileShortName: George_Hololens
@@ -676,7 +676,10 @@ PlayerSettings:
   platformCapabilities:
     WindowsStoreApps:
       GazeInput: True
+      PrivateNetworkClientServer: True
+      InternetClientServer: True
       SpatialPerception: True
+      InternetClient: True
       WebCam: True
       Microphone: True
   metroTargetDeviceFamilies: {}
