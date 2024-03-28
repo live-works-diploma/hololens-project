@@ -10,13 +10,13 @@ using System.Net;
 
 namespace DatabaseFunctions
 {
-    public class Function1
+    public class DatabaseFunctions
     {
-        private readonly ILogger<Function1> _logger;
+        private readonly ILogger<DatabaseFunctions> _logger;
         private readonly DatabaseControl _databaseControl;
         private readonly SqlConnectionStringBuilder builder;
 
-        public Function1(ILogger<Function1> logger)
+        public DatabaseFunctions(ILogger<DatabaseFunctions> logger)
         {
             _logger = logger;
             _databaseControl = new DatabaseControl(logger);

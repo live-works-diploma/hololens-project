@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseFunctions", "DatabaseFunctions\DatabaseFunctions.csproj", "{CFA9F808-89FB-4466-9038-80A502290174}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureBlobFunctions", "AzureBlobFunctions\AzureBlobFunctions.csproj", "{8BA38856-4E7C-4E51-8E5E-8D2A30CEB240}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{AD6748FC-D05D-43EA-B026-C3664ED7BAFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{CFA9F808-89FB-4466-9038-80A502290174}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFA9F808-89FB-4466-9038-80A502290174}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFA9F808-89FB-4466-9038-80A502290174}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8BA38856-4E7C-4E51-8E5E-8D2A30CEB240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8BA38856-4E7C-4E51-8E5E-8D2A30CEB240}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8BA38856-4E7C-4E51-8E5E-8D2A30CEB240}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8BA38856-4E7C-4E51-8E5E-8D2A30CEB240}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD6748FC-D05D-43EA-B026-C3664ED7BAFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD6748FC-D05D-43EA-B026-C3664ED7BAFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD6748FC-D05D-43EA-B026-C3664ED7BAFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD6748FC-D05D-43EA-B026-C3664ED7BAFA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
