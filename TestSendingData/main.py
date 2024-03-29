@@ -14,8 +14,8 @@ logging.basicConfig(level=logging.INFO)
 def CreateDatabaseDefaultData(key: str):
     """Connects to a function, adds default data then sends that data up and allows the function to add it to the database."""
     
-    function_url = "https://iotsensor-funcs.azurewebsites.net/api/DatabaseInteraction"
-    function_key = "6edFuUYY4CJIFSuP9M0TuvzWdFew2iJW-UaA2I_pTIiOAzFuWlCZow=="
+    function_url = "https://iotsensor-funcs.azurewebsites.net/api/DatabaseAccess"
+    function_key = "SkHNi0keD-EJi0rPfIEa0XO5i5jlp98wVj_BUvA92OSdAzFuuGYHTA=="
 
     client = AzureFunctions(function_url, function_key, key)
 
@@ -34,15 +34,14 @@ def CreateDatabaseDefaultData(key: str):
 def GetDatabaseData(key: str):
     """Retrieves data from database"""
 
-    function_url = "https://iotsensor-funcs.azurewebsites.net/api/DatabaseInteraction"
-    function_key = "6edFuUYY4CJIFSuP9M0TuvzWdFew2iJW-UaA2I_pTIiOAzFuWlCZow=="
+    function_url = "https://iotsensor-funcs.azurewebsites.net/api/DatabaseAccess"
+    function_key = "SkHNi0keD-EJi0rPfIEa0XO5i5jlp98wVj_BUvA92OSdAzFuuGYHTA=="
 
     client = AzureFunctions(function_url, function_key, key)
     json_converter = Json()
 
     expected_types = [
-        "Sensor",
-        "Plant"
+        "TelemetryData",
     ]
 
     TableNames = json_converter.ConvertToJson(expected_types)
@@ -86,7 +85,7 @@ if __name__ == "__main__":
     # Call the function with logging
     try:
         # CreateDatabaseTables(master_key)
-        CreateDatabaseDefaultData(default_key)
-        # GetDatabaseData(default_key)
+        # CreateDatabaseDefaultData(default_key)
+        GetDatabaseData(default_key)
     except Exception as e:
         logging.error(f"Error occurred: {e}")

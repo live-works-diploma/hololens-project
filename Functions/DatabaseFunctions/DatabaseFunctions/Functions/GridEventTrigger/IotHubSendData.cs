@@ -1,43 +1,33 @@
+// Default URL for triggering event grid function in the local environment.
+// http://localhost:7071/runtime/webhooks/EventGrid?functionName={functionname}
+
 using System;
+using System.Text;
+using Azure.Messaging;
 using Azure.Messaging.EventGrid;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Azure;
-using System.Text;
 
-namespace TestApp
+namespace DatabaseFunctions.Functions.GridEventTrigger
 {
-    public class TestFunction
+    public class IotHubSendData
     {
-        private readonly ILogger<TestFunction> _logger;
+        private readonly ILogger<IotHubSendData> _logger;
 
-        public TestFunction(ILogger<TestFunction> logger)
+        public IotHubSendData(ILogger<IotHubSendData> logger)
         {
             _logger = logger;
         }
 
-        [Function("TestDisplayData")]
-        public void DebugInformation([EventGridTrigger] EventGridEvent eventGridEvent)
-        {
-            _logger.LogInformation($"Event received: {eventGridEvent.EventType}");
-            _logger.LogInformation($"Event data: {eventGridEvent.Data}");
-            _logger.LogInformation($"Event subject: {eventGridEvent.Subject}");
-            _logger.LogInformation($"Event timestamp: {eventGridEvent.EventTime}");         
-        }
-
-        [Function("TestEventGridTrigger")]
-        public async Task<IActionResult> TriggerEvent([EventGridTrigger] EventGridEvent eventGridEvent)
+        [Function("IotDeviceSendData")]
+        public async Task<IActionResult> IotDeviceSendData([EventGridTrigger] EventGridEvent eventGridEvent)
         {
             _logger.LogInformation("Received event from Event Grid");
 
             try
             {
-                _logger.LogInformation($"\nEvent grid data: {eventGridEvent.Data.ToObjectFromJson()}");
                 var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(eventGridEvent.Data.ToString());
 
                 if (data == null)
@@ -64,11 +54,6 @@ namespace TestApp
                     return new BadRequestObjectResult("Didn't find the properties");
                 }
 
-                //_logger.LogInformation($"Data: {data}\n");
-                //_logger.LogInformation($"Properties: {customProperties}");
-
-                // Send main message and custom properties to IoT Hub or other processing logic
-
                 return new OkResult();
             }
             catch (Exception ex)
@@ -77,6 +62,5 @@ namespace TestApp
                 return new BadRequestObjectResult(ex.Message);
             }
         }
-
     }
 }

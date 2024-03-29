@@ -41,12 +41,10 @@ class AzureFunctions:
         print(expected_types)
 
         try:
-            url_with_query = f"{self.function_url}?jsonString={expected_types}"
+            url_with_query = f"{self.function_url}?TableNames={expected_types}"
             response = requests.get(url_with_query, headers=headers)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
             print(f"Error retrieving data from database: {e}")
-            if response.status_code != 200:
-                print(f"Response text: {response.text}")
             return {}

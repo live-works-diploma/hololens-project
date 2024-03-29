@@ -32,13 +32,7 @@ except Exception as e:
 
 # Define the message payload using the wanted_message data
 wanted_message = {
-    "Sensor": [
-        {
-            "Name": "Raspberry Pi Sim",
-            "WaterLevel": "1",
-            "PHLevel": "1"
-        }
-    ]
+    "MainMessage": "Main message"
 }
 
 # Convert the wanted_message dictionary to a JSON string
@@ -46,8 +40,9 @@ message_payload = json.dumps(wanted_message)
 
 # Define the message object
 message = Message(message_payload)
-message.custom_properties["Property1"] = "Value1"
-message.custom_properties["Property2"] = "Value2"
+message.custom_properties["Name"] = "Raspberry Pi Sim"
+message.custom_properties["WaterLevel"] = "1"
+message.custom_properties["PhLevel"] = "5"
 
 logging.info("\n")
 try:
