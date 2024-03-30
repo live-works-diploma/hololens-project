@@ -5,45 +5,56 @@ class Default:
     def __init__(self) -> None:
         pass
 
-    def CreateDefaultData(self, number_of_instances: int = 1) -> dict[str, list[dict[str, str]]]:
+    def create_default_data(self, number_of_instances: int = 1) -> dict[str, list[dict[str, str]]]:
         data: dict[str, list[dict[str, str]]] = dict()
 
         types_of_data_to_send: dict = {
             "Sensor": create_sensor_data,
-            # "Plant": create_plant_data,
+            "Plant": create_plant_data,
+            "TelemetryData": create_telemetry_data,
         }
 
         for name in types_of_data_to_send:
             instances: list[dict[str, str]] = []
             
-            instances.append(types_of_data_to_send[name](f"abcd"))
+            instances.append(types_of_data_to_send[name](f"updated data"))
 
             data[name] = instances
 
         return data
     
     def create_default_instance(self):
-        data = {}
+        tables = {}
 
-        data["Sensor"] = ["Name", "WaterLevel", "PhLevel"]
+        tables["Sensor"] = ["Name", "WaterLevel", "PhLevel"]
+        # tables["Plant"] = ["Name", "Scale", "Fruiting"]
+        # tables["TelemetryData"] = ["Name", "Temperature", "Humidity", "WaterLevel", "OverHeating"]
 
-        return data
+        return tables
     
 
-def CreateDefaultValue(min_value: float, max_value: float) -> float:
+def create_random_value(min_value: float, max_value: float) -> float:
     random_number = random.uniform(min_value, max_value)
     return random_number
 
 
-create_plant_data = lambda name : {
+create_plant_data = lambda name: {
     "Name": f"{name}",
-    "Scale": f"{CreateDefaultValue(0.5, 2)}",
-    "Fruiting": "true" if CreateDefaultValue(0, 1) > 0.5 else "false",
+    "Scale": f"{create_random_value(0.5, 2)}",
+    "Fruiting": "true" if create_random_value(0, 1) > 0.5 else "false",
 }
 
-create_sensor_data = lambda name : {
+create_sensor_data = lambda name: {
     "Name": f"{name}",
-    "WaterLevel": f"{CreateDefaultValue(0.1, 3)}",
-    "PhLevel": f"{CreateDefaultValue(2, 10)}",
+    # "WaterLevel": f"{create_random_value(0.1, 3)}",
+    # "PhLevel": f"{create_random_value(2, 10)}",
+}
+
+create_telemetry_data = lambda name: {
+    "Name": f"{name}", 
+    # "Temperature": create_random_value(0, 1), 
+    # "Humidity": f"{create_random_value(0, 1)}", 
+    # "WaterLevel": f"{create_random_value(0, 1)}", 
+    # "OverHeating": "true" if create_random_value(0, 1) > 0.5 else "false",
 }
 

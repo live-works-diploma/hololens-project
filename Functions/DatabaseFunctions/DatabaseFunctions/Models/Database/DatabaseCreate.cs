@@ -13,7 +13,6 @@ namespace DatabaseFunctions.Models.Database
         public static bool CreateTables(ILogger logger, SqlConnectionStringBuilder builder, Dictionary<string, List<string>> tablesAndFields)
         {
             bool success = true;
-            string failMessage = "";
 
             foreach (var table in tablesAndFields)
             {

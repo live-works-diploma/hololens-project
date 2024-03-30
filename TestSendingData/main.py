@@ -11,7 +11,8 @@ import time
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
-def CreateDatabaseDefaultData(key: str):
+
+def create_data(key: str):
     """Connects to a function, adds default data then sends that data up and allows the function to add it to the database."""
     
     function_url = "https://iotsensor-funcs.azurewebsites.net/api/DatabaseAccess"
@@ -22,8 +23,12 @@ def CreateDatabaseDefaultData(key: str):
     default_data = Default()
     json_converter = Json()
 
-    data = default_data.CreateDefaultData()
+    data = default_data.create_default_data()    
     json_data = json_converter.ConvertToJson(data)
+    
+    print(f"Data being sent: {json_data}")
+
+
 
     if client.send_data_to_database(json_data):
         print("Sending data Successful.")
@@ -31,7 +36,7 @@ def CreateDatabaseDefaultData(key: str):
         print("Sending data Unsuccessful.")
 
 
-def GetDatabaseData(key: str):
+def retrieve_data(key: str):
     """Retrieves data from database"""
 
     function_url = "https://iotsensor-funcs.azurewebsites.net/api/DatabaseAccess"
@@ -40,19 +45,24 @@ def GetDatabaseData(key: str):
     client = AzureFunctions(function_url, function_key, key)
     json_converter = Json()
 
-    expected_types = [
-        "TelemetryData",
+    table_names = [
+        # "TelemetryData",
+        # "Plant",
+        "Sensor",
     ]
 
-    TableNames = json_converter.ConvertToJson(expected_types)
+    TableNames = json_converter.ConvertToJson(table_names)
 
-    data = client.retrieve_data_from_database(TableNames)
+    conditions = "[Name] = 'updated data'"
+    # conditions = ""
+
+    data = client.retrieve_data_from_database(TableNames, conditions)
     print(f"data found: {data}")
     
 
-def CreateDatabaseTables(key: str):
-    function_url = "https://iotsensor-funcs.azurewebsites.net/api/DatabaseCreateTable"
-    function_key = "ANjf-r4xfSJwl-c9-ZSDhmnezN0PHlVCfGgH1bfcG2k3AzFuuPE1vw=="
+def create_tables(key: str):
+    function_url = "https://iotsensor-funcs.azurewebsites.net/api/DatabaseTableCreation"
+    function_key = "JOb-JXMCv0Lg7YvnLPrr679np-pEq-ExL8EhXPo3QnwfAzFuxyUhuA=="
 
     client = AzureFunctions(function_url, function_key, key)
 
@@ -62,7 +72,7 @@ def CreateDatabaseTables(key: str):
     data = default_data.create_default_instance()
     json_data = json_converter.ConvertToJson(data)
 
-    print(json_data)
+    print(f"Data being sent: {json_data}")
 
     if client.send_data_to_database(json_data):
         print("Create Tables Successful.")
@@ -70,8 +80,8 @@ def CreateDatabaseTables(key: str):
         print("Create Tables Unsuccessful.")
 
 
-master_key = "xY9WO3XPmVvAy9KwdmGTULuVIlfy_q4dn3Oi-NNd5oWCAzFuM2azqw=="
-default_key = "AvDHmPkNon7U2I2cgVNYkwKORH6H4HBNYQT5OvF1rd41AzFuJdfj3Q=="
+master_key = "xY9WO3XPmVvAy9KwdmGTULuVIlfy_q4dn3Oi-NNd5oWCAzFuM2azqw=="     # works for everything
+default_key = "AvDHmPkNon7U2I2cgVNYkwKORH6H4HBNYQT5OvF1rd41AzFuJdfj3Q=="    # works for function authority and below (basically everything except creating / updating tables)
 
 
 if __name__ == "__main__":
@@ -84,8 +94,8 @@ if __name__ == "__main__":
 
     # Call the function with logging
     try:
-        # CreateDatabaseTables(master_key)
-        # CreateDatabaseDefaultData(default_key)
-        GetDatabaseData(default_key)
+        # create_tables(master_key)
+        # create_data(default_key)
+        retrieve_data(default_key)
     except Exception as e:
         logging.error(f"Error occurred: {e}")

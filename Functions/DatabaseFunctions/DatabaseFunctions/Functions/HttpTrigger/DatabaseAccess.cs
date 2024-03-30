@@ -43,7 +43,13 @@ namespace DatabaseFunctions.Functions.HttpTrigger
         {
             try
             {
-                string requestBody = req.Query["TableNames"] ?? "";
+                string requestBody = req.Query["TableNames"];                
+
+                if (requestBody == null)
+                {
+                    return req.CreateResponse(HttpStatusCode.BadRequest);
+                }
+                
                 logger.LogInformation($"Request body: {requestBody}");
 
                 string[] tableNames = JsonConvert.DeserializeObject<string[]>(requestBody);
@@ -61,7 +67,9 @@ namespace DatabaseFunctions.Functions.HttpTrigger
                     tableNames[i] = $"[dbo].[{tableNames[i]}]";
                 }
 
-                var data = DatabaseRetrieve.DatabaseGet(logger, AzureAccountInfo.builder, tableNames);
+                string conditions = req.Query["Conditions"] ?? "";
+
+                var data = DatabaseRetrieve.DatabaseGet(logger, AzureAccountInfo.builder, tableNames, conditions);
 
                 var response = req.CreateResponse(HttpStatusCode.OK);
                 await response.WriteAsJsonAsync(data);
@@ -81,7 +89,6 @@ namespace DatabaseFunctions.Functions.HttpTrigger
             }            
         }
 
-
         async Task<HttpResponseData> SendToDatabase(ILogger logger, HttpRequestData req)
         {
             try
@@ -96,7 +103,12 @@ namespace DatabaseFunctions.Functions.HttpTrigger
                     return req.CreateResponse(HttpStatusCode.BadRequest);
                 }
 
-                DatabaseSend.DatabaseSave(logger, AzureAccountInfo.builder, contentToSave);
+                string allowUpdateStr = req.Query["AllowUpdate"] ?? false.ToString();
+                string conditions = req.Query["Conditions"] ?? "";
+
+                bool allowUpdate = bool.Parse(allowUpdateStr);
+
+                DatabaseSend.DatabaseSave(logger, AzureAccountInfo.builder, contentToSave, allowUpdate, conditions);
 
                 return req.CreateResponse(HttpStatusCode.OK);
             }

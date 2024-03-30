@@ -15,21 +15,27 @@ class AzureFunctions:
                 "x-functions-key": self.access_key
             }
 
-            response = requests.post(self.function_url, headers=headers, json=data)
+            queries = [
+                "AllowUpdate=True",
+                "Conditions=[Name]='new data'"
+            ]
+
+            function_url_query = f"{self.function_url}?{'&'.join(queries)}"
+
+            response = requests.post(function_url_query, headers=headers, json=data)
             response.raise_for_status()
             return True
         except requests.exceptions.RequestException as e:
             print(f"Error sending data to database: {e}")
             if hasattr(e, 'response') and e.response is not None:
                 print(f"Response status code: {e.response.status_code}")
-                print(f"Response text: {e.response.text}")
             return False
         
 
-    def retrieve_data_from_database(self, expected_types: str) -> dict:
+    def retrieve_data_from_database(self, table_names: str, conditions: str = "") -> dict:
         """Retrieves data from the database."""
 
-        if not expected_types:
+        if not table_names:
             print("Expected types cannot be null or empty.")
             return {}
 
@@ -38,10 +44,17 @@ class AzureFunctions:
             "x-functions-key": self.access_key,
         }
 
-        print(expected_types)
+        print(table_names)
 
         try:
-            url_with_query = f"{self.function_url}?TableNames={expected_types}"
+            queries = [
+                f"TableNames={table_names}"      
+            ]
+
+            if conditions != "":
+                queries.append(f"Conditions={conditions}")
+
+            url_with_query = f"{self.function_url}?{'&'.join(queries)}"
             response = requests.get(url_with_query, headers=headers)
             response.raise_for_status()
             return response.json()

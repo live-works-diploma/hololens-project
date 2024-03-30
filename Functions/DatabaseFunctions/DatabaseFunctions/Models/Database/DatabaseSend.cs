@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -10,30 +11,52 @@ namespace DatabaseFunctions.Models.Database
 {
     public class DatabaseSend
     {
-        public static void DatabaseSave(ILogger logger, SqlConnectionStringBuilder builder, Dictionary<string, List<Dictionary<string, string>>> contentToSave)
+        public static void DatabaseSave(ILogger logger, SqlConnectionStringBuilder builder, Dictionary<string, List<Dictionary<string, string>>> contentToSave, bool allowUpdate, string condition)
         {
-            Action<string, SqlConnection> saveToDatabase = (tableName, connection) =>
+            foreach (var tableName in contentToSave.Keys)
             {
                 List<Dictionary<string, string>> content = contentToSave[tableName];
 
-                for (int i = 0; i < content.Count; i++)
+                foreach (var record in content)
                 {
-                    string columns = string.Join(",", content[i].Keys.Select(k => $"[{k}]"));
-                    string values = string.Join(",", content[i].Keys.Select(k => $"@{k}"));
-                    string query = $"INSERT INTO [{tableName}] ({columns}) VALUES ({values})";
+                    string columns = string.Join(",", record.Keys.Select(k => $"[{k}]"));
+                    string values = string.Join(",", record.Keys.Select(k => $"@{k}"));
+                    string setValues = string.Join(",", record.Keys.Select(k => $"[{k}] = @{k}"));
 
-                    logger.LogInformation($"query for entering into database: {query}");
+                    string insertQuery = $"INSERT INTO [{tableName}] ({columns}) VALUES ({values})";
+                    string updateQuery = $"UPDATE [{tableName}] SET {setValues} WHERE {condition}";
 
                     try
                     {
-                        using (SqlCommand command = new SqlCommand(query, connection))
+                        using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
                         {
-                            foreach (var kvp in content[i])
+                            connection.Open();
+
+                            string commandText = insertQuery;
+                            if (allowUpdate && !string.IsNullOrEmpty(condition))
                             {
-                                command.Parameters.AddWithValue($"@{kvp.Key}", kvp.Value);
+                                string selectQuery = $"SELECT COUNT(*) FROM [{tableName}] WHERE {condition}";
+                                using (SqlCommand checkCommand = new SqlCommand(selectQuery, connection))
+                                {
+                                    int count = (int)checkCommand.ExecuteScalar();
+                                    if (count > 0)
+                                    {
+                                        commandText = updateQuery;
+                                    }
+                                }
                             }
 
-                            command.ExecuteNonQuery();
+                            using (SqlCommand command = new SqlCommand(commandText, connection))
+                            {
+                                foreach (var kvp in record)
+                                {
+                                    command.Parameters.AddWithValue($"@{kvp.Key}", kvp.Value);
+                                }
+
+                                command.ExecuteNonQuery();
+                            }
+
+                            connection.Close();
                         }
                     }
                     catch (Exception ex)
@@ -41,11 +64,6 @@ namespace DatabaseFunctions.Models.Database
                         logger.LogError($"Error sending command to database: {ex.Message}");
                     }
                 }
-            };
-
-            foreach (var type in contentToSave.Keys)
-            {
-                DatabaseConnection.AccessDatabase(logger, type, builder, saveToDatabase);
             }
         }
 

@@ -14,12 +14,12 @@ namespace DatabaseFunctions.Models.Database
 {
     public class DatabaseRetrieve
     {
-        public static Dictionary<string, List<Dictionary<string, string>>>? DatabaseGet(ILogger logger, SqlConnectionStringBuilder builder, string[] tableNames)
+        public static Dictionary<string, List<Dictionary<string, string>>>? DatabaseGet(ILogger logger, SqlConnectionStringBuilder builder, string[] tableNames, string conditions)
         {
             Func<string, SqlConnection, List<Dictionary<string, string>>> function = (tableName, connection) =>
             {
-                string query = $"SELECT * FROM {tableName}";
-
+                string query = conditions == "" ? $"SELECT * FROM {tableName}" : $"SELECT * FROM {tableName} WHERE {conditions}";                           
+                            
                 using (SqlCommand command = new SqlCommand(query, connection))
                 using (SqlDataReader reader = command.ExecuteReader())
                 {                   

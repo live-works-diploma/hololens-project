@@ -3,10 +3,6 @@
   "WorkspaceRootPath": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|d:\\dip stage 2\\hololens-project\\functions\\databasefunctions\\databasefunctions\\models\\azureaccountinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|solutionrelative:databasefunctions\\models\\azureaccountinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|d:\\dip stage 2\\hololens-project\\functions\\databasefunctions\\databasefunctions\\functions\\httptrigger\\databaseaccess.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|solutionrelative:databasefunctions\\functions\\httptrigger\\databaseaccess.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -18,7 +14,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -26,28 +22,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "DatabaseAccess.cs",
               "DocumentMoniker": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Functions\\HttpTrigger\\DatabaseAccess.cs",
               "RelativeDocumentMoniker": "DatabaseFunctions\\Functions\\HttpTrigger\\DatabaseAccess.cs",
               "ToolTip": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Functions\\HttpTrigger\\DatabaseAccess.cs",
               "RelativeToolTip": "DatabaseFunctions\\Functions\\HttpTrigger\\DatabaseAccess.cs",
-              "ViewState": "AQIAACEAAAAAAAAAAAAqwC0AAAA2AAAA",
+              "ViewState": "AQIAAFAAAAAAAAAAAAAwwGkAAAA+AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-29T18:38:01.558Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "AzureAccountInfo.cs",
-              "DocumentMoniker": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Models\\AzureAccountInfo.cs",
-              "RelativeDocumentMoniker": "DatabaseFunctions\\Models\\AzureAccountInfo.cs",
-              "ToolTip": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Models\\AzureAccountInfo.cs",
-              "RelativeToolTip": "DatabaseFunctions\\Models\\AzureAccountInfo.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAA3AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-29T18:34:17.998Z",
+              "WhenOpened": "2024-03-30T18:46:16.031Z",
               "EditorCaption": ""
             }
           ]

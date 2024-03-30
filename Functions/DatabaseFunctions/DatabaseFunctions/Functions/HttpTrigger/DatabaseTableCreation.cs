@@ -39,7 +39,7 @@ namespace DatabaseFunctions.Functions.HttpTrigger
 
                 bool success = DatabaseCreate.CreateTables(logger, AzureAccountInfo.builder, tableAndFields);
 
-                if (success)
+                if (!success)
                 {
                     return req.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
                 }

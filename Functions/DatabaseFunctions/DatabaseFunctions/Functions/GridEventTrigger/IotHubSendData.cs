@@ -22,7 +22,7 @@ namespace DatabaseFunctions.Functions.GridEventTrigger
         }
 
         [Function("IotDeviceSendData")]
-        public async Task<IActionResult> IotDeviceSendData([EventGridTrigger] EventGridEvent eventGridEvent)
+        public IActionResult IotDeviceSendData([EventGridTrigger] EventGridEvent eventGridEvent)
         {
             _logger.LogInformation("Received event from Event Grid");
 
@@ -33,28 +33,29 @@ namespace DatabaseFunctions.Functions.GridEventTrigger
                 if (data == null)
                 {
                     return new BadRequestObjectResult("Didn't find the data");
-                }
-
-                var bodyBase64 = data["body"].ToString();
-                var bodyBytes = Convert.FromBase64String(bodyBase64);
-                var bodyMessage = Encoding.UTF8.GetString(bodyBytes);
-
-                var bodyData = JsonConvert.DeserializeObject<Dictionary<string, object>>(bodyMessage);
-                var mainMessage = bodyData.ContainsKey("MainMessage") ? bodyData["MainMessage"].ToString() : "Main message not found";
-
-                var customProperties = data["properties"];
+                }        
 
                 foreach (var key in data.Keys)
                 {
                     _logger.LogInformation($"Data key: {key}, data value: {data[key]}");
                 }
+                
+                var customProperties = data["properties"];
 
                 if (customProperties == null)
                 {
                     return new BadRequestObjectResult("Didn't find the properties");
                 }
 
+                _logger.LogInformation($"Custom Properties type: {customProperties.GetType()}");
+                _logger.LogInformation($"Custom Properties: {customProperties}");
+
                 return new OkResult();
+            }
+            catch (JsonException ex)
+            {
+                _logger.LogError($"Error deserializing object: {ex}");
+                return new BadRequestObjectResult(ex.Message);
             }
             catch (Exception ex)
             {
