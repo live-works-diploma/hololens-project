@@ -11,45 +11,35 @@ using Newtonsoft.Json;
 using System.Net;
 using System.Net.Mail;
 
-namespace DatabaseFunctions.Functions.HttpTrigger
+namespace DatabaseFunctions.Functions.HttpTrigger.DataAccess
 {
-    public class DatabaseAccess
+    public class DatabaseGetItem
     {
-        readonly ILogger<DatabaseAccess> _logger;
+        readonly ILogger<DatabaseGetItem> _logger;
 
-        public DatabaseAccess(ILogger<DatabaseAccess> logger)
+        public DatabaseGetItem(ILogger<DatabaseGetItem> logger)
         {
             _logger = logger;
         }
 
-        [Function("DatabaseAccess")]
-        public async Task<HttpResponseData> DataInteraction([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req, FunctionContext context)
+        [Function("DatabaseGetItem")]
+        public async Task<HttpResponseData> DataInteraction([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req, FunctionContext context)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
-
-            if (req.Method == "POST")
-            {
-                return await SendToDatabase(_logger, req);
-            }
-            if (req.Method == "GET")
-            {
-                return await RetrieveFromDatabase(_logger, req);
-            }
-
-            return req.CreateResponse(HttpStatusCode.NotFound);
+            return await RetrieveFromDatabase(_logger, req);
         }
 
         async Task<HttpResponseData> RetrieveFromDatabase(ILogger logger, HttpRequestData req)
         {
             try
             {
-                string requestBody = req.Query["TableNames"];                
+                string requestBody = req.Query["TableNames"];
 
                 if (requestBody == null)
                 {
                     return req.CreateResponse(HttpStatusCode.BadRequest);
                 }
-                
+
                 logger.LogInformation($"Request body: {requestBody}");
 
                 string[] tableNames = JsonConvert.DeserializeObject<string[]>(requestBody);
@@ -85,41 +75,6 @@ namespace DatabaseFunctions.Functions.HttpTrigger
             {
                 string errorMessage = $"An error occurred: {ex.Message}";
                 logger.LogError(errorMessage);
-                return req.CreateResponse(HttpStatusCode.InternalServerError);
-            }            
-        }
-
-        async Task<HttpResponseData> SendToDatabase(ILogger logger, HttpRequestData req)
-        {
-            try
-            {
-                string reqBody = await new StreamReader(req.Body).ReadToEndAsync();
-
-                var contentToSave = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, string>>>>(reqBody);
-
-                if (contentToSave == null)
-                {
-                    logger.LogError("Couldn't find request body");
-                    return req.CreateResponse(HttpStatusCode.BadRequest);
-                }
-
-                string allowUpdateStr = req.Query["AllowUpdate"] ?? false.ToString();
-                string conditions = req.Query["Conditions"] ?? "";
-
-                bool allowUpdate = bool.Parse(allowUpdateStr);
-
-                DatabaseSend.DatabaseSave(logger, AzureAccountInfo.builder, contentToSave, allowUpdate, conditions);
-
-                return req.CreateResponse(HttpStatusCode.OK);
-            }
-            catch (JsonException ex)
-            {
-                logger.LogError($"Error deserializing JSON: {ex.Message}");
-                return req.CreateResponse(HttpStatusCode.BadRequest);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError($"Error sending data to database: {ex}");
                 return req.CreateResponse(HttpStatusCode.InternalServerError);
             }
         }

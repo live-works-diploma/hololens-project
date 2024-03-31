@@ -8,18 +8,29 @@ class Default:
     def create_default_data(self, number_of_instances: int = 1) -> dict[str, list[dict[str, str]]]:
         data: dict[str, list[dict[str, str]]] = dict()
 
-        types_of_data_to_send: dict = {
-            "Sensor": create_sensor_data,
+        types_of_data_to_send: dict = {            
             "Plant": create_plant_data,
             "TelemetryData": create_telemetry_data,
+            "Sensor": create_sensor_data,
         }
 
         for name in types_of_data_to_send:
             instances: list[dict[str, str]] = []
             
-            instances.append(types_of_data_to_send[name](f"updated data"))
+            for i in range(number_of_instances):
+                instances.append(types_of_data_to_send[name](f"instance ({i})", i))
 
             data[name] = instances
+
+        return data
+    
+    def create_random_upate_data(self, number_of_instances: int = 1):
+        data = []
+
+        for i in range(number_of_instances):
+            instance_data = create_sensor_data(f"New Updated Data ({i})", i)
+            instance_data["id"] = f"{i+1}"
+            data.append(instance_data)
 
         return data
     
@@ -38,23 +49,23 @@ def create_random_value(min_value: float, max_value: float) -> float:
     return random_number
 
 
-create_plant_data = lambda name: {
+create_plant_data = lambda name, id: {
     "Name": f"{name}",
     "Scale": f"{create_random_value(0.5, 2)}",
     "Fruiting": "true" if create_random_value(0, 1) > 0.5 else "false",
 }
 
-create_sensor_data = lambda name: {
+create_sensor_data = lambda name, id: {
     "Name": f"{name}",
-    # "WaterLevel": f"{create_random_value(0.1, 3)}",
-    # "PhLevel": f"{create_random_value(2, 10)}",
+    "WaterLevel": f"My Wate Level",
+    "PhLevel": f"{create_random_value(2, 10)}",
 }
 
-create_telemetry_data = lambda name: {
+create_telemetry_data = lambda name, id: {
     "Name": f"{name}", 
-    # "Temperature": create_random_value(0, 1), 
-    # "Humidity": f"{create_random_value(0, 1)}", 
-    # "WaterLevel": f"{create_random_value(0, 1)}", 
-    # "OverHeating": "true" if create_random_value(0, 1) > 0.5 else "false",
+    "Temperature": create_random_value(0, 1), 
+    "Humidity": f"{create_random_value(0, 1)}", 
+    "WaterLevel": f"{create_random_value(0, 1)}", 
+    "OverHeating": "true" if create_random_value(0, 1) > 0.5 else "false",
 }
 

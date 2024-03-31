@@ -3,9 +3,7 @@ from app.json import Json
 from app.default_data import Default
 
 import logging
-from msal import ConfidentialClientApplication
-# pip install msal
-import time
+from msal import ConfidentialClientApplication # pip install msal
 
 
 # Configure logging
@@ -15,8 +13,8 @@ logging.basicConfig(level=logging.INFO)
 def create_data(key: str):
     """Connects to a function, adds default data then sends that data up and allows the function to add it to the database."""
     
-    function_url = "https://iotsensor-funcs.azurewebsites.net/api/DatabaseAccess"
-    function_key = "SkHNi0keD-EJi0rPfIEa0XO5i5jlp98wVj_BUvA92OSdAzFuuGYHTA=="
+    function_url = "https://iotsensor-funcs.azurewebsites.net/api/DatabaseInsertItem"
+    function_key = "OnW_5R3npJxH-K0YolOjnHqyLis3HQQezb4BzG55MnIgAzFuWXxvzg=="
 
     client = AzureFunctions(function_url, function_key, key)
 
@@ -28,8 +26,6 @@ def create_data(key: str):
     
     print(f"Data being sent: {json_data}")
 
-
-
     if client.send_data_to_database(json_data):
         print("Sending data Successful.")
     else:
@@ -39,8 +35,8 @@ def create_data(key: str):
 def retrieve_data(key: str):
     """Retrieves data from database"""
 
-    function_url = "https://iotsensor-funcs.azurewebsites.net/api/DatabaseAccess"
-    function_key = "SkHNi0keD-EJi0rPfIEa0XO5i5jlp98wVj_BUvA92OSdAzFuuGYHTA=="
+    function_url = "https://iotsensor-funcs.azurewebsites.net/api/DatabaseGetItem"
+    function_key = "tZZDyPwLOOM6QcRV8FufauF1hICAm8-BcrH8POGmPrMXAzFuZ7toqw=="
 
     client = AzureFunctions(function_url, function_key, key)
     json_converter = Json()
@@ -53,12 +49,40 @@ def retrieve_data(key: str):
 
     TableNames = json_converter.ConvertToJson(table_names)
 
-    conditions = "[Name] = 'updated data'"
-    # conditions = ""
+    conditions = ""
 
     data = client.retrieve_data_from_database(TableNames, conditions)
     print(f"data found: {data}")
     
+
+def update_data(key: str):
+    function_url = "https://iotsensor-funcs.azurewebsites.net/api/DatabaseUpdateItem"
+    function_key = "2Xba3QinJQZ_xk3xDEhKpC9vveiwuB2f3Ca-CxXDaneeAzFu0ATKzQ=="
+
+    client = AzureFunctions(function_url, function_key, key)
+
+    default_data = Default()
+    json_converter = Json()
+
+    data = default_data.create_random_upate_data(1)    
+    json_data = json_converter.ConvertToJson(data)
+    
+    print(f"Data being sent: {json_data}")
+
+    queries = [
+        "TableName=Sensor",
+        "ConditionColumn=Name",
+    ]
+
+    if client.send_data_to_database(json_data, queries):
+        print("Sending data Successful.")
+    else:
+        print("Sending data Unsuccessful.")
+
+
+def delete_data(key: str):
+    ...
+
 
 def create_tables(key: str):
     function_url = "https://iotsensor-funcs.azurewebsites.net/api/DatabaseTableCreation"
@@ -95,7 +119,11 @@ if __name__ == "__main__":
     # Call the function with logging
     try:
         # create_tables(master_key)
+
+        # retrieve_data(default_key)
         # create_data(default_key)
-        retrieve_data(default_key)
+        # update_data(default_key)  
+        # delete_data(default_key)    
+        pass  
     except Exception as e:
         logging.error(f"Error occurred: {e}")

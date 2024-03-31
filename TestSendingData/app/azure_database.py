@@ -7,7 +7,7 @@ class AzureFunctions:
         self.function_key = function_key
         self.access_key = access_key
 
-    def send_data_to_database(self, data: dict) -> bool:
+    def send_data_to_database(self, data: dict, extra_queries: list[str] = []) -> bool:
         """Sends data to the Azure Function to be saved to the database."""
         try:
             headers = {
@@ -15,12 +15,7 @@ class AzureFunctions:
                 "x-functions-key": self.access_key
             }
 
-            queries = [
-                "AllowUpdate=True",
-                "Conditions=[Name]='new data'"
-            ]
-
-            function_url_query = f"{self.function_url}?{'&'.join(queries)}"
+            function_url_query = f"{self.function_url}?{'&'.join(extra_queries)}"
 
             response = requests.post(function_url_query, headers=headers, json=data)
             response.raise_for_status()
@@ -55,6 +50,9 @@ class AzureFunctions:
                 queries.append(f"Conditions={conditions}")
 
             url_with_query = f"{self.function_url}?{'&'.join(queries)}"
+
+            print(url_with_query)
+
             response = requests.get(url_with_query, headers=headers)
             response.raise_for_status()
             return response.json()

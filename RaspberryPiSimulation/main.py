@@ -40,7 +40,7 @@ message_payload = json.dumps(wanted_message)
 
 # Define the message object
 message = Message(message_payload)
-message.custom_properties["Name"] = "Raspberry Pi Sim"
+message.custom_properties["Name"] = "New Raspberry Pi"
 message.custom_properties["WaterLevel"] = "1"
 message.custom_properties["PhLevel"] = "5"
 

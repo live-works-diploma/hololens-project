@@ -5,6 +5,9 @@ using System;
 using System.Text;
 using Azure.Messaging;
 using Azure.Messaging.EventGrid;
+using DatabaseFunctions.Functions.HttpTrigger;
+using DatabaseFunctions.Models;
+using DatabaseFunctions.Models.Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -49,6 +52,17 @@ namespace DatabaseFunctions.Functions.GridEventTrigger
 
                 _logger.LogInformation($"Custom Properties type: {customProperties.GetType()}");
                 _logger.LogInformation($"Custom Properties: {customProperties}");
+
+                var myProperties = JsonConvert.DeserializeObject<Dictionary<string, string>>(customProperties.ToString());
+
+                _logger.LogInformation($"My props: {myProperties}");
+
+                foreach (var key in myProperties.Keys)
+                {
+                    _logger.LogInformation($"My properties key: {key}, value: {myProperties[key]}");
+                }
+
+                DatabaseSend.InsertRecord(_logger, AzureAccountInfo.builder, "Sensor", myProperties);
 
                 return new OkResult();
             }

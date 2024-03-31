@@ -11,65 +11,96 @@ namespace DatabaseFunctions.Models.Database
 {
     public class DatabaseSend
     {
-        public static void DatabaseSave(ILogger logger, SqlConnectionStringBuilder builder, Dictionary<string, List<Dictionary<string, string>>> contentToSave, bool allowUpdate, string condition)
+        public static void DatabaseSaveAll(ILogger logger, SqlConnectionStringBuilder builder, Dictionary<string, List<Dictionary<string, string>>> contentToSave)
         {
             foreach (var tableName in contentToSave.Keys)
             {
                 List<Dictionary<string, string>> content = contentToSave[tableName];
 
-                foreach (var record in content)
+                for (int i = 0; i < content.Count; i++)
                 {
-                    string columns = string.Join(",", record.Keys.Select(k => $"[{k}]"));
-                    string values = string.Join(",", record.Keys.Select(k => $"@{k}"));
-                    string setValues = string.Join(",", record.Keys.Select(k => $"[{k}] = @{k}"));
-
-                    string insertQuery = $"INSERT INTO [{tableName}] ({columns}) VALUES ({values})";
-                    string updateQuery = $"UPDATE [{tableName}] SET {setValues} WHERE {condition}";
-
-                    try
-                    {
-                        using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
-                        {
-                            connection.Open();
-
-                            string commandText = insertQuery;
-                            if (allowUpdate && !string.IsNullOrEmpty(condition))
-                            {
-                                string selectQuery = $"SELECT COUNT(*) FROM [{tableName}] WHERE {condition}";
-                                using (SqlCommand checkCommand = new SqlCommand(selectQuery, connection))
-                                {
-                                    int count = (int)checkCommand.ExecuteScalar();
-                                    if (count > 0)
-                                    {
-                                        commandText = updateQuery;
-                                    }
-                                }
-                            }
-
-                            using (SqlCommand command = new SqlCommand(commandText, connection))
-                            {
-                                foreach (var kvp in record)
-                                {
-                                    command.Parameters.AddWithValue($"@{kvp.Key}", kvp.Value);
-                                }
-
-                                command.ExecuteNonQuery();
-                            }
-
-                            connection.Close();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.LogError($"Error sending command to database: {ex.Message}");
-                    }
+                    InsertRecord(logger, builder, tableName, content[i]);
                 }
             }
         }
 
-        public static void DatabaseUpdate()
+        public static void InsertRecord(ILogger logger, SqlConnectionStringBuilder builder, string tableName, Dictionary<string, string> record)
         {
+            string columns = string.Join(",", record.Keys.Select(k => $"[{k}]"));
+            string values = string.Join(",", record.Keys.Select(k => $"@{k}"));
+            string insertQuery = $"INSERT INTO [{tableName}] ({columns}) VALUES ({values})";
 
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(insertQuery, connection))
+                    {
+                        foreach (var kvp in record)
+                        {
+                            command.Parameters.AddWithValue($"@{kvp.Key}", kvp.Value);
+                        }
+
+                        command.ExecuteNonQuery();
+                    }
+
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error inserting record into database: {ex.Message}");
+            }
         }
+
+        public static void UpdateAllRecords(ILogger logger, SqlConnectionStringBuilder builder, string tableName, List<Dictionary<string, string>> records, string conditionColumn)
+        {
+            foreach (var record in records)
+            {
+                if (record.TryGetValue(conditionColumn, out var conditionValue))
+                {
+                    string condition = $"[{conditionColumn}] = '{conditionValue}'";
+                    logger.LogInformation($"Condition: {condition}");
+                    UpdateRecord(logger, builder, tableName, record, condition);
+                }
+                else
+                {
+                    logger.LogError($"Condition column '{conditionColumn}' not found in record.");
+                }
+            }
+        }
+
+        public static void UpdateRecord(ILogger logger, SqlConnectionStringBuilder builder, string tableName, Dictionary<string, string> record, string condition)
+        {
+            string setValues = string.Join(",", record.Keys.Where(k => k != "id").Select(k => $"[{k}] = @{k}"));
+            string updateQuery = $"UPDATE [{tableName}] SET {setValues} WHERE {condition}";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+                {
+                    connection.Open();
+
+                    using (SqlCommand command = new SqlCommand(updateQuery, connection))
+                    {
+                        foreach (var kvp in record)
+                        {
+                            command.Parameters.AddWithValue($"@{kvp.Key}", kvp.Value);
+                        }
+
+                        command.ExecuteNonQuery();
+                    }
+
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error updating record in database: {ex.Message}");
+            }
+        }
+
     }
 }
