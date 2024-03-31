@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DatabaseFunctions.Models.Database
+namespace DatabaseFunctions.Models.Database.Tables
 {
-    public class DatabaseCreate
+    public class ModelDBTableCreate
     {
         public static bool CreateTables(ILogger logger, SqlConnectionStringBuilder builder, Dictionary<string, List<string>> tablesAndFields)
         {
@@ -49,7 +49,7 @@ namespace DatabaseFunctions.Models.Database
             {
                 try
                 {
-                    string columnString = String.Join(", ", columnsWithTypes);
+                    string columnString = string.Join(", ", columnsWithTypes);
                     string query = $"CREATE TABLE {tableName} ({columnString})";
 
                     logger.LogInformation($"column string: {columnString}");
@@ -67,7 +67,7 @@ namespace DatabaseFunctions.Models.Database
                 }
             };
 
-            DatabaseConnection.AccessDatabase(logger, tableName, builder, createNewTable);
+            ModelDBConnect.AccessDatabase(logger, tableName, builder, createNewTable);
 
             return success;
         }

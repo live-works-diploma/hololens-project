@@ -18,7 +18,7 @@ class Default:
             instances: list[dict[str, str]] = []
             
             for i in range(number_of_instances):
-                instances.append(types_of_data_to_send[name](f"instance ({i})", i))
+                instances.append(types_of_data_to_send[name](f"instance ({i})"))
 
             data[name] = instances
 
@@ -28,7 +28,7 @@ class Default:
         data = []
 
         for i in range(number_of_instances):
-            instance_data = create_sensor_data(f"New Updated Data ({i})", i)
+            instance_data = create_sensor_data(f"Sensor Data ({i})")
             instance_data["id"] = f"{i+1}"
             data.append(instance_data)
 
@@ -37,9 +37,9 @@ class Default:
     def create_default_instance(self):
         tables = {}
 
-        tables["Sensor"] = ["Name", "WaterLevel", "PhLevel"]
-        # tables["Plant"] = ["Name", "Scale", "Fruiting"]
-        # tables["TelemetryData"] = ["Name", "Temperature", "Humidity", "WaterLevel", "OverHeating"]
+        # tables["Sensor"] = ["Name", "WaterLevel", "PhLevel"]
+        tables["Plant"] = ["Name", "Scale", "Fruiting"]
+        tables["TelemetryData"] = ["Name", "Temperature", "Humidity", "WaterLevel", "OverHeating"]
 
         return tables
     
@@ -49,19 +49,19 @@ def create_random_value(min_value: float, max_value: float) -> float:
     return random_number
 
 
-create_plant_data = lambda name, id: {
+create_plant_data = lambda name: {
     "Name": f"{name}",
     "Scale": f"{create_random_value(0.5, 2)}",
     "Fruiting": "true" if create_random_value(0, 1) > 0.5 else "false",
 }
 
-create_sensor_data = lambda name, id: {
+create_sensor_data = lambda name: {
     "Name": f"{name}",
-    "WaterLevel": f"My Wate Level",
+    "WaterLevel": f"{create_random_value(0, 5)}",
     "PhLevel": f"{create_random_value(2, 10)}",
 }
 
-create_telemetry_data = lambda name, id: {
+create_telemetry_data = lambda name: {
     "Name": f"{name}", 
     "Temperature": create_random_value(0, 1), 
     "Humidity": f"{create_random_value(0, 1)}", 

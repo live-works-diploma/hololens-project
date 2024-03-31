@@ -1,5 +1,5 @@
+using DatabaseFunctions.Models.Database.Items;
 using DatabaseFunctions.Models.Database;
-using DatabaseFunctions.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
@@ -10,38 +10,37 @@ using System.Net;
 
 namespace DatabaseFunctions.Functions.HttpTrigger.DataAccess
 {
-    public class DatabaseInsertItem
+    public class HttpDBItemDelete
     {
-        private readonly ILogger<DatabaseInsertItem> _logger;
+        private readonly ILogger<HttpDBItemDelete> _logger;
 
-        public DatabaseInsertItem(ILogger<DatabaseInsertItem> logger)
+        public HttpDBItemDelete(ILogger<HttpDBItemDelete> logger)
         {
             _logger = logger;
         }
 
-        [Function("DatabaseInsertItem")]
+        [Function("HttpDBItemDelete")]
         public async Task<HttpResponseData> DataInteraction([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req, FunctionContext context)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
-
-            return await SendToDatabase(_logger, req);
+            return await DeleteFromDatabase(_logger, req);
         }
 
-        async Task<HttpResponseData> SendToDatabase(ILogger logger, HttpRequestData req)
+        async Task<HttpResponseData> DeleteFromDatabase(ILogger logger, HttpRequestData req)
         {
             try
             {
                 string reqBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-                var contentToSave = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, string>>>>(reqBody);
+                var contentToDelete = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, string>>>>(reqBody);
 
-                if (contentToSave == null)
+                if (contentToDelete == null)
                 {
                     logger.LogError("Couldn't find request body");
                     return req.CreateResponse(HttpStatusCode.BadRequest);
                 }
 
-                DatabaseSend.DatabaseSaveAll(logger, AzureAccountInfo.builder, contentToSave);
+                ModelDBItemDelete.DatabaseDeleteAll(logger, ModelDBAccountInfo.builder, contentToDelete); 
 
                 return req.CreateResponse(HttpStatusCode.OK);
             }

@@ -1,8 +1,8 @@
 ﻿using Microsoft.Data.SqlClient;
 
-namespace DatabaseFunctions.Models
+namespace DatabaseFunctions.Models.Database
 {
-    public class AzureAccountInfo
+    public class ModelDBAccountInfo
     {
         // database information
         static SqlConnectionStringBuilder _builder = new SqlConnectionStringBuilder();

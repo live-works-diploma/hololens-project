@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DatabaseFunctions.Models.Database
 {
-    public class DatabaseConnection
+    public class ModelDBConnect
     {
         static void OpenConnection(SqlConnection connection, ILogger logger)
         {
@@ -62,14 +62,14 @@ namespace DatabaseFunctions.Models.Database
             }
         }
 
-        public static void AccessDatabase(ILogger logger, string tableName, SqlConnectionStringBuilder builder, Action<string, SqlConnection> whatToDoWithDatabase)
+        public static void AccessDatabase(ILogger logger, string input, SqlConnectionStringBuilder builder, Action<string, SqlConnection> whatToDoWithDatabase)
         {
             using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
             {
                 OpenConnection(connection, logger);
                 try
                 {
-                    whatToDoWithDatabase(tableName, connection);
+                    whatToDoWithDatabase(input, connection);
                 }
                 catch (Exception ex)
                 {

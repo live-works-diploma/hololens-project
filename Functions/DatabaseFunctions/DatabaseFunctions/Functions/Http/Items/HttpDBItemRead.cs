@@ -1,6 +1,6 @@
 using Azure;
-using DatabaseFunctions.Models;
 using DatabaseFunctions.Models.Database;
+using DatabaseFunctions.Models.Database.Items;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
@@ -13,16 +13,16 @@ using System.Net.Mail;
 
 namespace DatabaseFunctions.Functions.HttpTrigger.DataAccess
 {
-    public class DatabaseGetItem
+    public class HttpDBItemRead
     {
-        readonly ILogger<DatabaseGetItem> _logger;
+        readonly ILogger<HttpDBItemRead> _logger;
 
-        public DatabaseGetItem(ILogger<DatabaseGetItem> logger)
+        public HttpDBItemRead(ILogger<HttpDBItemRead> logger)
         {
             _logger = logger;
         }
 
-        [Function("DatabaseGetItem")]
+        [Function("HttpDBItemRead")]
         public async Task<HttpResponseData> DataInteraction([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req, FunctionContext context)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
@@ -59,7 +59,7 @@ namespace DatabaseFunctions.Functions.HttpTrigger.DataAccess
 
                 string conditions = req.Query["Conditions"] ?? "";
 
-                var data = DatabaseRetrieve.DatabaseGet(logger, AzureAccountInfo.builder, tableNames, conditions);
+                var data = ModelDBItemRead.DatabaseGet(logger, ModelDBAccountInfo.builder, tableNames, conditions);
 
                 var response = req.CreateResponse(HttpStatusCode.OK);
                 await response.WriteAsJsonAsync(data);

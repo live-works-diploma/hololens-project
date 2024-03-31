@@ -6,8 +6,8 @@ using System.Text;
 using Azure.Messaging;
 using Azure.Messaging.EventGrid;
 using DatabaseFunctions.Functions.HttpTrigger;
-using DatabaseFunctions.Models;
 using DatabaseFunctions.Models.Database;
+using DatabaseFunctions.Models.Database.Items;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
@@ -15,16 +15,16 @@ using Newtonsoft.Json;
 
 namespace DatabaseFunctions.Functions.GridEventTrigger
 {
-    public class IotHubSendData
+    public class EGEDBItemCreate
     {
-        private readonly ILogger<IotHubSendData> _logger;
+        private readonly ILogger<EGEDBItemCreate> _logger;
 
-        public IotHubSendData(ILogger<IotHubSendData> logger)
+        public EGEDBItemCreate(ILogger<EGEDBItemCreate> logger)
         {
             _logger = logger;
         }
 
-        [Function("IotDeviceSendData")]
+        [Function("EGEDBItemCreate")]
         public IActionResult IotDeviceSendData([EventGridTrigger] EventGridEvent eventGridEvent)
         {
             _logger.LogInformation("Received event from Event Grid");
@@ -62,7 +62,7 @@ namespace DatabaseFunctions.Functions.GridEventTrigger
                     _logger.LogInformation($"My properties key: {key}, value: {myProperties[key]}");
                 }
 
-                DatabaseSend.InsertRecord(_logger, AzureAccountInfo.builder, "Sensor", myProperties);
+                ModelDBItemCreate.InsertRecord(_logger, ModelDBAccountInfo.builder, "Sensor", myProperties);
 
                 return new OkResult();
             }

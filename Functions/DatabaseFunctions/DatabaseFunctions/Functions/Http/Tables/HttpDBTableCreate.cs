@@ -1,22 +1,22 @@
-using DatabaseFunctions.Models;
 using DatabaseFunctions.Models.Database;
+using DatabaseFunctions.Models.Database.Tables;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace DatabaseFunctions.Functions.HttpTrigger
+namespace DatabaseFunctions.Functions.HttpTrigger.Tables
 {
-    public class DatabaseTableCreation
+    public class HttpDBTableCreate
     {
-        private readonly ILogger<DatabaseTableCreation> _logger;
+        private readonly ILogger<HttpDBTableCreate> _logger;
 
-        public DatabaseTableCreation(ILogger<DatabaseTableCreation> logger)
+        public HttpDBTableCreate(ILogger<HttpDBTableCreate> logger)
         {
             _logger = logger;
         }
 
-        [Function("DatabaseTableCreation")]
+        [Function("HttpDBTableCreate")]
         public async Task<HttpResponseData> CreateTable([HttpTrigger(AuthorizationLevel.Admin, "get", "post")] HttpRequestData req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
@@ -37,7 +37,7 @@ namespace DatabaseFunctions.Functions.HttpTrigger
                     return req.CreateResponse(System.Net.HttpStatusCode.BadRequest);
                 }
 
-                bool success = DatabaseCreate.CreateTables(logger, AzureAccountInfo.builder, tableAndFields);
+                bool success = ModelDBTableCreate.CreateTables(logger, ModelDBAccountInfo.builder, tableAndFields);
 
                 if (!success)
                 {
@@ -56,6 +56,6 @@ namespace DatabaseFunctions.Functions.HttpTrigger
                 logger.LogError($"Error creating new table: {ex}");
                 return req.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
             }
-        }    
+        }
     }
 }

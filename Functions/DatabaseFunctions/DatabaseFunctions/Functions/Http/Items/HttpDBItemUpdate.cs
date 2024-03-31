@@ -1,5 +1,3 @@
-using DatabaseFunctions.Models.Database;
-using DatabaseFunctions.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
@@ -7,19 +5,21 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net;
+using DatabaseFunctions.Models.Database.Items;
+using DatabaseFunctions.Models.Database;
 
 namespace DatabaseFunctions.Functions.HttpTrigger.DataAccess
 {
-    public class DatabaseUpdateItem
+    public class HttpDBItemUpdate
     {
-        private readonly ILogger<DatabaseUpdateItem> _logger;
+        private readonly ILogger<HttpDBItemUpdate> _logger;
 
-        public DatabaseUpdateItem(ILogger<DatabaseUpdateItem> logger)
+        public HttpDBItemUpdate(ILogger<HttpDBItemUpdate> logger)
         {
             _logger = logger;
         }
 
-        [Function("DatabaseUpdateItem")]
+        [Function("HttpDBItemUpdate")]
         public async Task<HttpResponseData> DataInteraction([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req, FunctionContext context)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
@@ -32,9 +32,9 @@ namespace DatabaseFunctions.Functions.HttpTrigger.DataAccess
             {
                 string reqBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-                var contentToSave = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(reqBody);
+                var contentToUpdate = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(reqBody);
 
-                if (contentToSave == null)
+                if (contentToUpdate == null)
                 {
                     logger.LogError("Couldn't find request body");
                     return req.CreateResponse(HttpStatusCode.BadRequest);
@@ -49,7 +49,7 @@ namespace DatabaseFunctions.Functions.HttpTrigger.DataAccess
 
                 string conditions = req.Query["ConditionColumn"] ?? "id";
 
-                DatabaseSend.UpdateAllRecords(logger, AzureAccountInfo.builder, tableName, contentToSave, conditions);
+                ModelDBItemUpdate.UpdateAllRecords(logger, ModelDBAccountInfo.builder, tableName, contentToUpdate, conditions);
 
                 return req.CreateResponse(HttpStatusCode.OK);
             }

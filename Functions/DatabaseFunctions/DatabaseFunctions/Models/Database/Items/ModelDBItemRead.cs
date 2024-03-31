@@ -10,19 +10,19 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace DatabaseFunctions.Models.Database
+namespace DatabaseFunctions.Models.Database.Items
 {
-    public class DatabaseRetrieve
+    public class ModelDBItemRead
     {
         public static Dictionary<string, List<Dictionary<string, string>>>? DatabaseGet(ILogger logger, SqlConnectionStringBuilder builder, string[] tableNames, string conditions)
         {
             Func<string, SqlConnection, List<Dictionary<string, string>>> function = (tableName, connection) =>
             {
-                string query = conditions == "" ? $"SELECT * FROM {tableName}" : $"SELECT * FROM {tableName} WHERE {conditions}";                           
-                            
+                string query = conditions == "" ? $"SELECT * FROM {tableName}" : $"SELECT * FROM {tableName} WHERE {conditions}";
+
                 using (SqlCommand command = new SqlCommand(query, connection))
                 using (SqlDataReader reader = command.ExecuteReader())
-                {                   
+                {
                     List<Dictionary<string, string>> allInstances = new List<Dictionary<string, string>>();
 
                     while (reader.Read())
@@ -54,7 +54,7 @@ namespace DatabaseFunctions.Models.Database
 
             for (int i = 0; i < tableNames.Length; i++)
             {
-                var instancesFound = DatabaseConnection.AccessDatabase(logger, tableNames[i], builder, function);
+                var instancesFound = ModelDBConnect.AccessDatabase(logger, tableNames[i], builder, function);
 
                 if (instancesFound == null)
                 {
@@ -65,7 +65,7 @@ namespace DatabaseFunctions.Models.Database
                 allData[strippedKey] = instancesFound;
             }
 
-            return allData; 
+            return allData;
         }
     }
 }
