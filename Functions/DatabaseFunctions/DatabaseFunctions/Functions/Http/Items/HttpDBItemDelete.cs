@@ -23,10 +23,10 @@ namespace DatabaseFunctions.Functions.HttpTrigger.DataAccess
         public async Task<HttpResponseData> DataInteraction([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req, FunctionContext context)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
-            return await DeleteFromDatabase(_logger, req);
+            return await Delete(_logger, req);
         }
 
-        async Task<HttpResponseData> DeleteFromDatabase(ILogger logger, HttpRequestData req)
+        async Task<HttpResponseData> Delete(ILogger logger, HttpRequestData req)
         {
             try
             {

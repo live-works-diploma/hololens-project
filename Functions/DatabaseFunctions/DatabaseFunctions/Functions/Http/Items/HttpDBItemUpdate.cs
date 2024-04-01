@@ -23,10 +23,10 @@ namespace DatabaseFunctions.Functions.HttpTrigger.DataAccess
         public async Task<HttpResponseData> DataInteraction([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req, FunctionContext context)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
-            return await SendToDatabase(_logger, req);
+            return await Update(_logger, req);
         }
 
-        async Task<HttpResponseData> SendToDatabase(ILogger logger, HttpRequestData req)
+        async Task<HttpResponseData> Update(ILogger logger, HttpRequestData req)
         {
             try
             {
