@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Doesn't work, might be used to connect through sockets
+/// </summary>
 [CreateAssetMenu(fileName = "Network", menuName = "Connection Info/Network")]
 public class NetworkData : ScriptableObject
 {

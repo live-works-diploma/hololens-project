@@ -36,6 +36,14 @@ public class DR_AzureDB<T> : IDataRetrieval<T>, IJsonHandler<T>, IAzure where T 
 
         string toSend = JsonConvert.SerializeObject(keysList);
         string jsonData = await RetrieveJson(toSend);
+        
+
+        if (jsonData == null || jsonData == "")
+        {
+            error("There was no data found");
+            return;
+        }
+        
         error(jsonData);
 
         Dictionary<string, List<T>> builtData = IJsonHandler<T>.BuildData(jsonData, howToBuildTask, expectedTypes);

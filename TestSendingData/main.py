@@ -42,9 +42,9 @@ def data_read(key: str):
     json_converter = Json()
 
     table_names = [
-        # "TelemetryData",
+        "TelemetryData",
         # "Plant",
-        "Sensor",
+        # "Sensor",
     ]
 
     TableNames = json_converter.ConvertToJson(table_names)
@@ -153,7 +153,7 @@ if __name__ == "__main__":
         # table_create(master_key)
 
         # data_create(default_key)
-        # data_read(default_key)        
+        data_read(default_key)        
         # data_update(default_key)  
         # data_delete(default_key)    
         pass  

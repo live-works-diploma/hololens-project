@@ -16,7 +16,7 @@ public class DRU_Sensors : MonoBehaviour
     void Start()
     {
         interactor = GetComponent<IInteractor<IDataHandler>>();
-        interactor.AddListener<Sensor>(this, ListenForData);
+        interactor.AddListener<TelemetryData>(this, ListenForData);
     }
 
     void ListenForData(List<IDataHandler> foundItems)

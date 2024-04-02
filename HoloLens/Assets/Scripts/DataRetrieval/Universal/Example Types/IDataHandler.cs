@@ -5,8 +5,10 @@ using UnityEngine;
 using static Microsoft.MixedReality.GraphicsTools.MeshInstancer;
 
 /// <summary>
-/// a way to allow Data_Dummy to create default data, fill data without knowing the fields and transfering data from one class to another (class passes
-/// the CreateDefaultData return straight into FillData)
+/// Says this class is a type to listen for when retrieving data. This interfaces makes the class that implements it implement a method which takes in data and builds the class
+/// based off that data, a method which gathers all the data from the class and returns it (used for displayed data on a canvas) and a method which randomly generates data
+/// (only used if wanting to create random default data). This also has the Funcs needed for telling other classes how to interact with the methods (so can call one Func 
+/// and each class can chose what that Func does)
 /// </summary>
 public interface IDataHandler
 {
@@ -23,6 +25,10 @@ public interface IDataHandler
     /// <returns></returns>
     Dictionary<string, string> CreateDefaultData(float heightAlter, string name, float maxDistanceToSpawn = 30);
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
     Dictionary<string, string> TurnDataIntoDictionary();
 
     static Func<Dictionary<string, string>, Type, IDataHandler> howToBuildTask 
@@ -39,6 +45,9 @@ public interface IDataHandler
         }
     }
 
+    /// <summary>
+    /// Used to turn all the data from the class into dictionary format
+    /// </summary>
     static Func<IDataHandler, Dictionary<string, string>> howToTurnIntoDictionary
     {
         get
@@ -47,6 +56,9 @@ public interface IDataHandler
         }
     }
 
+    /// <summary>
+    /// Used to get data and fill the class based off that data.
+    /// </summary>
     static Func<Type, string, IDataHandler> howToBuildDefaultTask
     {
         get
@@ -61,5 +73,8 @@ public interface IDataHandler
         }
     }
 
+    /// <summary>
+    /// Used for the canvases
+    /// </summary>
     public string name { get; set; }
 }

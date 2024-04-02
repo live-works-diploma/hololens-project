@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Example usage of using the abstract layer which deals with retrieving data from where ever you want. Where it gets it data from doesn't matter since it won't
+/// change how the abstract layer deals with this class.
+/// </summary>
 public class ExampleUsage : MonoBehaviour
 {
     IInteractor<IDataHandler> interactor;
