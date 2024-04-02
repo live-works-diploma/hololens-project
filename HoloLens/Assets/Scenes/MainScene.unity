@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -669,7 +669,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sensorPrefab: {fileID: 4942856195860374894, guid: c36fa145b116c2347bcb5c8439e3e257, type: 3}
   startingLocation: {fileID: 643368552}
-  fieldPrefab: {fileID: 0}
+  fieldPrefab: {fileID: 8930270098211552320, guid: ba86cdd6ea1a01842be7610d96aa6624, type: 3}
 --- !u!114 &968355012
 MonoBehaviour:
   m_ObjectHideFlags: 0

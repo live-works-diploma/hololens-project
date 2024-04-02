@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79d0833810214934f8a93d23ce4b00af, type: 3}
   m_Name: GeorgeDatabase
   m_EditorClassIdentifier: 
-  functionUrl: https://iotsensor-funcs.azurewebsites.net/api/DatabaseInteraction
-  functionKey: 6edFuUYY4CJIFSuP9M0TuvzWdFew2iJW-UaA2I_pTIiOAzFuWlCZow==
+  functionUrl: https://iotsensor-funcs.azurewebsites.net/api/HttpDBItemRead
+  functionKey: VaayMcEHGs0P-Pp6OUbCOvWdhoWk9aHc8b7rG-rdh6pqAzFuhKPhbQ==
   defaultKey: AvDHmPkNon7U2I2cgVNYkwKORH6H4HBNYQT5OvF1rd41AzFuJdfj3Q==

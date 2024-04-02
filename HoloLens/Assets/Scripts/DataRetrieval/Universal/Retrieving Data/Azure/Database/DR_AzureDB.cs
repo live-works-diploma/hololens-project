@@ -53,7 +53,7 @@ public class DR_AzureDB<T> : IDataRetrieval<T>, IJsonHandler<T>, IAzure where T 
         error("sending req to function");
 
         // JSON string to pass in the GET request
-        string queryString = $"?jsonString={Uri.EscapeDataString(jsonData)}";
+        string queryString = $"?TableNames={Uri.EscapeDataString(jsonData)}";
 
         using var client = new HttpClient();
         client.DefaultRequestHeaders.Add("x-functions-key", defaultKey);
