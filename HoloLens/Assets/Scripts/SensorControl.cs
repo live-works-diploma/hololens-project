@@ -13,53 +13,55 @@ public class SensorControl : MonoBehaviour
 
     Dictionary<string, TextMeshProUGUI> fieldsCreated = new();
 
+    float heightDecrease = 0;
+
     public void CreateFields(Dictionary<string, string> sensorData, string name)
     {
-        float heightDecrease = 0;
-
         title.text = name;
 
         foreach (var field in sensorData.Keys)
         {
-            if (field == "name")
-            {
-                continue;
-            }
-
-            Vector3 whereToAddFields = locationToCreateFields.transform.position;
-
-            Vector3 position = new Vector3(whereToAddFields.x, whereToAddFields.y, whereToAddFields.z);
-
-            GameObject createdField = Instantiate(fieldPrefab, Vector3.zero, Quaternion.identity, locationToCreateFields.transform);
-
-            createdField.transform.localPosition = Vector3.zero;
-
-            RectTransform rectTransform = createdField.GetComponent<RectTransform>();
-            rectTransform.anchorMin = new Vector2(0.5f, 1);
-            rectTransform.anchorMax = new Vector2(0.5f, 1);
-            rectTransform.anchoredPosition = new Vector2(0, heightDecrease);
-
-            heightDecrease -= 25;
-
-            TextMeshProUGUI[] createdChildren = createdField.GetComponentsInChildren<TextMeshProUGUI>();
-            createdChildren[0].text = field;
-            createdChildren[1].text = sensorData[field];
-
-            fieldsCreated[field] = createdChildren[1];
+            CreateField(field, sensorData[field]);
         }
+    }
+
+    void CreateField(string key, string value) 
+    {
+        Vector3 whereToAddFields = locationToCreateFields.transform.position;
+
+        Vector3 position = new Vector3(whereToAddFields.x, whereToAddFields.y, whereToAddFields.z);
+
+        GameObject createdField = Instantiate(fieldPrefab, Vector3.zero, Quaternion.identity, locationToCreateFields.transform);
+
+        createdField.transform.localPosition = Vector3.zero;
+
+        RectTransform rectTransform = createdField.GetComponent<RectTransform>();
+        rectTransform.anchorMin = new Vector2(0.5f, 1);
+        rectTransform.anchorMax = new Vector2(0.5f, 1);
+        rectTransform.anchoredPosition = new Vector2(0, heightDecrease);
+
+        heightDecrease -= 25;
+
+        TextMeshProUGUI[] createdChildren = createdField.GetComponentsInChildren<TextMeshProUGUI>();
+        createdChildren[0].text = key;
+        createdChildren[1].text = value;
+
+        fieldsCreated[key] = createdChildren[1];
     }
 
     public void UpdateFields(Dictionary<string, string> sensorData, string name)
     {
         foreach (var field in sensorData.Keys)
         {
-            if (field == "name")
+            if (!fieldsCreated.ContainsKey(field))
             {
-                continue;
+                CreateField(field, sensorData[field]);
             }
-
-            TextMeshProUGUI textField = fieldsCreated[field];
-            textField.text = sensorData[field];
+            else
+            {
+                TextMeshProUGUI textField = fieldsCreated[field];
+                textField.text = sensorData[field];
+            }
         }
     }
 }
