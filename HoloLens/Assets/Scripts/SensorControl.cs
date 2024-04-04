@@ -11,9 +11,19 @@ public class SensorControl : MonoBehaviour
     public TextMeshProUGUI title;
     public GameObject locationToCreateFields;
 
+    public List<TextMeshProUGUI> preCreatedFields = new List<TextMeshProUGUI>();
+
     Dictionary<string, TextMeshProUGUI> fieldsCreated = new();
 
     float heightDecrease = 0;
+
+    void Start()
+    {
+        for (int i = 0; i < preCreatedFields.Count; i++)
+        {
+            fieldsCreated[preCreatedFields[i].name] = preCreatedFields[i];
+        }
+    }
 
     public void CreateFields(Dictionary<string, string> sensorData, string name)
     {
@@ -27,9 +37,10 @@ public class SensorControl : MonoBehaviour
 
     void CreateField(string key, string value) 
     {
-        Vector3 whereToAddFields = locationToCreateFields.transform.position;
-
-        Vector3 position = new Vector3(whereToAddFields.x, whereToAddFields.y, whereToAddFields.z);
+        if (fieldsCreated.ContainsKey(key))
+        {
+            return;
+        }
 
         GameObject createdField = Instantiate(fieldPrefab, Vector3.zero, Quaternion.identity, locationToCreateFields.transform);
 
@@ -53,6 +64,7 @@ public class SensorControl : MonoBehaviour
     {
         foreach (var field in sensorData.Keys)
         {
+            Debug.Log($"field: {field}");
             if (!fieldsCreated.ContainsKey(field))
             {
                 CreateField(field, sensorData[field]);
