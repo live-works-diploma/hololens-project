@@ -26,7 +26,7 @@ def data_create(key: str):
     
     print(f"Data being sent: {json_data}")
 
-    if client.send_data_to_database(json_data):
+    if client.send_data(json_data):
         print("Sending data Successful.")
     else:
         print("Sending data Unsuccessful.")
@@ -51,7 +51,7 @@ def data_read(key: str):
 
     conditions = ""
 
-    data = client.retrieve_data_from_database(TableNames, conditions)
+    data = client.retrieve_data(TableNames, conditions)
     print(f"data found: {data}")
     
 
@@ -74,7 +74,7 @@ def data_update(key: str):
         "ConditionColumn=id",
     ]
 
-    if client.send_data_to_database(json_data, queries):
+    if client.send_data(json_data, queries):
         print("Sending data Successful.")
     else:
         print("Sending data Unsuccessful.")
@@ -110,7 +110,7 @@ def data_delete(key: str):
 
     json_data = json_convert.ConvertToJson(data)
 
-    if client.send_data_to_database(json_data):
+    if client.send_data(json_data):
         print("Sending data Successful")
     else:
         print("Sending data Unsuccessful.")
@@ -130,10 +130,29 @@ def table_create(key: str):
 
     print(f"Data being sent: {json_data}")
 
-    if client.send_data_to_database(json_data):
+    if client.send_data(json_data):
         print("Create Tables Successful.")
     else:
         print("Create Tables Unsuccessful.")
+
+
+def send_command(key: str):
+    function_url = "https://iotsensor-funcs.azurewebsites.net/api/HttpIOThubCommand"
+    function_key = "waSGFDDXda5EGUb77oTVX6_m1FFMSwHOIfb2_ldM-FRPAzFuPibN5g=="
+
+    to_send = {
+        "command": "attempt: 1"
+    }
+
+    client = AzureFunctions(function_url, function_key, key)
+    json_converter = Json()
+
+    json_data = json_converter.ConvertToJson(to_send)
+
+    if client.send_data(json_data):
+        print("Sending data Successful")
+    else:
+        print("Sending data Unsuccessful.")
 
 
 master_key = "xY9WO3XPmVvAy9KwdmGTULuVIlfy_q4dn3Oi-NNd5oWCAzFuM2azqw=="     # works for everything
@@ -153,9 +172,11 @@ if __name__ == "__main__":
         # table_create(master_key)
 
         # data_create(default_key)
-        data_read(default_key)        
+        # data_read(default_key)        
         # data_update(default_key)  
-        # data_delete(default_key)    
+        # data_delete(default_key)   
+
+        send_command(default_key) 
         pass  
     except Exception as e:
         logging.error(f"Error occurred: {e}")

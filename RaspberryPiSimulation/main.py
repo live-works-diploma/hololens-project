@@ -8,7 +8,6 @@ logging.basicConfig(level=logging.INFO)
 # Define the connection string
 connection_string = "HostName=iot-sensor-iot-hub.azure-devices.net;DeviceId=sim-raspberry-pi;SharedAccessKey=TXWwqyQu6Bx3zUl5dvgOIv/5+EJASYz5iAIoTI7Cu/E="
 
-logging.info("\n")
 try:
     # Create an instance of the device client using the connection string
     client = IoTHubDeviceClient.create_from_connection_string(connection_string)
@@ -20,7 +19,6 @@ except exceptions.ConnectionFailedError as e:
 except Exception as e:
     logging.error(f"Error creating client: {e}")
 
-logging.info("\n")
 try:
     # Connect the client
     client.connect()
@@ -31,20 +29,18 @@ except Exception as e:
     logging.error(f"Error connecting to client: {e}")
 
 # Define the message payload using the wanted_message data
-wanted_message = {
-    "MainMessage": "Main message"
+message = {
+    "Name": "New Raspberry Pi",
+    "WaterLevel": "1",
+    "PhLevel": "5"
 }
 
 # Convert the wanted_message dictionary to a JSON string
-message_payload = json.dumps(wanted_message)
+message_payload = json.dumps(message)
 
 # Define the message object
 message = Message(message_payload)
-message.custom_properties["Name"] = "New Raspberry Pi"
-message.custom_properties["WaterLevel"] = "1"
-message.custom_properties["PhLevel"] = "5"
 
-logging.info("\n")
 try:
     # Send the message
     client.send_message(message)
@@ -54,7 +50,6 @@ except exceptions.MessageSendFailureError as e:
 except Exception as e:
     logging.error(f"Error sending data: {e}")
 
-logging.info("\n")
 try:
     # Disconnect the client
     client.disconnect()

@@ -9,8 +9,8 @@ class Default:
         data: dict[str, list[dict[str, str]]] = dict()
 
         types_of_data_to_send: dict = {            
-            "Plant": create_plant_data,
-            "TelemetryData": create_telemetry_data,
+            # "Plant": create_plant_data,
+            # "TelemetryData": create_telemetry_data,
             "Sensor": create_sensor_data,
         }
 

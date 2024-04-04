@@ -31,38 +31,36 @@ namespace DatabaseFunctions.Functions.GridEventTrigger
 
             try
             {
+                _logger.LogInformation(eventGridEvent.Data.ToString());
+
                 var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(eventGridEvent.Data.ToString());
 
                 if (data == null)
                 {
                     return new BadRequestObjectResult("Didn't find the data");
-                }        
+                }
 
                 foreach (var key in data.Keys)
                 {
                     _logger.LogInformation($"Data key: {key}, data value: {data[key]}");
                 }
-                
-                var customProperties = data["properties"];
 
-                if (customProperties == null)
+                var bodyBase64 = data["body"].ToString();
+                var bodyBytes = Convert.FromBase64String(bodyBase64);
+                var bodyString = Encoding.UTF8.GetString(bodyBytes);
+
+                _logger.LogInformation($"Decoded body: {bodyString}");
+
+                Dictionary<string, string> body = JsonConvert.DeserializeObject<Dictionary<string, string>>(bodyString);
+
+                _logger.LogInformation($"Body: {body}");
+
+                foreach (var key in body.Keys)
                 {
-                    return new BadRequestObjectResult("Didn't find the properties");
+                    _logger.LogInformation($"Body key: {key}, value: {body[key]}");
                 }
 
-                _logger.LogInformation($"Custom Properties type: {customProperties.GetType()}");
-                _logger.LogInformation($"Custom Properties: {customProperties}");
-
-                var myProperties = JsonConvert.DeserializeObject<Dictionary<string, string>>(customProperties.ToString());
-
-                _logger.LogInformation($"My props: {myProperties}");
-
-                foreach (var key in myProperties.Keys)
-                {
-                    _logger.LogInformation($"My properties key: {key}, value: {myProperties[key]}");
-                }
-
-                ModelDBItemCreate.InsertRecord(_logger, ModelDBAccountInfo.builder, "Sensor", myProperties);
+                ModelDBItemCreate.InsertRecord(_logger, ModelDBAccountInfo.builder, "Sensor", body);
 
                 return new OkResult();
             }

@@ -47,7 +47,7 @@ namespace DatabaseFunctions.Models.Database
                 OpenConnection(connection, logger);
                 try
                 {
-                    List<Dictionary<string, string>> instancesFound = whatToDoWithDatabaseConnection(tableName, connection);
+                    List<Dictionary<string, string>> instancesFound = whatToDoWithDatabaseConnection($"[dbo].[{tableName}]", connection);
                     return instancesFound;
                 }
                 catch (Exception ex)

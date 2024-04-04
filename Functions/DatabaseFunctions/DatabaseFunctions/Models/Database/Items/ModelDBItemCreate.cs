@@ -28,10 +28,15 @@ namespace DatabaseFunctions.Models.Database.Items
         {
             string columns = string.Join(",", record.Keys.Select(k => $"[{k}]"));
             string values = string.Join(",", record.Keys.Select(k => $"@{k}"));
-            string insertQuery = $"INSERT INTO [{tableName}] ({columns}) VALUES ({values})";
+            string insertQuery = $"INSERT INTO [dbo].[{tableName}] ({columns}) VALUES ({values})";
+
+            logger.LogInformation($"Insert Query: {insertQuery}");
 
             Action<string, SqlConnection> whatToDoWithDatabase = (query, connection) =>
             {
+                logger.LogInformation($"Insert Query: {insertQuery}");
+                logger.LogInformation($"");
+
                 using (SqlCommand command = new SqlCommand(insertQuery, connection))
                 {
                     foreach (var kvp in record)

@@ -7,7 +7,7 @@ class AzureFunctions:
         self.function_key = function_key
         self.access_key = access_key
 
-    def send_data_to_database(self, data: dict, extra_queries: list[str] = []) -> bool:
+    def send_data(self, data: dict, extra_queries: list[str] = []) -> bool:
         """Sends data to the Azure Function to be saved to the database."""
         try:
             headers = {
@@ -27,7 +27,7 @@ class AzureFunctions:
             return False
         
 
-    def retrieve_data_from_database(self, table_names: str, conditions: str = "") -> dict:
+    def retrieve_data(self, table_names: str, conditions: str = "") -> dict:
         """Retrieves data from the database."""
 
         if not table_names:

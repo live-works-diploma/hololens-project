@@ -52,11 +52,6 @@ namespace DatabaseFunctions.Functions.HttpTrigger.DataAccess
 
                 logger.LogInformation($"Table names: {string.Join(", ", tableNames)}");
 
-                for (int i = 0; i < tableNames.Length; i++)
-                {
-                    tableNames[i] = $"[dbo].[{tableNames[i]}]";
-                }
-
                 string conditions = req.Query["Conditions"] ?? "";
 
                 var data = ModelDBItemRead.DatabaseGet(logger, ModelDBAccountInfo.builder, tableNames, conditions);
