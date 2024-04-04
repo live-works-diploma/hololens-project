@@ -10,6 +10,8 @@ public class DRU_Sensors : MonoBehaviour
     [SerializeField] GameObject startingLocation;
     [SerializeField] GameObject fieldPrefab;
 
+    public List<GameObject> preCreatedSensors = new List<GameObject>();
+
     Dictionary<string, GameObject> sensorsCreated = new();
     
 
@@ -17,6 +19,11 @@ public class DRU_Sensors : MonoBehaviour
     {
         interactor = GetComponent<IInteractor<IDataHandler>>();
         interactor.AddListener<TelemetryData>(this, ListenForData);
+
+        for (int i = 0; i < preCreatedSensors.Count; i++)
+        {
+            sensorsCreated[preCreatedSensors[i].name] = preCreatedSensors[i];
+        }
     }
 
     void ListenForData(List<IDataHandler> foundItems)
@@ -28,7 +35,7 @@ public class DRU_Sensors : MonoBehaviour
             return;
         }
 
-        for (int i = 0; i < foundItems.Count; i++)
+        for (int i = 0; i < 1; i++)
         {
             string sensorName = foundItems[i].name;
             Dictionary<string, string> sensorData = IDataHandler.howToTurnIntoDictionary(foundItems[i]);
