@@ -106,7 +106,7 @@ public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandl
     /// </summary>
     /// <param name="foundData"></param>
     /// <exception cref="Exception"></exception>
-    void PopulateData(Dictionary<string, List<DataHandler>> foundData)
+    async void PopulateData(Dictionary<string, List<DataHandler>> foundData)
     {
         anchors++;
         foreach (var key in foundData.Keys)

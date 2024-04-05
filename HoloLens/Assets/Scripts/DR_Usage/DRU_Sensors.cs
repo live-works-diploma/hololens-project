@@ -19,7 +19,7 @@ public class DRU_Sensors : MonoBehaviour
     void Start()
     {
         interactor = GetComponent<IInteractor<IDataHandler>>();
-        interactor.AddListener<TelemetryData>(this, ListenForData);
+        interactor.AddListener<TelemetryData>(this, ListenerForData);
         // interactor.AddListener<Sensor>(this, ListenForData);
 
         for (int i = 0; i < preCreatedSensors.Count; i++)
@@ -28,7 +28,7 @@ public class DRU_Sensors : MonoBehaviour
         }
     }
 
-     async void ListenForData(List<IDataHandler> foundItems)
+     async void ListenerForData(List<IDataHandler> foundItems)
     {
         interactor.AlterAnchors(1);
 

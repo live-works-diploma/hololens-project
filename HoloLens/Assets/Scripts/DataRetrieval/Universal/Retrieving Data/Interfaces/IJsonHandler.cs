@@ -44,8 +44,5 @@ public interface IJsonHandler<T> where T : class
         return builtData;
     }
 
-    async Task<string> RetrieveJson()
-    {
-        throw new NotImplementedException();
-    } 
+    abstract Task<string> RetrieveJson(string queries);
 }

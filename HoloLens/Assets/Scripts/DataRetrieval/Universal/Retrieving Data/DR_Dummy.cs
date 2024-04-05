@@ -75,4 +75,9 @@ public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 
         return JsonConvert.SerializeObject(allInstances);
     }
+
+    public Task<string> RetrieveJson(string queries)
+    {
+        throw new NotImplementedException();
+    }
 }

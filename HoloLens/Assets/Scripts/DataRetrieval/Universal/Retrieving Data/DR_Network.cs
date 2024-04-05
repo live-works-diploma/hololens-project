@@ -13,4 +13,9 @@ public class DR_Network<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
     {
         throw new NotImplementedException();
     }
+
+    public Task<string> RetrieveJson(string queries)
+    {
+        throw new NotImplementedException();
+    }
 }

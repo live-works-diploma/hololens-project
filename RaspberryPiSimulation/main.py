@@ -29,14 +29,14 @@ except Exception as e:
     logging.error(f"Error connecting to client: {e}")
 
 # Define the message payload using the wanted_message data
-message = {
+message_content = {
     "Name": "New Raspberry Pi",
     "WaterLevel": "1",
     "PhLevel": "5"
 }
 
 # Convert the wanted_message dictionary to a JSON string
-message_payload = json.dumps(message)
+message_payload = json.dumps(message_content)
 
 # Define the message object
 message = Message(message_payload)

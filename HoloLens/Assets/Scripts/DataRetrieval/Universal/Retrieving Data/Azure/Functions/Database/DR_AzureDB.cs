@@ -40,7 +40,7 @@ public class DR_AzureDB<T> : IDataRetrieval<T>, IJsonHandler<T>, IAzure where T 
         callWhenFoundData(builtData);
     }
 
-    async Task<string> RetrieveJson(string queries)
+    public async Task<string> RetrieveJson(string queries)
     {
         logger("sending req to function");
 

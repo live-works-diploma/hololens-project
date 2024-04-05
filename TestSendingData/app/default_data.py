@@ -2,9 +2,6 @@ import random
 
 
 class Default:
-    def __init__(self) -> None:
-        pass
-
     def create_default_data(self, number_of_instances: int = 1) -> dict[str, list[dict[str, str]]]:
         data: dict[str, list[dict[str, str]]] = dict()
 
@@ -24,7 +21,7 @@ class Default:
 
         return data
     
-    def create_random_upate_data(self, number_of_instances: int = 1):
+    def create_random_update_data(self, number_of_instances: int = 1):
         data = []
 
         for i in range(number_of_instances):

@@ -64,7 +64,7 @@ def data_update(key: str):
     default_data = Default()
     json_converter = Json()
 
-    data = default_data.create_random_upate_data(1)    
+    data = default_data.create_random_update_data(1)    
     json_data = json_converter.ConvertToJson(data)
     
     print(f"Data being sent: {json_data}")
@@ -159,7 +159,7 @@ master_key = "xY9WO3XPmVvAy9KwdmGTULuVIlfy_q4dn3Oi-NNd5oWCAzFuM2azqw=="     # wo
 default_key = "AvDHmPkNon7U2I2cgVNYkwKORH6H4HBNYQT5OvF1rd41AzFuJdfj3Q=="    # works for function authority and below (basically everything except creating / updating tables)
 
 
-if __name__ == "__main__":
+def main():
     # Configure logging to print to console
     console = logging.StreamHandler()
     console.setLevel(logging.INFO)
@@ -180,3 +180,7 @@ if __name__ == "__main__":
         pass  
     except Exception as e:
         logging.error(f"Error occurred: {e}")
+
+
+if __name__ == "__main__":
+    main()

@@ -29,7 +29,6 @@ namespace DatabaseFunctions.Functions.Http.IOT
             _logger.LogInformation("C# HTTP trigger function processed a request.");
             try
             {
-                // Get the command from the request body
                 string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
                 Dictionary<string, string> data = JsonConvert.DeserializeObject<Dictionary<string, string>>(requestBody);
 
@@ -41,7 +40,6 @@ namespace DatabaseFunctions.Functions.Http.IOT
 
                 string commandToSend = data["command"];
 
-                // Use MQTT to send the command to the device
                 await SendMqttCommandAsync(commandToSend);
 
                 _logger.LogInformation("Command sent successfully.");
@@ -59,10 +57,9 @@ namespace DatabaseFunctions.Functions.Http.IOT
             }
         }
 
-        private async Task SendMqttCommandAsync(string commandToSend)
+        async Task SendMqttCommandAsync(string commandToSend)
         {
-            // Use the Azure IoT Hub SDK for .NET to send the command using MQTT
-            using (var deviceClient = DeviceClient.CreateFromConnectionString(ModelIOTConnect.connectionString, TransportType.Mqtt))
+            using (var deviceClient = DeviceClient.CreateFromConnectionString(ModelIOTInfo.connectionString, TransportType.Mqtt))
             {
                 var message = new Message(Encoding.UTF8.GetBytes(commandToSend));
                 await deviceClient.SendEventAsync(message);
