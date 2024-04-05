@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class DRU_Sensors : MonoBehaviour
@@ -19,6 +20,7 @@ public class DRU_Sensors : MonoBehaviour
     {
         interactor = GetComponent<IInteractor<IDataHandler>>();
         interactor.AddListener<TelemetryData>(this, ListenForData);
+        // interactor.AddListener<Sensor>(this, ListenForData);
 
         for (int i = 0; i < preCreatedSensors.Count; i++)
         {
@@ -26,7 +28,7 @@ public class DRU_Sensors : MonoBehaviour
         }
     }
 
-    void ListenForData(List<IDataHandler> foundItems)
+     async void ListenForData(List<IDataHandler> foundItems)
     {
         interactor.AlterAnchors(1);
 
@@ -35,24 +37,24 @@ public class DRU_Sensors : MonoBehaviour
             return;
         }
 
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < foundItems.Count; i++)
         {
             string sensorName = foundItems[i].name;
             Dictionary<string, string> sensorData = IDataHandler.howToTurnIntoDictionary(foundItems[i]);
 
             if (sensorsCreated.ContainsKey(sensorName))
             {
-                UpdateSensor(sensorName, sensorData);
+                await UpdateSensor(sensorName, sensorData);
                 continue;
             }
 
-            CreateSensor(sensorName, sensorData);         
+            await CreateSensor(sensorName, sensorData);         
         }
 
         interactor.AlterAnchors(-1);
     }
 
-    void CreateSensor(string name, Dictionary<string, string> sensorData)
+    async Task CreateSensor(string name, Dictionary<string, string> sensorData)
     {
         Vector3 newStartingLocation = startingLocation.transform.position;
         newStartingLocation.x = 1.325f * sensorsCreated.Count;
@@ -61,16 +63,16 @@ public class DRU_Sensors : MonoBehaviour
         newSensor.name = name;
 
         SensorControl sensorControl = newSensor.GetComponent<SensorControl>();
-        sensorControl.CreateFields(sensorData, name);
+        await sensorControl.CreateFields(sensorData, name);
 
         sensorsCreated[name] = newSensor;
     }
 
-    void UpdateSensor(string name, Dictionary<string, string> sensorData)
+    async Task UpdateSensor(string name, Dictionary<string, string> sensorData)
     {
         GameObject createdSensor = sensorsCreated[name];
 
         SensorControl sensorControl = createdSensor.GetComponent<SensorControl>();
-        sensorControl.UpdateFields(sensorData, name);
+        await sensorControl.UpdateFields(sensorData, name);
     }
 }

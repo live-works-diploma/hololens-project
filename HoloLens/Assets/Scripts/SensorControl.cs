@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -25,17 +26,17 @@ public class SensorControl : MonoBehaviour
         }
     }
 
-    public void CreateFields(Dictionary<string, string> sensorData, string name)
+    public async Task CreateFields(Dictionary<string, string> sensorData, string name)
     {
         title.text = name;
 
         foreach (var field in sensorData.Keys)
         {
-            CreateField(field, sensorData[field]);
+            await CreateField(field, sensorData[field]);
         }
     }
 
-    void CreateField(string key, string value) 
+    async Task CreateField(string key, string value) 
     {
         if (fieldsCreated.ContainsKey(key))
         {
@@ -60,14 +61,13 @@ public class SensorControl : MonoBehaviour
         fieldsCreated[key] = createdChildren[1];
     }
 
-    public void UpdateFields(Dictionary<string, string> sensorData, string name)
+    public async Task UpdateFields(Dictionary<string, string> sensorData, string name)
     {
         foreach (var field in sensorData.Keys)
         {
-            Debug.Log($"field: {field}");
             if (!fieldsCreated.ContainsKey(field))
             {
-                CreateField(field, sensorData[field]);
+                await CreateField(field, sensorData[field]);
             }
             else
             {

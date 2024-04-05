@@ -6,14 +6,6 @@ using System.Threading.Tasks;
 using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
-public class Logger : MonoBehaviour
-{
-    public static void LogMyStuff(string message)
-    {
-        print(message);
-    }
-}
-
 /// <summary>
 /// An interface for retrieving json strings and then converting it into a dictionary. Allows other classes do what they want with the Dicionary.
 /// </summary>
@@ -22,7 +14,6 @@ public interface IJsonHandler<T> where T : class
 {
     static Dictionary<string, List<T>> BuildData(string json, Func<Dictionary<string, string>, Type, T> howToBuildTask, Dictionary<string, Type> expectedTypes)
     {        
-        Logger.LogMyStuff($"Json string: {json}");
         Dictionary<string, List<Dictionary<string, string>>> foundData = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, string>>>>(json);
 
         Dictionary<string, List<T>> builtData = new Dictionary<string, List<T>>();

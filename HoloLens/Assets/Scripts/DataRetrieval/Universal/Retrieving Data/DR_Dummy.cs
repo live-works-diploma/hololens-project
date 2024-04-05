@@ -24,12 +24,6 @@ public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 
     public int amountOfInstancesToCreatePerType = 5;
 
-    Dictionary<string, Type> expectedTypes = new Dictionary<string, Type>();
-    public void SetExpectedTypes(Dictionary<string, Type> typesToListenFor)
-    {
-        this.expectedTypes = typesToListenFor;
-    }
-
     public DR_Dummy(Func<Dictionary<string, string>, Type, T> howToBuildTask, Func<T, Dictionary<string, string>> howToTurnIntoDictionary, Func<Type, string, T> howToBuildDefaultTask)
     {
         if (howToBuildTask == null || howToBuildDefaultTask == null || howToTurnIntoDictionary == null)
@@ -42,21 +36,21 @@ public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
         this.howToBuildTask = howToBuildTask;
     }
 
-    public async void Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData)
+    public async void Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData, Dictionary<string, Type> expectedTypes, string query)
     {
-        callWhenFoundData?.Invoke(await Search());
+        callWhenFoundData?.Invoke(await Search(expectedTypes));
     }
 
-    async Task<Dictionary<string, List<T>>> Search()
+    async Task<Dictionary<string, List<T>>> Search(Dictionary<string, Type> expectedTypes)
     {
         await Task.Delay(100);  // just to see what happens
 
-        string foundDataJson = await RetrieveJson();
+        string foundDataJson = await RetrieveJson(expectedTypes);
 
         return IJsonHandler<T>.BuildData(foundDataJson, howToBuildTask, expectedTypes);
     }
 
-    public async Task<string> RetrieveJson()
+    public async Task<string> RetrieveJson(Dictionary<string, Type> expectedTypes)
     {
         Dictionary<string, List<Dictionary<string, string>>> allInstances = new Dictionary<string, List<Dictionary<string, string>>>();
 

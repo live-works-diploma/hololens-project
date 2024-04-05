@@ -1,0 +1,22 @@
+using Newtonsoft.Json;
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using UnityEngine;
+
+public class DR_AzureCommands : IAzure
+{
+    public string functionKey { get; set; }
+    public string functionUrl { get; set; }
+    public string defaultKey { get; set; }
+
+    public async Task SendCommand(string commandName)
+    {
+        Dictionary<string, string> body = new Dictionary<string, string>();
+        body["command"] = commandName;
+
+        string jsonBody = JsonConvert.SerializeObject(body);
+
+        await IAzure.Post(jsonBody, "", functionUrl, defaultKey, null);
+    }
+}

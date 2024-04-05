@@ -16,6 +16,8 @@ namespace DatabaseFunctions.Models.Database.Items
     {
         public static Dictionary<string, List<Dictionary<string, string>>>? DatabaseGet(ILogger logger, SqlConnectionStringBuilder builder, string[] tableNames, string conditions)
         {
+            logger.LogInformation($"conditions: {conditions}");
+
             Func<string, SqlConnection, List<Dictionary<string, string>>> function = (tableName, connection) =>
             {
                 string query = conditions == "" ? $"SELECT * FROM {tableName}" : $"SELECT * FROM {tableName} WHERE {conditions}";
@@ -62,7 +64,10 @@ namespace DatabaseFunctions.Models.Database.Items
                 }
 
                 string strippedKey = Regex.Match(tableNames[i], @"\[dbo\]\.\[(.*?)\]").Groups[1].Value;
-                allData[strippedKey] = instancesFound;
+                string key = strippedKey == "" ? tableNames[i] : strippedKey;
+
+                logger.LogInformation($"key: {key}, stripped key: {strippedKey}");
+                allData[key] = instancesFound;
             }
 
             return allData;

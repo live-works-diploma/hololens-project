@@ -34,10 +34,11 @@ public class Interactor_AzureDB : MonoBehaviour, IInteractor<IDataHandler>
 
             howToBuildTask = IDataHandler.howToBuildTask,
 
-            error = error =>
+            logger = error =>
             {
                 errorText.text = error;
-            }
+                print(error);
+            },
         };
     }
 }

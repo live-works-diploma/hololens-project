@@ -22,6 +22,6 @@ public class Interactor_Network : MonoBehaviour, IInteractor<IDataHandler>
 
     DR_Network<IDataHandler> CreateDataRetrieval()
     {
-        return new DR_Network<IDataHandler>(IDataHandler.howToBuildTask, networkData.url);
+        return new DR_Network<IDataHandler>();
     }
 }

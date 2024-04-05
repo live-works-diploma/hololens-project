@@ -34,7 +34,6 @@ public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandl
     public DRInteractor(IDataRetrieval<DataHandler> dataRetrival)
     {
         this.dataRetrieval = dataRetrival;
-        dataRetrieval.SetExpectedTypes(typesToListenFor);
     }
 
     public void AddListener<type>(IDRHandler<DataHandler>.VoidDelegate methodToCallWhenFoundData) where type : DataHandler
@@ -88,7 +87,17 @@ public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandl
         }
 
         await Task.Delay(delay);
-        dataRetrieval.Retrieve(PopulateData);   
+
+        List<string> tableNames = new List<string>();
+
+        foreach (var name in typesToListenFor.Keys)
+        {
+            tableNames.Add(name);
+        }
+
+        string query = $"TableNames={Uri.EscapeDataString(JsonConvert.SerializeObject(tableNames))}";
+
+        dataRetrieval.Retrieve(PopulateData, typesToListenFor, query);   
     }
 
     /// <summary>
