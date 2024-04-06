@@ -31,46 +31,21 @@ public interface IDataHandler
     /// <returns></returns>
     Dictionary<string, string> TurnDataIntoDictionary();
 
-    static Func<Dictionary<string, string>, Type, IDataHandler> howToBuildTask 
+    IDataHandler BuildTask(Dictionary<string, string> data)
     {
-        get
-        {
-            return (data, type) =>
-            {
-                IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
-                instance.FillData(data);
-                
-                return instance;
-            };
-        }
+        FillData(data);
+        return this;
     }
 
-    /// <summary>
-    /// Used to turn all the data from the class into dictionary format
-    /// </summary>
-    static Func<IDataHandler, Dictionary<string, string>> howToTurnIntoDictionary
+    Dictionary<string, string> TurnIntoDictionary()
     {
-        get
-        {
-            return instance => instance.TurnDataIntoDictionary();
-        }
+        return TurnDataIntoDictionary();
     }
 
-    /// <summary>
-    /// Used to get data and fill the class based off that data.
-    /// </summary>
-    static Func<Type, string, IDataHandler> howToBuildDefaultTask
+    IDataHandler BuildRandomInstance()
     {
-        get
-        {
-            return (type, name) =>
-            {
-                IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
-                instance.FillData(instance.CreateDefaultData(0, name));
-
-                return instance;
-            };
-        }
+        FillData(CreateDefaultData(0, name));
+        return this;
     }
 
     /// <summary>

@@ -6,13 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public interface IAzure
+public static class AzureFunctionRequestHandler
 {
-    public string functionKey { get; set; }
-    public string functionUrl { get; set; }
-    public string defaultKey { get; set; }
-
-    static async Task<HttpResponseMessage> Get(string queryString, string functionUrl, string defaultKey, Action<string> logError)
+    public static async Task<HttpResponseMessage> Get(string queryString, string functionUrl, string defaultKey, Action<string> logError)
     {
         using var client = new HttpClient();
         client.DefaultRequestHeaders.Add("x-functions-key", defaultKey);
@@ -29,7 +25,7 @@ public interface IAzure
         }
     }
 
-    static async Task<HttpResponseMessage> Post(string body, string queries, string functionUrl, string defaultKey, Action<string> logError)
+    public static async Task<HttpResponseMessage> Post(string body, string queries, string functionUrl, string defaultKey, Action<string> logError)
     {
         using var client = new HttpClient();
         client.DefaultRequestHeaders.Add("x-functions-key", defaultKey);

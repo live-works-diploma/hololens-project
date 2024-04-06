@@ -10,11 +10,11 @@ using Newtonsoft.Json;
 using System.Net;
 using Azure.Core;
 
-public class DR_AzureDB<T> : IDataRetrieval<T>, IJsonHandler<T>, IAzure where T : class
+public class DR_AzureDB<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 {
-    public string functionKey { get; set; }
-    public string functionUrl { get; set; }
-    public string defaultKey { get; set; }
+    public string functionKey;
+    public string functionUrl;
+    public string defaultKey;
 
     public Action<string> logger;
 
@@ -36,7 +36,7 @@ public class DR_AzureDB<T> : IDataRetrieval<T>, IJsonHandler<T>, IAzure where T 
 
         logger(jsonData);
 
-        Dictionary<string, List<T>> builtData = IJsonHandler<T>.BuildData(jsonData, howToBuildTask, expectedTypes);
+        Dictionary<string, List<T>> builtData = JsonBuildTask<T>.BuildData(jsonData, howToBuildTask, expectedTypes);
         callWhenFoundData(builtData);
     }
 
@@ -47,7 +47,7 @@ public class DR_AzureDB<T> : IDataRetrieval<T>, IJsonHandler<T>, IAzure where T 
         try
         {
             // Send a GET request with the JSON data as a query parameter
-            var response = await IAzure.Get(queries, functionUrl, defaultKey, logger);
+            var response = await AzureFunctionRequestHandler.Get(queries, functionUrl, defaultKey, logger);
 
             if (response.StatusCode != HttpStatusCode.OK)
             {

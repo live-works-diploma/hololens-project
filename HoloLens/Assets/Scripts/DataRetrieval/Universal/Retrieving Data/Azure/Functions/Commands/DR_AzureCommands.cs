@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class DR_AzureCommands : IAzure
+public class DR_AzureCommands
 {
-    public string functionKey { get; set; }
-    public string functionUrl { get; set; }
-    public string defaultKey { get; set; }
+    public string functionKey;
+    public string functionUrl;
+    public string defaultKey;
 
     public async Task SendCommand(string commandName)
     {
@@ -17,6 +17,6 @@ public class DR_AzureCommands : IAzure
 
         string jsonBody = JsonConvert.SerializeObject(body);
 
-        await IAzure.Post(jsonBody, "", functionUrl, defaultKey, null);
+        await AzureFunctionRequestHandler.Post(jsonBody, "", functionUrl, defaultKey, null);
     }
 }

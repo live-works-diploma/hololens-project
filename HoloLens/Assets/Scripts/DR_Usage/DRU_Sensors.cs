@@ -28,7 +28,7 @@ public class DRU_Sensors : MonoBehaviour
         }
     }
 
-     async void ListenerForData(List<IDataHandler> foundItems)
+    async void ListenerForData(List<IDataHandler> foundItems)
     {
         interactor.AlterAnchors(1);
 
@@ -40,7 +40,7 @@ public class DRU_Sensors : MonoBehaviour
         for (int i = 0; i < foundItems.Count; i++)
         {
             string sensorName = foundItems[i].name;
-            Dictionary<string, string> sensorData = IDataHandler.howToTurnIntoDictionary(foundItems[i]);
+            Dictionary<string, string> sensorData = foundItems[i].TurnDataIntoDictionary();
 
             if (sensorsCreated.ContainsKey(sensorName))
             {

@@ -47,7 +47,7 @@ public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 
         string foundDataJson = await RetrieveJson(expectedTypes);
 
-        return IJsonHandler<T>.BuildData(foundDataJson, howToBuildTask, expectedTypes);
+        return JsonBuildTask<T>.BuildData(foundDataJson, howToBuildTask, expectedTypes);
     }
 
     public async Task<string> RetrieveJson(Dictionary<string, Type> expectedTypes)

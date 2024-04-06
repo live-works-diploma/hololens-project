@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -32,7 +33,11 @@ public class Interactor_AzureDB : MonoBehaviour, IInteractor<IDataHandler>
             functionUrl = azureAccount.functionUrl,
             defaultKey = azureAccount.defaultKey,
 
-            howToBuildTask = IDataHandler.howToBuildTask,
+            howToBuildTask = (data, type) =>
+            {
+                IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
+                return instance.BuildTask(data);
+            },
 
             logger = error =>
             {
