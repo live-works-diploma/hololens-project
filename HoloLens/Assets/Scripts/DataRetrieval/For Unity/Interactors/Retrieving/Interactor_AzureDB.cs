@@ -8,7 +8,7 @@ using UnityEngine;
 /// The class that acts as an abstract layer for retrieving data from an azure database. This class creates an instance of the class that will be used to retrieve the data
 /// and then passes that instance to another abstract layer which makes it so it retrieves data in a controlled infinite loop
 /// </summary>
-public class Interactor_AzureDB : MonoBehaviour, IInteractor<IDataHandler>
+public class Interactor_AzureDB : MonoBehaviour, IDRInteractor<IDataHandler>
 {
     public DRInteractor<IDataHandler> dataRetrieval { get; set; }
     public AzureFunctionAccess azureAccount;

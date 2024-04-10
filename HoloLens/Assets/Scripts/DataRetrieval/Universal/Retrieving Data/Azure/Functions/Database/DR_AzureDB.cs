@@ -20,13 +20,11 @@ public class DR_AzureDB<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 
     public Func<Dictionary<string, string>, Type, T> howToBuildTask;
 
-    public async void Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData, Dictionary<string, Type> expectedTypes, string query)
+    public async void Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData, Dictionary<string, Type> expectedTypes)
     {
         logger("starting the retrieve of data");
 
-        logger($"query: {query}");
-
-        string jsonData = await RetrieveJson(query);
+        string jsonData = await RetrieveJson(expectedTypes);
         
         if (jsonData == null || jsonData == "")
         {
@@ -36,18 +34,27 @@ public class DR_AzureDB<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 
         logger(jsonData);
 
-        Dictionary<string, List<T>> builtData = JsonBuildTask<T>.BuildData(jsonData, howToBuildTask, expectedTypes);
+        Dictionary<string, List<T>> builtData = await JsonBuildTask<T>.BuildData(jsonData, howToBuildTask, expectedTypes);
         callWhenFoundData(builtData);
     }
 
-    public async Task<string> RetrieveJson(string queries)
+    public async Task<string> RetrieveJson(Dictionary<string, Type> expectedTypes)
     {
         logger("sending req to function");
+
+        List<string> tableNames = new List<string>();
+
+        foreach (var name in expectedTypes.Keys)
+        {
+            tableNames.Add(name);
+        }
+
+        string query = $"TableNames={Uri.EscapeDataString(JsonConvert.SerializeObject(tableNames))}";
 
         try
         {
             // Send a GET request with the JSON data as a query parameter
-            var response = await AzureFunctionRequestHandler.Get(queries, functionUrl, defaultKey, logger);
+            var response = await AzureFunctionRequestHandler.Get(query, functionUrl, defaultKey, logger);
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
@@ -61,7 +68,7 @@ public class DR_AzureDB<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
         }
         catch (HttpRequestException e)
         {
-            logger($"Error retrieving data from database: {e.Message}; {functionUrl}; {queries}");
+            logger($"Error retrieving data from database: {e.Message}; {functionUrl}; {query}");
             throw new Exception($"Error retrieving data from database: {e.Message}");
         }
     }

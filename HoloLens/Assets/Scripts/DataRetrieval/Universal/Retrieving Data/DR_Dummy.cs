@@ -18,11 +18,12 @@ using UnityEngine;
 /// </typeparam>
 public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 {
-    Func<Dictionary<string, string>, Type, T> howToBuildTask;
-    Func<T, Dictionary<string, string>> howToTurnIntoDictionary;
-    Func<Type, string, T> howToBuildDefaultTask;
+    Func<Dictionary<string, string>, Type, T> buildInstance;
+    Func<T, Dictionary<string, string>> turnInstanceToDictionary;
+    Func<Type, string, T> createRandomInstanceData;
 
     public int amountOfInstancesToCreatePerType = 5;
+    public Action<string> logger;
 
     public DR_Dummy(Func<Dictionary<string, string>, Type, T> howToBuildTask, Func<T, Dictionary<string, string>> howToTurnIntoDictionary, Func<Type, string, T> howToBuildDefaultTask)
     {
@@ -31,53 +32,51 @@ public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
             throw new Exception("Funcs can't be null");
         }
 
-        this.howToBuildDefaultTask = howToBuildDefaultTask;
-        this.howToTurnIntoDictionary = howToTurnIntoDictionary;
-        this.howToBuildTask = howToBuildTask;
+        this.createRandomInstanceData = howToBuildDefaultTask;
+        this.turnInstanceToDictionary = howToTurnIntoDictionary;
+        this.buildInstance = howToBuildTask;
     }
 
-    public async void Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData, Dictionary<string, Type> expectedTypes, string query)
+    public async void Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData, Dictionary<string, Type> expectedTypes)
     {
-        callWhenFoundData?.Invoke(await Search(expectedTypes));
-    }
+        string jsonData = await RetrieveJson(expectedTypes);
 
-    async Task<Dictionary<string, List<T>>> Search(Dictionary<string, Type> expectedTypes)
-    {
-        await Task.Delay(100);  // just to see what happens
+        logger?.Invoke(jsonData);
 
-        string foundDataJson = await RetrieveJson(expectedTypes);
-
-        return JsonBuildTask<T>.BuildData(foundDataJson, howToBuildTask, expectedTypes);
+        Dictionary<string, List<T>> data = await JsonBuildTask<T>.BuildData(jsonData, buildInstance, expectedTypes);
+        callWhenFoundData?.Invoke(data);
     }
 
     public async Task<string> RetrieveJson(Dictionary<string, Type> expectedTypes)
     {
-        Dictionary<string, List<Dictionary<string, string>>> allInstances = new Dictionary<string, List<Dictionary<string, string>>>();
+        return JsonConvert.SerializeObject(BuildInstances(expectedTypes));
+    }
 
-        foreach (var type in expectedTypes.Keys)
+    Dictionary<string, List<Dictionary<string, string>>> BuildInstances(Dictionary<string, Type> expectedTypes)
+    {
+        Dictionary<string, List<Dictionary<string, string>>> data = new();
+
+        foreach (var table in expectedTypes.Keys)
         {
-            List<Dictionary<string, string>> typeInstances = new List<Dictionary<string, string>>();
+            List<Dictionary<string, string>> instances = new List<Dictionary<string, string>>();
 
             for (int i = 0; i < amountOfInstancesToCreatePerType; i++)
             {
-                T instance = howToBuildDefaultTask(expectedTypes[type], $"{type}: {i}");
+                T instance = createRandomInstanceData(expectedTypes[table], $"{table} ({i})");
 
-                if (instance == null)
+                var instanceData = turnInstanceToDictionary(instance);
+
+                foreach (var kvp in instanceData)
                 {
-                    throw new Exception("instance == null");
+                    logger?.Invoke($"key: {kvp.Key}, value: {kvp.Value}");
                 }
 
-                typeInstances.Add(howToTurnIntoDictionary(instance));
+                instances.Add(turnInstanceToDictionary(instance));
             }
 
-            allInstances[expectedTypes[type].Name] = typeInstances;
+            data[table] = instances;
         }
 
-        return JsonConvert.SerializeObject(allInstances);
-    }
-
-    public Task<string> RetrieveJson(string queries)
-    {
-        throw new NotImplementedException();
+        return data;
     }
 }

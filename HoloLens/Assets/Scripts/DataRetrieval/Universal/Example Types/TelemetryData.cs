@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class TelemetryData : IDataHandler
@@ -21,12 +23,19 @@ public class TelemetryData : IDataHandler
 
     public Dictionary<string, string> CreateDefaultData(float heightAlter, string name, float maxDistanceToSpawn = 30)
     {
-        throw new System.NotImplementedException();
+        Dictionary<string, string> data = new();
+
+        data["TelemetryDataId"] = name;
+        data["water Level"] = UnityEngine.Random.Range(0, 10).ToString();
+        data["ph levels"] = UnityEngine.Random.Range(0, 5).ToString();
+        data["temp."] = UnityEngine.Random.Range(-40, 40).ToString();
+
+        return data;
     }
 
     public void FillData(Dictionary<string, string> dataNeeded)
     {
-        name = dataNeeded["TelemetryDataId"];
+        name = dataNeeded["TelemetryDataId"];             
         _data = dataNeeded;
     }
 

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class DR_AzureCommands
+public class DS_AzureCommands
 {
     public string functionKey;
     public string functionUrl;

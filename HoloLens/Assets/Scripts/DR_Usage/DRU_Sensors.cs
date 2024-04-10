@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class DRU_Sensors : MonoBehaviour
 {
-    IInteractor<IDataHandler> interactor;
+    IDRInteractor<IDataHandler> interactor;
 
     [SerializeField] GameObject sensorPrefab;
     [SerializeField] GameObject startingLocation;
@@ -18,9 +18,10 @@ public class DRU_Sensors : MonoBehaviour
 
     void Start()
     {
-        interactor = GetComponent<IInteractor<IDataHandler>>();
+        interactor = GetComponent<IDRInteractor<IDataHandler>>();
+
         interactor.AddListener<TelemetryData>(this, ListenerForData);
-        // interactor.AddListener<Sensor>(this, ListenForData);
+        interactor.AddListener<Sensor>(this, ListenerForData);
 
         for (int i = 0; i < preCreatedSensors.Count; i++)
         {
@@ -37,6 +38,7 @@ public class DRU_Sensors : MonoBehaviour
             return;
         }
 
+        // for (int i = foundItems.Count - 1; i < foundItems.Count; i++)
         for (int i = 0; i < foundItems.Count; i++)
         {
             string sensorName = foundItems[i].name;

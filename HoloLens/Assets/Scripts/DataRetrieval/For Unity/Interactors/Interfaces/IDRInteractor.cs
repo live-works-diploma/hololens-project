@@ -9,7 +9,7 @@ using UnityEngine;
 /// of data.
 /// </summary>
 /// <typeparam name="T">The parent type of the data you wish to listen for. Every class that you add to listen for needs to implement this type.</typeparam>
-public interface IInteractor<T> where T : class
+public interface IDRInteractor<T> where T : class
 {
     DRInteractor<T> dataRetrieval { get; set; }
 
@@ -30,7 +30,7 @@ public interface IInteractor<T> where T : class
     /// <typeparam name="type">The type of data you wish to listen for.</typeparam>
     /// <param name="methodToCall">The method that is called when data is found with the same name.</param>
     /// <returns></returns>
-    private IEnumerator DelayedAddListener<type>(IDRHandler<T>.VoidDelegate methodToCall) where type : T
+    IEnumerator DelayedAddListener<type>(IDRHandler<T>.VoidDelegate methodToCall) where type : T
     {
         while (dataRetrieval == null)
         {

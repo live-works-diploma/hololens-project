@@ -12,5 +12,5 @@ using UnityEngine;
 /// <typeparam name="T"></typeparam>
 public interface IJsonHandler<T> where T : class
 {
-    abstract Task<string> RetrieveJson(string queries);
+    Task<string> RetrieveJson(Dictionary<string, Type> expectedTypes);
 }

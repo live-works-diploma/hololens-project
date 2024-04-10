@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Interactor_Network : MonoBehaviour, IInteractor<IDataHandler>
+public class Interactor_Network : MonoBehaviour, IDRInteractor<IDataHandler>
 {
     public DRInteractor<IDataHandler> dataRetrieval { get; set; }
 

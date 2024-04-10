@@ -6,11 +6,11 @@ using UnityEngine;
 public class Interactor_AzureCommand : MonoBehaviour
 {
     public AzureFunctionAccess azureAccount;
-    public DR_AzureCommands interactor;
+    public DS_AzureCommands interactor;
 
     private void Start()
     {
-        interactor = new DR_AzureCommands()
+        interactor = new DS_AzureCommands()
         {
             functionKey = azureAccount.functionKey,
             functionUrl = azureAccount.functionUrl,

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Interactor_Dummy : MonoBehaviour, IInteractor<IDataHandler>
+public class Interactor_Dummy : MonoBehaviour, IDRInteractor<IDataHandler>
 {
     public DRInteractor<IDataHandler> dataRetrieval { get; set; }
 
@@ -37,12 +37,16 @@ public class Interactor_Dummy : MonoBehaviour, IInteractor<IDataHandler>
         Func<Type, string, IDataHandler> buildRandomInstance = (type, name) =>
         {
             IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
-            return instance.BuildRandomInstance();
+            return instance.BuildRandomInstance(name);
         };
 
         return new DR_Dummy<IDataHandler>(buildTask, turnIntoDictionary, buildRandomInstance)
         {
-            amountOfInstancesToCreatePerType = numberOfInstancesPerType
+            amountOfInstancesToCreatePerType = numberOfInstancesPerType,
+            logger = message =>
+            {
+                print(message);
+            }
         };
     }
 }

@@ -42,7 +42,7 @@ public interface IDataHandler
         return TurnDataIntoDictionary();
     }
 
-    IDataHandler BuildRandomInstance()
+    IDataHandler BuildRandomInstance(string name)
     {
         FillData(CreateDefaultData(0, name));
         return this;

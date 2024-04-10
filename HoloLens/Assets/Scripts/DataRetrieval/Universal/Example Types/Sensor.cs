@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Sensor : IDataHandler
 {
-    string _name;
+    string _name = "not set";
     public string name 
     { 
         get
