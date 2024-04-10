@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a093fb11e7e90fa419f3cfcb600caba4
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - sensorPrefab: {fileID: 4942856195860374894, guid: c36fa145b116c2347bcb5c8439e3e257, type: 3}
+  - startingLocation: {instanceID: 0}
+  - fieldPrefab: {fileID: 8930270098211552320, guid: ba86cdd6ea1a01842be7610d96aa6624, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

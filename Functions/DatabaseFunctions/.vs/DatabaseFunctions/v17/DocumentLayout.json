@@ -1,0 +1,92 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|d:\\dip stage 2\\hololens-project\\functions\\databasefunctions\\databasefunctions\\functions\\http\\iot\\httpiothubcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|solutionrelative:databasefunctions\\functions\\http\\iot\\httpiothubcommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|d:\\dip stage 2\\hololens-project\\functions\\databasefunctions\\databasefunctions\\models\\database\\tables\\modeldbtablecreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|solutionrelative:databasefunctions\\models\\database\\tables\\modeldbtablecreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|d:\\dip stage 2\\hololens-project\\functions\\databasefunctions\\databasefunctions\\models\\database\\tables\\modeldbtableupdateremove.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|solutionrelative:databasefunctions\\models\\database\\tables\\modeldbtableupdateremove.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|d:\\dip stage 2\\hololens-project\\functions\\databasefunctions\\databasefunctions\\models\\database\\tables\\modeldbtableupdateadd.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|solutionrelative:databasefunctions\\models\\database\\tables\\modeldbtableupdateadd.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "HttpIOThubCommand.cs",
+              "DocumentMoniker": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Functions\\Http\\IOT\\HttpIOThubCommand.cs",
+              "RelativeDocumentMoniker": "DatabaseFunctions\\Functions\\Http\\IOT\\HttpIOThubCommand.cs",
+              "ToolTip": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Functions\\Http\\IOT\\HttpIOThubCommand.cs",
+              "RelativeToolTip": "DatabaseFunctions\\Functions\\Http\\IOT\\HttpIOThubCommand.cs",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAAAC4AAAANAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-05T17:48:31.54Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "ModelDBTableUpdateRemove.cs",
+              "DocumentMoniker": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Models\\Database\\Tables\\ModelDBTableUpdateRemove.cs",
+              "RelativeDocumentMoniker": "DatabaseFunctions\\Models\\Database\\Tables\\ModelDBTableUpdateRemove.cs",
+              "ToolTip": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Models\\Database\\Tables\\ModelDBTableUpdateRemove.cs",
+              "RelativeToolTip": "DatabaseFunctions\\Models\\Database\\Tables\\ModelDBTableUpdateRemove.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-05T17:45:35.578Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ModelDBTableUpdateAdd.cs",
+              "DocumentMoniker": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Models\\Database\\Tables\\ModelDBTableUpdateAdd.cs",
+              "RelativeDocumentMoniker": "DatabaseFunctions\\Models\\Database\\Tables\\ModelDBTableUpdateAdd.cs",
+              "ToolTip": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Models\\Database\\Tables\\ModelDBTableUpdateAdd.cs",
+              "RelativeToolTip": "DatabaseFunctions\\Models\\Database\\Tables\\ModelDBTableUpdateAdd.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-05T17:45:34.708Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ModelDBTableCreate.cs",
+              "DocumentMoniker": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Models\\Database\\Tables\\ModelDBTableCreate.cs",
+              "RelativeDocumentMoniker": "DatabaseFunctions\\Models\\Database\\Tables\\ModelDBTableCreate.cs",
+              "ToolTip": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Models\\Database\\Tables\\ModelDBTableCreate.cs",
+              "RelativeToolTip": "DatabaseFunctions\\Models\\Database\\Tables\\ModelDBTableCreate.cs",
+              "ViewState": "AQIAAB4AAAAAAAAAAAA5wAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-05T17:44:21.905Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
