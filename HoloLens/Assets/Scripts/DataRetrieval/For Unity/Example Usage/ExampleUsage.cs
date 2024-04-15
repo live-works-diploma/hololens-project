@@ -20,8 +20,9 @@ public class ExampleUsage : MonoBehaviour
         // This is how you add an type to listen for. When ever there is data found which shares the same name as the class it calls the method that is being passed into it.
         // The type being passed in needs to implement the interface IDataHandler. The method you pass it needs to have one argument which is a List of IDataHandler. Each
         // instance that gets passed into your method when the delegate holding the method gets invoked will be the same type just labeled as IDataHandler.
-        interactor.AddListener<Plant>(this, Listener);
-        interactor.AddListener<Sensor>(this, Listener);
+        interactor.AddListener<Plant>(Listener);
+        interactor.AddListener<Sensor>(Listener);
+        interactor.AddListener<TelemetryData>(Listener);
     }
 
     void Listener(List<IDataHandler> foundData)

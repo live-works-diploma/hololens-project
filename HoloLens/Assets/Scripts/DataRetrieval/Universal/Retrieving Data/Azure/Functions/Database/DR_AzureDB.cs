@@ -17,22 +17,24 @@ public class DR_AzureDB<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
     public string defaultKey;
 
     public Action<string> logger;
+    public Action<string> ErrorLogger;
 
     public Func<Dictionary<string, string>, Type, T> howToBuildTask;
 
     public async void Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData, Dictionary<string, Type> expectedTypes)
     {
-        logger("starting the retrieve of data");
+        logger?.Invoke("starting the retrieve of data");
 
         string jsonData = await RetrieveJson(expectedTypes);
         
         if (jsonData == null || jsonData == "")
         {
-            logger("There was no data found");
+            logger?.Invoke("There was no data found");
+            ErrorLogger?.Invoke("Didn't find any data");
             return;
         }
 
-        logger(jsonData);
+        logger?.Invoke(jsonData);
 
         Dictionary<string, List<T>> builtData = await JsonBuildTask<T>.BuildData(jsonData, howToBuildTask, expectedTypes);
         callWhenFoundData(builtData);
@@ -40,7 +42,7 @@ public class DR_AzureDB<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 
     public async Task<string> RetrieveJson(Dictionary<string, Type> expectedTypes)
     {
-        logger("sending req to function");
+        logger?.Invoke("sending req to function");
 
         List<string> tableNames = new List<string>();
 
@@ -58,17 +60,20 @@ public class DR_AzureDB<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                logger($"response code wasnt successful: {response.StatusCode}");
+                logger?.Invoke($"response code wasn't successful: {response.StatusCode}");
+                ErrorLogger?.Invoke($"response code wasn't successful: {response.StatusCode}");
+                throw new Exception($"Response code wasn't OK");
             }
             else
             {
-                logger("didnt error");
+                logger?.Invoke("Response code was OK");
             }           
             return await response.Content.ReadAsStringAsync();
         }
         catch (HttpRequestException e)
         {
-            logger($"Error retrieving data from database: {e.Message}; {functionUrl}; {query}");
+            logger?.Invoke($"Error retrieving data from database: {e.Message}; {functionUrl}; {query}");
+            ErrorLogger?.Invoke("Error retrieving data");
             throw new Exception($"Error retrieving data from database: {e.Message}");
         }
     }

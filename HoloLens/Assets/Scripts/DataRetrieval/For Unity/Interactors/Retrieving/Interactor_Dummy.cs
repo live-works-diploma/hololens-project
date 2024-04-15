@@ -18,6 +18,7 @@ public class Interactor_Dummy : MonoBehaviour, IDRInteractor<IDataHandler>
         {
             delayBetweenCalls = delayInbetweenCalls
         };
+
         dataRetrieval.SearchForData(initialDelay);
     }
 

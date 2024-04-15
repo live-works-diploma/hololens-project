@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 /// <summary>
@@ -14,11 +15,14 @@ public class Interactor_AzureDB : MonoBehaviour, IDRInteractor<IDataHandler>
     public AzureFunctionAccess azureAccount;
     public TextMeshProUGUI errorText;
 
+    [Tooltip("Not in seconds, think miliseconds. Used so the other classes have time to add in their own listeners and you don't waste a call. Won't make much different since loops anyway.")]
+    public int initialDelay = 500;
+
 
     private void Start()
     {
         dataRetrieval = new DRInteractor<IDataHandler>(CreateDataRetrieval());
-        dataRetrieval.SearchForData(500);
+        dataRetrieval.SearchForData(initialDelay);
     }
 
     /// <summary>
@@ -41,9 +45,13 @@ public class Interactor_AzureDB : MonoBehaviour, IDRInteractor<IDataHandler>
 
             logger = error =>
             {
-                errorText.text = error;
                 print(error);
             },
+
+            ErrorLogger = message =>
+            {
+                errorText.text = message;
+            }
         };
     }
 }

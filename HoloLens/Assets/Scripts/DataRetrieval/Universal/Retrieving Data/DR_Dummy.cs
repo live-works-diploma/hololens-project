@@ -63,14 +63,7 @@ public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
             for (int i = 0; i < amountOfInstancesToCreatePerType; i++)
             {
                 T instance = createRandomInstanceData(expectedTypes[table], $"{table} ({i})");
-
                 var instanceData = turnInstanceToDictionary(instance);
-
-                foreach (var kvp in instanceData)
-                {
-                    logger?.Invoke($"key: {kvp.Key}, value: {kvp.Value}");
-                }
-
                 instances.Add(turnInstanceToDictionary(instance));
             }
 

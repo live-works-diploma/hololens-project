@@ -43,6 +43,8 @@ public class SensorControl : MonoBehaviour
             return;
         }
 
+        await Task.Yield();
+        
         GameObject createdField = Instantiate(fieldPrefab, Vector3.zero, Quaternion.identity, locationToCreateFields.transform);
 
         createdField.transform.localPosition = Vector3.zero;
@@ -58,7 +60,7 @@ public class SensorControl : MonoBehaviour
         createdChildren[0].text = key;
         createdChildren[1].text = value;
 
-        fieldsCreated[key] = createdChildren[1];
+        fieldsCreated[key] = createdChildren[1];        
     }
 
     public async Task UpdateFields(Dictionary<string, string> sensorData, string name)
