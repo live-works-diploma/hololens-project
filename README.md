@@ -89,4 +89,4 @@ Examples:
 
 # **uml diagram**
 
-[Uml Diagram](/uml%20diagram/UmlV1.jpg)
+![Uml Diagram](/uml%20diagram/UmlV1.jpg)
