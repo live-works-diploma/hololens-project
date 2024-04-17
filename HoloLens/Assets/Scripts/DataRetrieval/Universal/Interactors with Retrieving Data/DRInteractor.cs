@@ -108,28 +108,31 @@ public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandl
     /// <exception cref="Exception"></exception>
     async void PopulateData(Dictionary<string, List<DataHandler>> foundData)
     {
-        anchors++;
-        foreach (var key in foundData.Keys)
+        await Task.Run(() =>
         {
-            if (!Application.isPlaying)
+            anchors++;
+            foreach (var key in foundData.Keys)
             {
-                return;
+                if (!Application.isPlaying)
+                {
+                    return;
+                }
+
+                if (!listeners.ContainsKey(key))
+                {
+                    continue;
+                }
+
+                if (!typesToListenFor.ContainsKey(key))
+                {
+                    throw new Exception($"Key wasn't present in types to listen for: {key}");
+                }
+
+                Type type = typesToListenFor[key];
+
+                listeners[key]?.Invoke(foundData[key]);
             }
-
-            if (!listeners.ContainsKey(key))
-            {
-                continue;
-            }
-
-            if (!typesToListenFor.ContainsKey(key))
-            {
-                throw new Exception($"Key wasn't present in types to listen for: {key}");
-            }
-
-            Type type = typesToListenFor[key];
-
-            listeners[key]?.Invoke(foundData[key]);
-        }
-        anchors--;
+            anchors--;
+        });
     }
 }
