@@ -20,7 +20,7 @@ After converting the data into these data classes, Unity passes them to the list
 
 The way the retrieval of data works is you create a class which does what you want and you find a reference to an [IDRInteractor](#idrinteractor) class and you use the AddListener method. You add in a the [IDataHandler](#idatahandler) class you wish to listen for and the method you wish to be called when there is data found.
 
-## _DataRetrieval_
+## _Interfaces_
 
 ### IDataHandler
 
@@ -56,9 +56,6 @@ Designed to work with an IDataRetrieval instance, IDRHandler classes loop at def
 Examples:
 - [**DRInteractor**](#drinteractor)
 
-## _DR_Usage_
-
-
 ## _Classes_
 
 ### Sensor
@@ -69,7 +66,15 @@ Examples:
 
 ### Interactor_AzureDB
 
+This creates an instance of [DR_AzureDB](#dr_azuredb) (x) and an instance of [DRInteractor](#drinteractor) (y). It then feeds the x instance into the y instance.
+
+Interfaces it uses:
+- [IDRInteractor](#idrinteractor)
+- [IDataHandler](#idatahandler)
+
 ### Interactor_Dummy
+
+This creates an instance of [DR_Dummy](#dr_dummy) (x) and an instance of [DRInteractor](#drinteractor) (y). It then feeds the x instance into the y instance.
 
 ### Interactor_Network
 
