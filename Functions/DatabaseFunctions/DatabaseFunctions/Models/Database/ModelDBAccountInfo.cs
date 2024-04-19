@@ -14,7 +14,7 @@ namespace DatabaseFunctions.Models.Database
 
         //static string DataSource = "tcp:databasefunctionsdbserver.database.windows.net";
         //static string UserID = "GeorgeAdmin";
-        //static string Password = "Sponge2002!";
+        //static string Password = "";
         //static string InitialCatalog = "DatabaseFunctions_db";
 
         public static SqlConnectionStringBuilder builder
