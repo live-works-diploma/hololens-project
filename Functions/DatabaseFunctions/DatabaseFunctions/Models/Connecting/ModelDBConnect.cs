@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 
-namespace DatabaseFunctions.Models.Database
+namespace DatabaseFunctions.Models.Connecting
 {
     public class ModelDBConnect
     {
@@ -40,14 +40,14 @@ namespace DatabaseFunctions.Models.Database
             logger.LogError($"Error connecting to database: {message}");
         }
 
-        public static List<Dictionary<string, string>>? AccessDatabase(ILogger logger, string tableName, SqlConnectionStringBuilder builder, Func<string, SqlConnection, List<Dictionary<string, string>>> whatToDoWithDatabaseConnection)
+        public static List<Dictionary<string, object>>? AccessDatabase(ILogger logger, string tableName, SqlConnectionStringBuilder builder, Func<string, SqlConnection, List<Dictionary<string, object>>> whatToDoWithDatabaseConnection)
         {
             using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
             {
                 OpenConnection(connection, logger);
                 try
                 {
-                    List<Dictionary<string, string>> instancesFound = whatToDoWithDatabaseConnection($"[dbo].[{tableName}]", connection);
+                    var instancesFound = whatToDoWithDatabaseConnection($"[dbo].[{tableName}]", connection);
                     return instancesFound;
                 }
                 catch (Exception ex)
@@ -58,7 +58,7 @@ namespace DatabaseFunctions.Models.Database
                 finally
                 {
                     CloseConnection(connection, logger);
-                }                
+                }
             }
         }
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DatabaseFunctions.Models.Database
+namespace DatabaseFunctions.Models.Information
 {
     public class ModelIOTInfo
     {

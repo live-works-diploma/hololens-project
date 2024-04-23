@@ -49,10 +49,14 @@ def data_read(key: str):
 
     TableNames = json_converter.ConvertToJson(table_names)
 
-    conditions = ""
+    conditions = "BlobStorage=true"
 
     data = client.retrieve_data(TableNames, conditions)
-    print(f"data found: {data}")
+
+    for key in data["Result"]:
+        for json_string in data["Result"][key]:
+            print(f"json string found from data: {json_string}")
+        print(f"json string count: {len(data["Result"][key])}")
     
 
 def data_update(key: str):
@@ -172,11 +176,11 @@ def main():
         # table_create(master_key)
 
         # data_create(default_key)
-        # data_read(default_key)        
+        data_read(default_key)        
         # data_update(default_key)  
         # data_delete(default_key)   
 
-        send_command(default_key) 
+        # send_command(default_key) 
         pass  
     except Exception as e:
         logging.error(f"Error occurred: {e}")

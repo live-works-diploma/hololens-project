@@ -1,6 +1,6 @@
 using Azure;
-using DatabaseFunctions.Models.Database;
-using DatabaseFunctions.Models.Database.Items;
+using DatabaseFunctions.Models.Items;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
@@ -33,7 +33,7 @@ namespace DatabaseFunctions.Functions.HttpTrigger.DataAccess
         {
             try
             {
-                string requestBody = req.Query["TableNames"];
+                string? requestBody = req.Query["TableNames"];
 
                 if (requestBody == null)
                 {
@@ -42,7 +42,7 @@ namespace DatabaseFunctions.Functions.HttpTrigger.DataAccess
 
                 logger.LogInformation($"Request body: {requestBody}");
 
-                string[] tableNames = JsonConvert.DeserializeObject<string[]>(requestBody);
+                string[]? tableNames = JsonConvert.DeserializeObject<string[]>(requestBody);
 
                 if (tableNames == null)
                 {
@@ -54,7 +54,7 @@ namespace DatabaseFunctions.Functions.HttpTrigger.DataAccess
 
                 string conditions = req.Query["Conditions"] ?? "";
 
-                string blobStorage = req.Query["BlobStorage"];                
+                string? blobStorage = req.Query["BlobStorage"];                
                 bool accessBlobStorage = blobStorage == null || blobStorage.ToLower() == "true";
 
                 ModelDBItemRead model = new();
@@ -62,7 +62,12 @@ namespace DatabaseFunctions.Functions.HttpTrigger.DataAccess
                 var data = model.GetData(logger, tableNames, conditions, accessBlobStorage);
 
                 var response = req.CreateResponse(HttpStatusCode.OK);
-                await response.WriteAsJsonAsync(data);
+
+                if (data != null)
+                {
+                    await response.WriteAsJsonAsync(data);
+                }
+
                 return response;
             }
             catch (JsonException ex)

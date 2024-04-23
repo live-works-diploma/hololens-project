@@ -1,5 +1,4 @@
-using DatabaseFunctions.Models.Database;
-using DatabaseFunctions.Models.Database.Tables;
+using DatabaseFunctions.Models.Tables;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;

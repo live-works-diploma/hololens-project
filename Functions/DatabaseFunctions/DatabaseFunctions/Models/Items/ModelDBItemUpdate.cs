@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DatabaseFunctions.Models.Database.Items
+namespace DatabaseFunctions.Models.Items
 {
     public class ModelDBItemUpdate
     {

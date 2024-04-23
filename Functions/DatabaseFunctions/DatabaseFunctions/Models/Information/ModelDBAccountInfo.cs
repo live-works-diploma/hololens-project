@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 
-namespace DatabaseFunctions.Models.Database
+namespace DatabaseFunctions.Models.Information
 {
     public class ModelDBAccountInfo
     {
@@ -11,11 +11,6 @@ namespace DatabaseFunctions.Models.Database
         static string UserID = "sqladmin";
         static string Password = "Bullet66!";
         static string InitialCatalog = "hololensSQLdb";
-
-        //static string DataSource = "tcp:databasefunctionsdbserver.database.windows.net";
-        //static string UserID = "GeorgeAdmin";
-        //static string Password = "";
-        //static string InitialCatalog = "DatabaseFunctions_db";
 
         public static SqlConnectionStringBuilder builder
         {

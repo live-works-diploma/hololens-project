@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DatabaseFunctions.Models.Database.Tables
+namespace DatabaseFunctions.Models.Tables
 {
     internal class ModelDBTableUpdateAdd
     {

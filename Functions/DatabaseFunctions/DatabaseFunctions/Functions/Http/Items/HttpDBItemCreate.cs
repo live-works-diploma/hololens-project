@@ -5,8 +5,8 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.Net;
-using DatabaseFunctions.Models.Database.Items;
-using DatabaseFunctions.Models.Database;
+using DatabaseFunctions.Models.Items;
+using DatabaseFunctions.Models.Information;
 
 namespace DatabaseFunctions.Functions.HttpTrigger.DataAccess
 {

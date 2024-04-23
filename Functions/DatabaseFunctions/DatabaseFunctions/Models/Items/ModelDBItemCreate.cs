@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DatabaseFunctions.Models.Connecting;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 using System;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DatabaseFunctions.Models.Database.Items
+namespace DatabaseFunctions.Models.Items
 {
     public class ModelDBItemCreate
     {
