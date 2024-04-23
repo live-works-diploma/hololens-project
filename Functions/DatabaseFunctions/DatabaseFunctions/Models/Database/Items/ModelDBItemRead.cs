@@ -8,13 +8,28 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace DatabaseFunctions.Models.Database.Items
 {
     public class ModelDBItemRead
     {
-        public static Dictionary<string, List<Dictionary<string, string>>>? DatabaseGet(ILogger logger, SqlConnectionStringBuilder builder, string[] tableNames, string conditions)
+        public Dictionary<string, List<Dictionary<string, string>>>? GetData(ILogger logger, string[] dataTypes, string conditions, bool blobStorage = true)
+        {
+            if (blobStorage)
+            {
+                logger.LogInformation("Retrieving data from blob storage");
+                return BlobStorageGet(logger, dataTypes, conditions);
+            }
+            else
+            {
+                logger.LogInformation("Retrieving data from database");
+                return DatabaseGet(logger, dataTypes, conditions);
+            }
+
+            throw new NotImplementedException();
+        }
+
+        Dictionary<string, List<Dictionary<string, string>>>? DatabaseGet(ILogger logger, string[] tableNames, string conditions)
         {
             logger.LogInformation($"conditions: {conditions}");
 
@@ -56,7 +71,7 @@ namespace DatabaseFunctions.Models.Database.Items
 
             for (int i = 0; i < tableNames.Length; i++)
             {
-                var instancesFound = ModelDBConnect.AccessDatabase(logger, tableNames[i], builder, function);
+                var instancesFound = ModelDBConnect.AccessDatabase(logger, tableNames[i], ModelDBAccountInfo.builder, function);
 
                 if (instancesFound == null)
                 {
@@ -71,6 +86,11 @@ namespace DatabaseFunctions.Models.Database.Items
             }
 
             return allData;
+        }
+
+        Dictionary<string, List<Dictionary<string, string>>>? BlobStorageGet(ILogger logger, string[] tableNames, string conditions)
+        {
+            throw new NotImplementedException();
         }
     }
 }

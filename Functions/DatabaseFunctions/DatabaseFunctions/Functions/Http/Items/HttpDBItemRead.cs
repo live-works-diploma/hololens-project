@@ -54,7 +54,12 @@ namespace DatabaseFunctions.Functions.HttpTrigger.DataAccess
 
                 string conditions = req.Query["Conditions"] ?? "";
 
-                var data = ModelDBItemRead.DatabaseGet(logger, ModelDBAccountInfo.builder, tableNames, conditions);
+                string blobStorage = req.Query["BlobStorage"];                
+                bool accessBlobStorage = blobStorage == null || blobStorage.ToLower() == "true";
+
+                ModelDBItemRead model = new();
+
+                var data = model.GetData(logger, tableNames, conditions, accessBlobStorage);
 
                 var response = req.CreateResponse(HttpStatusCode.OK);
                 await response.WriteAsJsonAsync(data);
