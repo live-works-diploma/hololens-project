@@ -16,28 +16,28 @@ public interface IDataHandler
     /// takes in a list of data needed to be added to the class and allows the class to manually chose where the data goes
     /// </summary>
     /// <param name="dataNeeded"></param>
-    void FillData(Dictionary<string, string> dataNeeded);
+    void FillData(Dictionary<string, object> dataNeeded);
 
     /// <summary>
     /// genereates random data for you to add to an instance of this object
     /// </summary>
     /// <param name="maxDistanceToSpawn"></param>
     /// <returns></returns>
-    Dictionary<string, string> CreateDefaultData(float heightAlter, string name, float maxDistanceToSpawn = 30);
+    Dictionary<string, object> CreateDefaultData(float heightAlter, string name, float maxDistanceToSpawn = 30);
 
     /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
-    Dictionary<string, string> TurnDataIntoDictionary();
+    Dictionary<string, object> TurnDataIntoDictionary();
 
-    IDataHandler BuildTask(Dictionary<string, string> data)
+    IDataHandler BuildTask(Dictionary<string, object> data)
     {
         FillData(data);
         return this;
     }
 
-    Dictionary<string, string> TurnIntoDictionary()
+    Dictionary<string, object> TurnIntoDictionary()
     {
         return TurnDataIntoDictionary();
     }

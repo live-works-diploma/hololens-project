@@ -59,7 +59,7 @@ namespace DatabaseFunctions.Functions.HttpTrigger.DataAccess
 
                 ModelDBItemRead model = new();
 
-                var data = model.GetData(logger, tableNames, conditions, accessBlobStorage);
+                var data = await model.GetData(logger, tableNames, conditions, accessBlobStorage);
 
                 var response = req.CreateResponse(HttpStatusCode.OK);
 

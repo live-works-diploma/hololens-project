@@ -26,13 +26,13 @@ public class SensorControl : MonoBehaviour
         }
     }
 
-    public async Task CreateFields(Dictionary<string, string> sensorData, string name)
+    public async Task CreateFields(Dictionary<string, object> sensorData, string name)
     {
         title.text = name;
 
         foreach (var field in sensorData.Keys)
         {
-            await CreateField(field, sensorData[field]);
+            await CreateField(field, sensorData[field].ToString());
         }
     }
 
@@ -63,18 +63,18 @@ public class SensorControl : MonoBehaviour
         fieldsCreated[key] = createdChildren[1];        
     }
 
-    public async Task UpdateFields(Dictionary<string, string> sensorData, string name)
+    public async Task UpdateFields(Dictionary<string, object> sensorData, string name)
     {
         foreach (var field in sensorData.Keys)
         {
             if (!fieldsCreated.ContainsKey(field))
             {
-                await CreateField(field, sensorData[field]);
+                await CreateField(field, sensorData[field].ToString());
             }
             else
             {
                 TextMeshProUGUI textField = fieldsCreated[field];
-                textField.text = sensorData[field];
+                textField.text = sensorData[field].ToString();
             }
         }
     }

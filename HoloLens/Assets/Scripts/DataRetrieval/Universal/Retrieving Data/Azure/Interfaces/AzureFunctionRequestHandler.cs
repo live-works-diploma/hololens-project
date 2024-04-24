@@ -15,12 +15,12 @@ public static class AzureFunctionRequestHandler
 
         try
         {
-            logError("Searching for data");
+            logError?.Invoke("Searching for data");
             return await client.GetAsync($"{functionUrl}?{queryString}");
         }
         catch (Exception e)
         {
-            logError($"Error retrieving data from database: {e.Message}; {functionUrl}; {queryString}");
+            logError?.Invoke($"Error retrieving data from database: {e.Message}; {functionUrl}; {queryString}");
             throw new Exception($"Error retrieving data from database: {e.Message}");
         }
     }
@@ -38,7 +38,7 @@ public static class AzureFunctionRequestHandler
         }
         catch (Exception e)
         {
-            logError($"Error posting data: {e.Message}; {functionUrl}");
+            logError?.Invoke($"Error posting data: {e.Message}; {functionUrl}");
             throw new Exception($"Error posting data: {e.Message}");
         }
     }

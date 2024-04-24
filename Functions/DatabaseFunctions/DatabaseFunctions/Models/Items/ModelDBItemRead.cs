@@ -153,7 +153,7 @@ namespace DatabaseFunctions.Models.Items
                     }
                 }
 
-                allData["TelementryData"] = convertedBlobData;
+                allData["TelemetryData"] = convertedBlobData;
             }
             catch (Exception ex)
             {

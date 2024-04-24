@@ -7,7 +7,7 @@ using UnityEngine;
 
 public static class JsonBuildTask<T> where T : class
 {
-    public static async Task<Dictionary<string, List<T>>> BuildData(string json, Func<Dictionary<string, string>, Type, T> howToBuildTask, Dictionary<string, Type> expectedTypes)
+    public static async Task<Dictionary<string, List<T>>> BuildData(string json, Func<Dictionary<string, object>, Type, T> howToBuildTask, Dictionary<string, Type> expectedTypes, Action<string> logger = null)
     {
         if (json == null)
         {
@@ -17,34 +17,46 @@ public static class JsonBuildTask<T> where T : class
 
         return await Task.Run(() =>
         {
-            Dictionary<string, List<Dictionary<string, string>>> foundData = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, string>>>>(json);
-
-            Dictionary<string, List<T>> builtData = new Dictionary<string, List<T>>();
-
-            foreach (var key in foundData.Keys)
+            try
             {
-                if (!expectedTypes.ContainsKey(key))
+                Dictionary<string, List<Dictionary<string, object>>> foundData = JsonConvert.DeserializeObject<Dictionary<string, List<Dictionary<string, object>>>>(json);
+
+                Dictionary<string, List<T>> builtData = new Dictionary<string, List<T>>();
+
+                foreach (var key in foundData.Keys)
                 {
-                    throw new Exception($"Key found isn't in expected keys: {key}");
+                    if (!expectedTypes.ContainsKey(key))
+                    {
+                        foreach (var kvp in expectedTypes)
+                        {
+                            logger?.Invoke($"expected types ({kvp.Key}:{kvp.Value})");
+                        }
+
+                        throw new Exception($"Key found isn't in expected keys: {key}");
+                    }
+
+                    if (!typeof(T).IsAssignableFrom(expectedTypes[key]))
+                    {
+                        throw new Exception($"Expected type doesn't implement needed type of: {typeof(T).Name}");
+                    }
+
+                    List<T> instancesFound = new List<T>();
+
+                    for (int i = 0; i < foundData[key].Count; i++)
+                    {
+                        T instance = howToBuildTask(foundData[key][i], expectedTypes[key]);
+                        instancesFound.Add(instance);
+                    }
+
+                    builtData[key] = instancesFound;
                 }
 
-                if (!typeof(T).IsAssignableFrom(expectedTypes[key]))
-                {
-                    throw new Exception($"Expected type doesn't implement needed type of: {typeof(T).Name}");
-                }
-
-                List<T> instancesFound = new List<T>();
-
-                for (int i = 0; i < foundData[key].Count; i++)
-                {
-                    T instance = howToBuildTask(foundData[key][i], expectedTypes[key]);
-                    instancesFound.Add(instance);
-                }
-
-                builtData[key] = instancesFound;
+                return builtData;
             }
-
-            return builtData;
+            catch (JsonException ex)
+            {
+                throw new Exception($"Json Error: {ex}");
+            }
         });
     }
 }

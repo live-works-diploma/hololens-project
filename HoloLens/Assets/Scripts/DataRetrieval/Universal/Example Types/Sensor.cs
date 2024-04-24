@@ -17,27 +17,27 @@ public class Sensor : IDataHandler
         }
     }
 
-    Dictionary<string, string> sensorData = new();
+    Dictionary<string, object> sensorData = new();
 
-    public void FillData(Dictionary<string, string> data)
+    public void FillData(Dictionary<string, object> data)
     {
-        name = data["Name"];
+        name = data["Name"].ToString();
         sensorData = data;
     }
 
-    public Dictionary<string, string> CreateDefaultData(float heightAlter, string name, float maxDistanceToSpawn = 30)
+    public Dictionary<string, object> CreateDefaultData(float heightAlter, string name, float maxDistanceToSpawn = 30)
     {
-        Dictionary<string, string> data = new Dictionary<string, string>();
+        Dictionary<string, object> data = new Dictionary<string, object>();
 
         data["Name"] = name;
-        data["wind level"] = Random.Range(0f, 20f).ToString();
-        data["water level"] = Random.Range(0f, 10f).ToString();
-        data["humidity"] = Random.Range(0f, 5f).ToString();
+        data["wind level"] = Random.Range(0f, 20f);
+        data["water level"] = Random.Range(0f, 10f);
+        data["humidity"] = Random.Range(0f, 5f);
 
         return data;
     }
 
-    public Dictionary<string, string> TurnDataIntoDictionary()
+    public Dictionary<string, object> TurnDataIntoDictionary()
     {
         return sensorData;
     }

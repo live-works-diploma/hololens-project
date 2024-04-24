@@ -18,14 +18,14 @@ using UnityEngine;
 /// </typeparam>
 public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 {
-    Func<Dictionary<string, string>, Type, T> buildInstance;
-    Func<T, Dictionary<string, string>> turnInstanceToDictionary;
+    Func<Dictionary<string, object>, Type, T> buildInstance;
+    Func<T, Dictionary<string, object>> turnInstanceToDictionary;
     Func<Type, string, T> createRandomInstanceData;
 
     public int amountOfInstancesToCreatePerType = 5;
     public Action<string> logger;
 
-    public DR_Dummy(Func<Dictionary<string, string>, Type, T> howToBuildTask, Func<T, Dictionary<string, string>> howToTurnIntoDictionary, Func<Type, string, T> howToBuildDefaultTask)
+    public DR_Dummy(Func<Dictionary<string, object>, Type, T> howToBuildTask, Func<T, Dictionary<string, object>> howToTurnIntoDictionary, Func<Type, string, T> howToBuildDefaultTask)
     {
         if (howToBuildTask == null || howToBuildDefaultTask == null || howToTurnIntoDictionary == null)
         {
@@ -52,13 +52,13 @@ public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
         return JsonConvert.SerializeObject(BuildInstances(expectedTypes));
     }
 
-    Dictionary<string, List<Dictionary<string, string>>> BuildInstances(Dictionary<string, Type> expectedTypes)
+    Dictionary<string, List<Dictionary<string, object>>> BuildInstances(Dictionary<string, Type> expectedTypes)
     {
-        Dictionary<string, List<Dictionary<string, string>>> data = new();
+        Dictionary<string, List<Dictionary<string, object>>> data = new();
 
         foreach (var table in expectedTypes.Keys)
         {
-            List<Dictionary<string, string>> instances = new List<Dictionary<string, string>>();
+            List<Dictionary<string, object>> instances = new List<Dictionary<string, object>>();
 
             for (int i = 0; i < amountOfInstancesToCreatePerType; i++)
             {

@@ -16,10 +16,12 @@ public class DR_AzureDB<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
     public string functionUrl;
     public string defaultKey;
 
+    public bool useBlobStorage = true;
+
     public Action<string> logger;
     public Action<string> ErrorLogger;
 
-    public Func<Dictionary<string, string>, Type, T> howToBuildTask;
+    public Func<Dictionary<string, object>, Type, T> howToBuildTask;
 
     public async void Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData, Dictionary<string, Type> expectedTypes)
     {
@@ -34,9 +36,9 @@ public class DR_AzureDB<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
             return;
         }
 
-        logger?.Invoke(jsonData);
+        logger?.Invoke($"json data found: {jsonData}");
 
-        Dictionary<string, List<T>> builtData = await JsonBuildTask<T>.BuildData(jsonData, howToBuildTask, expectedTypes);
+        Dictionary<string, List<T>> builtData = await JsonBuildTask<T>.BuildData(jsonData, howToBuildTask, expectedTypes, logger);
         callWhenFoundData(builtData);
     }
 
@@ -51,7 +53,7 @@ public class DR_AzureDB<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
             tableNames.Add(name);
         }
 
-        string query = $"TableNames={Uri.EscapeDataString(JsonConvert.SerializeObject(tableNames))}";
+        string query = $"TableNames={Uri.EscapeDataString(JsonConvert.SerializeObject(tableNames))}&BlobStorage={useBlobStorage}";
 
         try
         {

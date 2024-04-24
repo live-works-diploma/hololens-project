@@ -53,10 +53,9 @@ def data_read(key: str):
 
     data = client.retrieve_data(TableNames, conditions)
 
-    for key in data["Result"]:
-        for json_string in data["Result"][key]:
-            print(f"json string found from data: {json_string}")
-        print(f"json string count: {len(data["Result"][key])}")
+    for json_string in data[key]:
+        print(f"json string found from data: {json_string}")
+    print(f"json string count: {len(data[key])}")
     
 
 def data_update(key: str):

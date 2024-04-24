@@ -19,27 +19,27 @@ public class TelemetryData : IDataHandler
         }
     }
 
-    Dictionary<string, string> _data = new();
+    Dictionary<string, object> _data = new();
 
-    public Dictionary<string, string> CreateDefaultData(float heightAlter, string name, float maxDistanceToSpawn = 30)
+    public Dictionary<string, object> CreateDefaultData(float heightAlter, string name, float maxDistanceToSpawn = 30)
     {
-        Dictionary<string, string> data = new();
+        Dictionary<string, object> data = new();
 
         data["TelemetryDataId"] = name;
-        data["water Level"] = UnityEngine.Random.Range(0, 10).ToString();
-        data["ph levels"] = UnityEngine.Random.Range(0, 5).ToString();
-        data["temp."] = UnityEngine.Random.Range(-40, 40).ToString();
+        data["water Level"] = UnityEngine.Random.Range(0, 10);
+        data["ph levels"] = UnityEngine.Random.Range(0, 5);
+        data["temp."] = UnityEngine.Random.Range(-40, 40);
 
         return data;
     }
 
-    public void FillData(Dictionary<string, string> dataNeeded)
+    public void FillData(Dictionary<string, object> dataNeeded)
     {
-        name = dataNeeded["TelemetryDataId"];             
+        name = dataNeeded.ContainsKey("DeviceSent") ? dataNeeded["DeviceSent"].ToString() : "Not Set";             
         _data = dataNeeded;
     }
 
-    public Dictionary<string, string> TurnDataIntoDictionary()
+    public Dictionary<string, object> TurnDataIntoDictionary()
     {
         return _data;
     }

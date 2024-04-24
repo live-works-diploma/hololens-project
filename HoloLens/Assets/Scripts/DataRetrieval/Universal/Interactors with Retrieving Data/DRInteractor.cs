@@ -14,6 +14,9 @@ public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandl
     Dictionary<string, IDRHandler<DataHandler>.VoidDelegate> listeners = new();
     Dictionary<string, Type> typesToListenFor = new();
 
+    public Action<string> logger;
+    public Action<string> errorLogger;
+
     int _anchors = 0;
     public int anchors
     {
@@ -106,33 +109,30 @@ public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandl
     /// </summary>
     /// <param name="foundData"></param>
     /// <exception cref="Exception"></exception>
-    async void PopulateData(Dictionary<string, List<DataHandler>> foundData)
+    void PopulateData(Dictionary<string, List<DataHandler>> foundData)
     {
-        await Task.Run(() =>
+        logger?.Invoke("Populating data");
+
+
+        anchors++;
+        foreach (var key in foundData.Keys)
         {
-            anchors++;
-            foreach (var key in foundData.Keys)
+            if (!listeners.ContainsKey(key))
             {
-                if (!Application.isPlaying)
-                {
-                    return;
-                }
-
-                if (!listeners.ContainsKey(key))
-                {
-                    continue;
-                }
-
-                if (!typesToListenFor.ContainsKey(key))
-                {
-                    throw new Exception($"Key wasn't present in types to listen for: {key}");
-                }
-
-                Type type = typesToListenFor[key];
-
-                listeners[key]?.Invoke(foundData[key]);
+                errorLogger?.Invoke($"didn't find listener which used '{key}' key");
+                continue;
             }
-            anchors--;
-        });
+
+            if (!typesToListenFor.ContainsKey(key))
+            {
+                throw new Exception($"Key wasn't present in types to listen for: {key}");
+            }
+
+            Type type = typesToListenFor[key];
+
+            logger?.Invoke("passing data into listener");
+            listeners[key]?.Invoke(foundData[key]);
+        }
+        anchors--;
     }
 }

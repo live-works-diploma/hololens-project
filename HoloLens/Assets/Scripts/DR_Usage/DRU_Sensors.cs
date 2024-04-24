@@ -34,9 +34,11 @@ public class DRU_Sensors : MonoBehaviour
     {
         if (!Application.isPlaying)
         {
+            print("application isnt playing");
             return;
         }
 
+        print("Found Data");
 
         interactor.AlterAnchors(1);
 
@@ -44,7 +46,7 @@ public class DRU_Sensors : MonoBehaviour
         for (int i = 0; i < foundItems.Count; i++)
         {
             string sensorName = foundItems[i].name;
-            Dictionary<string, string> sensorData = foundItems[i].TurnDataIntoDictionary();
+            Dictionary<string, object> sensorData = foundItems[i].TurnDataIntoDictionary();
 
             if (sensorsCreated.ContainsKey(sensorName))
             {
@@ -58,7 +60,7 @@ public class DRU_Sensors : MonoBehaviour
         interactor.AlterAnchors(-1);
     }
 
-    async Task CreateSensor(string name, Dictionary<string, string> sensorData)
+    async Task CreateSensor(string name, Dictionary<string, object> sensorData)
     {
         Vector3 newStartingLocation = startingLocation.transform.position;
         newStartingLocation.x = 1.325f * sensorsCreated.Count;  // makes it so the sensors dont overlap
@@ -72,7 +74,7 @@ public class DRU_Sensors : MonoBehaviour
         sensorsCreated[name] = newSensor;
     }
 
-    async Task UpdateSensor(string name, Dictionary<string, string> sensorData)
+    async Task UpdateSensor(string name, Dictionary<string, object> sensorData)
     {
         GameObject createdSensor = sensorsCreated[name];
 
