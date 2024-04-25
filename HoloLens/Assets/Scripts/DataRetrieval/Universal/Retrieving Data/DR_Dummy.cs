@@ -2,8 +2,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 /// <summary>
@@ -29,7 +29,7 @@ public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
     {
         if (howToBuildTask == null || howToBuildDefaultTask == null || howToTurnIntoDictionary == null)
         {
-            throw new Exception("Funcs can't be null");
+            throw new ArgumentNullException("Funcs can't be null");
         }
 
         this.createRandomInstanceData = howToBuildDefaultTask;
@@ -37,8 +37,18 @@ public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
         this.buildInstance = howToBuildTask;
     }
 
-    public async void Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData, Dictionary<string, Type> expectedTypes)
+    public async Task Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData, Dictionary<string, Type> expectedTypes)
     {
+        if (expectedTypes == null || callWhenFoundData == null)
+        {
+            throw new ArgumentNullException("Arguments can't be null");
+        }
+
+        if (expectedTypes.Values.Any(type => !typeof(T).IsAssignableFrom(type)))
+        {
+            throw new ArgumentException("Each type in expectedTypes must use T as a parent type or be the parent type");
+        }
+
         string jsonData = await RetrieveJson(expectedTypes);
 
         logger?.Invoke(jsonData);

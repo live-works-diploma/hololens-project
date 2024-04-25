@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Microsoft.MixedReality.GraphicsTools.MeshInstancer;
 
 /// <summary>
 /// Says this class is a type to listen for when retrieving data. This interfaces makes the class that implements it implement a method which takes in data and builds the class

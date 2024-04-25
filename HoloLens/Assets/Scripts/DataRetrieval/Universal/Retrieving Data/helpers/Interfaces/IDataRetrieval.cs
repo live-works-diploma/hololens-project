@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -33,5 +34,5 @@ public interface IDataRetrieval<T> where T : class
     /// Shows the class how to create default data for an instance. It passes in the type of instance and returns an instance populated with the default data. Is only needed
     /// when creating default data. 
     /// </param>
-    void Retrieve(VoidDelegate callWhenFoundData, Dictionary<string, Type> expectedTypes);
+    Task Retrieve(VoidDelegate callWhenFoundData, Dictionary<string, Type> expectedTypes);
 }

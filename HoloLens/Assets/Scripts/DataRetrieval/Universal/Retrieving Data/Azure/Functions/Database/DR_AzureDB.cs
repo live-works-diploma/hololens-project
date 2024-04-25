@@ -23,7 +23,7 @@ public class DR_AzureDB<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 
     public Func<Dictionary<string, object>, Type, T> howToBuildTask;
 
-    public async void Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData, Dictionary<string, Type> expectedTypes)
+    public async Task Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData, Dictionary<string, Type> expectedTypes)
     {
         logger?.Invoke("starting the retrieve of data");
 

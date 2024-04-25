@@ -100,7 +100,7 @@ public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandl
 
         string query = $"TableNames={Uri.EscapeDataString(JsonConvert.SerializeObject(tableNames))}";
 
-        dataRetrieval.Retrieve(PopulateData, typesToListenFor);   
+        await dataRetrieval.Retrieve(PopulateData, typesToListenFor);   
     }
 
     /// <summary>
