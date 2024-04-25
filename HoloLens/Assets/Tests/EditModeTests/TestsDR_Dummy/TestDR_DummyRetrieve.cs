@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing.Printing;
+using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using UnityEngine;
@@ -9,169 +11,120 @@ using UnityEngine.TestTools;
 
 public class TestDR_DummyRetrieve
 {
-    [Test]
-    public void NullArguments()
+    Func<Dictionary<string, object>, Type, IDataHandler> buildTask = (data, type) =>
     {
-        Func<Dictionary<string, object>, Type, IDataHandler> buildTask = (data, type) =>
-        {
-            IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
-            return instance.BuildTask(data);
-        };
+        IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
+        return instance;
+    };
 
-        Func<IDataHandler, Dictionary<string, object>> turnIntoDictionary = instance =>
-        {
-            return instance.TurnDataIntoDictionary();
-        };
+    Func<IDataHandler, Dictionary<string, object>> turnIntoDictionary = instance =>
+    {
+        return new();
+    };
 
-        Func<Type, string, IDataHandler> buildRandomInstance = (type, name) =>
-        {
-            IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
-            return instance.BuildRandomInstance(name);
-        };
+    Func<Type, string, IDataHandler> buildRandomInstance = (type, name) =>
+    {
+        IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
+        return instance.BuildRandomInstance(name);
+    };
 
+    Dictionary<string, Type> expectedTypes = new Dictionary<string, Type>()
+    {
+        { "Sensor", typeof(Sensor) },
+        { "Plant", typeof(Plant) },
+        { "TelemetryData", typeof(TelemetryData) },
+    };
+
+    [UnityTest]
+    public IEnumerator NullArguments()
+    {
         var dummy = new DR_Dummy<IDataHandler>(buildTask, turnIntoDictionary, buildRandomInstance);
+
+        Task retrieveTask = dummy.Retrieve(null, null);
+
+        yield return new WaitUntil(() => retrieveTask.IsCompleted || retrieveTask.IsFaulted || retrieveTask.IsCanceled);
 
         try
         {
-            dummy.Retrieve(null, null).Wait(TimeSpan.FromSeconds(1));
+            retrieveTask.GetAwaiter().GetResult();
             Assert.Fail("Expected ArgumentNullException was not thrown.");
         }
-        catch (AggregateException ex) when (ex.InnerException is ArgumentNullException)
+        catch (ArgumentNullException ex)
         {
-            Assert.Pass();
+            Assert.Pass("Throw argument null exception");
         }
-        catch (AggregateException ex) when (ex.InnerException is TimeoutException)
+        catch (TimeoutException)
         {
             Assert.Fail("Operation timed out."); // The Wait operation timed out
         }
     }
 
-    [Test]
-    public void NullExpectedTypes()
+    [UnityTest]
+    public IEnumerator NullExpectedTypes()
     {
-        Func<Dictionary<string, object>, Type, IDataHandler> buildTask = (data, type) =>
-        {
-            IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
-            return instance.BuildTask(data);
-        };
-
-        Func<IDataHandler, Dictionary<string, object>> turnIntoDictionary = instance =>
-        {
-            return instance.TurnDataIntoDictionary();
-        };
-
-        Func<Type, string, IDataHandler> buildRandomInstance = (type, name) =>
-        {
-            IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
-            return instance.BuildRandomInstance(name);
-        };
-
         var dummy = new DR_Dummy<IDataHandler>(buildTask, turnIntoDictionary, buildRandomInstance);
+
+        Task retrieveTask = dummy.Retrieve(data => { }, null);
+
+        yield return new WaitUntil(() => retrieveTask.IsCompleted || retrieveTask.IsFaulted || retrieveTask.IsCanceled);
 
         try
         {
-            dummy.Retrieve(data => { }, null).Wait(TimeSpan.FromSeconds(1));
+            retrieveTask.GetAwaiter().GetResult();
             Assert.Fail("Expected ArgumentNullException was not thrown.");
         }
-        catch (AggregateException ex) when (ex.InnerException is ArgumentNullException)
+        catch (ArgumentNullException)
         {
-            Assert.Pass();
+            Assert.Pass("Throw argument null exception");
         }
-        catch (AggregateException ex) when (ex.InnerException is TimeoutException)
+    }
+
+
+    [UnityTest]
+    public IEnumerator NullDelegate()
+    {
+        var dummy = new DR_Dummy<IDataHandler>(buildTask, turnIntoDictionary, buildRandomInstance);
+
+        Task retrieveTask = dummy.Retrieve(null, expectedTypes);
+
+        yield return new WaitUntil(() => retrieveTask.IsCompleted || retrieveTask.IsFaulted || retrieveTask.IsCanceled);
+
+        try
+        {
+            retrieveTask.GetAwaiter().GetResult();
+            Assert.Fail("Expected ArgumentNullException was not thrown.");
+        }
+        catch (ArgumentNullException)
+        {
+            Assert.Pass("Throw argument null exception");
+        }
+        catch (TimeoutException)
         {
             Assert.Fail("Operation timed out."); // The Wait operation timed out
         }
     }
 
-    [Test]
-    public void NullDelegate()
+
+    [UnityTest]
+    public IEnumerator ValidArguments()
     {
-        Func<Dictionary<string, object>, Type, IDataHandler> buildTask = (data, type) =>
-        {
-            IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
-            return instance.BuildTask(data);
-        };
-
-        Func<IDataHandler, Dictionary<string, object>> turnIntoDictionary = instance =>
-        {
-            return instance.TurnDataIntoDictionary();
-        };
-
-        Func<Type, string, IDataHandler> buildRandomInstance = (type, name) =>
-        {
-            IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
-            return instance.BuildRandomInstance(name);
-        };
-
-        var expectedTypes = new Dictionary<string, Type>();
-
         var dummy = new DR_Dummy<IDataHandler>(buildTask, turnIntoDictionary, buildRandomInstance);
 
-        try
+        Task retrieveTask = dummy.Retrieve(data => Debug.Log("Data found"), expectedTypes);
+
+        yield return new WaitUntil(() => retrieveTask.IsCompleted || retrieveTask.IsFaulted || retrieveTask.IsCanceled);
+
+        if (retrieveTask.IsFaulted || retrieveTask.IsCanceled)
         {
-            dummy.Retrieve(null, expectedTypes).Wait(TimeSpan.FromSeconds(1));
-            Assert.Fail("Expected ArgumentNullException was not thrown.");
+            Assert.Fail("Operation failed or was canceled.");
         }
-        catch (AggregateException ex) when (ex.InnerException is ArgumentNullException)
-        {
-            Assert.Pass();
-        }
-        catch (AggregateException ex) when (ex.InnerException is TimeoutException)
-        {
-            Assert.Fail("Operation timed out."); // The Wait operation timed out
-        }
+
+        Assert.Pass("Data retrieved successfully.");
     }
 
-    [Test]
-    public void ValidArguments()
+    [UnityTest]
+    public IEnumerator InvalidExpectedTypes()
     {
-        Func<Dictionary<string, object>, Type, IDataHandler> buildTask = (data, type) =>
-        {
-            IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
-            return instance.BuildTask(data);
-        };
-
-        Func<IDataHandler, Dictionary<string, object>> turnIntoDictionary = instance =>
-        {
-            return instance.TurnDataIntoDictionary();
-        };
-
-        Func<Type, string, IDataHandler> buildRandomInstance = (type, name) =>
-        {
-            IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
-            return instance.BuildRandomInstance(name);
-        };
-
-        var expectedTypes = new Dictionary<string, Type>();
-
-        var dummy = new DR_Dummy<IDataHandler>(buildTask, turnIntoDictionary, buildRandomInstance);
-
-        Assert.DoesNotThrow(() =>
-        {
-            dummy.Retrieve(data => { }, expectedTypes).Wait();
-        });
-    }
-
-    [Test]
-    public void InvalidExpectedTypes()
-    {
-        Func<Dictionary<string, object>, Type, IDataHandler> buildTask = (data, type) =>
-        {
-            IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
-            return instance.BuildTask(data);
-        };
-
-        Func<IDataHandler, Dictionary<string, object>> turnIntoDictionary = instance =>
-        {
-            return instance.TurnDataIntoDictionary();
-        };
-
-        Func<Type, string, IDataHandler> buildRandomInstance = (type, name) =>
-        {
-            IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
-            return instance.BuildRandomInstance(name);
-        };
-
         var expectedTypes = new Dictionary<string, Type>
         {
             { "int", typeof(int) },
@@ -181,62 +134,89 @@ public class TestDR_DummyRetrieve
 
         var dummy = new DR_Dummy<IDataHandler>(buildTask, turnIntoDictionary, buildRandomInstance);
 
+        Task retrieveTask = dummy.Retrieve(data => { }, expectedTypes);
+
+        yield return new WaitUntil(() => retrieveTask.IsCompleted || retrieveTask.IsFaulted || retrieveTask.IsCanceled);
+
         try
         {
-            dummy.Retrieve(null, expectedTypes).Wait(TimeSpan.FromSeconds(1));
-            Assert.Fail("Expected ArgumentNullException was not thrown.");
+            // Check if the task threw an exception
+            retrieveTask.GetAwaiter().GetResult();
+            Assert.Fail("Expected ArgumentException was not thrown.");
         }
-        catch (AggregateException ex) when (ex.InnerException is ArgumentNullException)
+        catch (ArgumentException)
         {
-            Assert.Pass();
+            Assert.Pass("Throw argument null exception");
         }
-        catch (AggregateException ex) when (ex.InnerException is TimeoutException)
+        catch (TimeoutException)
         {
             Assert.Fail("Operation timed out."); // The Wait operation timed out
         }
     }
 
-    [Test]
-    public void ValidExpectedTypes()
+    [UnityTest]
+    public IEnumerator ValidExpectedTypes()
     {
-        Func<Dictionary<string, object>, Type, IDataHandler> buildTask = (data, type) =>
+        var dummy = new DR_Dummy<IDataHandler>(buildTask, turnIntoDictionary, buildRandomInstance)
         {
-            IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
-            return instance.BuildTask(data);
+            amountOfInstancesToCreatePerType = 2,
+
+            logger = message =>
+            {
+                // Debug.Log(message);
+            },
         };
 
-        Func<IDataHandler, Dictionary<string, object>> turnIntoDictionary = instance =>
-        {
-            return instance.TurnDataIntoDictionary();
-        };
+        Task retrieveTask = dummy.Retrieve(data => Debug.Log($"different types of data found: {data.Count}"), expectedTypes);
 
-        Func<Type, string, IDataHandler> buildRandomInstance = (type, name) =>
-        {
-            IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
-            return instance.BuildRandomInstance(name);
-        };
+        yield return new WaitUntil(() => retrieveTask.IsCompleted || retrieveTask.IsFaulted || retrieveTask.IsCanceled);
 
-        var expectedTypes = new Dictionary<string, Type>()
+        if (retrieveTask.IsFaulted || retrieveTask.IsCanceled)
         {
-            { "Sensr", typeof(Sensor) },
-            { "Plant", typeof(Plant) },
-            { "TelemetryData", typeof(TelemetryData) },
-        };
-
-        var dummy = new DR_Dummy<IDataHandler>(buildTask, turnIntoDictionary, buildRandomInstance);
-
-        try
-        {
-            dummy.Retrieve(null, expectedTypes).Wait(TimeSpan.FromSeconds(1));
-            Assert.Fail("Expected ArgumentNullException was not thrown.");
+            Assert.Fail("Operation failed or was canceled.");
         }
-        catch (AggregateException ex) when (ex.InnerException is ArgumentNullException)
+
+        Assert.Pass("Data retrieved successfully.");
+    }
+
+    [UnityTest]
+    public IEnumerator CorrectAmountOfDataReturned()
+    {
+        int numberOfInstancesPerType = 1;      
+
+        var dummy = new DR_Dummy<IDataHandler>(buildTask, turnIntoDictionary, buildRandomInstance)
         {
-            Assert.Pass();
-        }
-        catch (AggregateException ex) when (ex.InnerException is TimeoutException)
+            amountOfInstancesToCreatePerType = numberOfInstancesPerType,
+
+            logger = message =>
+            {
+                // Debug.Log(message);
+            },
+        };
+        
+        int totalInstancesFound = 0;
+
+        IDataRetrieval<IDataHandler>.VoidDelegate dele = null;
+
+        dele += data => Debug.Log($"different types of data found: {data.Count}");
+
+        dele += data =>
         {
-            Assert.Fail("Operation timed out."); // The Wait operation timed out
+            foreach (var kvp in data)
+            {
+                totalInstancesFound += kvp.Value.Count;
+            }
+        };
+
+        Task retrieveTask = dummy.Retrieve(dele, expectedTypes);
+
+        yield return new WaitUntil(() => retrieveTask.IsCompleted || retrieveTask.IsFaulted || retrieveTask.IsCanceled);
+
+        if (retrieveTask.IsFaulted || retrieveTask.IsCanceled)
+        {
+            Assert.Fail("Operation failed or was canceled.");
         }
+
+        Assert.AreEqual(expectedTypes.Count * numberOfInstancesPerType, totalInstancesFound);
     }
 }

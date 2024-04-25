@@ -31,7 +31,7 @@ public class TestDR_DummyInstantiate
     }
 
     [Test]
-    public void TestDR_DummyInstantiateAllArgumentsAreNull()
+    public void NullArguments()
     {
         Assert.Throws<ArgumentNullException>(() =>
         {
@@ -40,7 +40,7 @@ public class TestDR_DummyInstantiate
     }
 
     [Test]
-    public void TestDR_DummyInstantiateBuildTaskIsNull()
+    public void NullArgumentBuildTask()
     {
         Assert.Throws<ArgumentNullException>(() =>
         {
@@ -49,7 +49,7 @@ public class TestDR_DummyInstantiate
     }
 
     [Test]
-    public void TestDR_DummyInstantiateTurnIntoDictionaryIsNull()
+    public void NullArgumentTurnIntoDictionary()
     {
         Assert.Throws<ArgumentNullException>(() =>
         {
@@ -58,7 +58,7 @@ public class TestDR_DummyInstantiate
     }
 
     [Test]
-    public void TestDR_DummyInstantiateBuildRandomInstanceIsNull()
+    public void NullArgumentBuildRandomInstances()
     {
         Assert.Throws<ArgumentNullException>(() =>
         {
@@ -67,7 +67,7 @@ public class TestDR_DummyInstantiate
     }
 
     [Test]
-    public void TestDR_DummyInstantiateAllArgumentsAreProvided()
+    public void ValidArguments()
     {
         Assert.DoesNotThrow(() =>
         {

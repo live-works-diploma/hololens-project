@@ -1,3 +1,4 @@
+using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -42,36 +43,63 @@ public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
         if (expectedTypes == null || callWhenFoundData == null)
         {
             throw new ArgumentNullException("Arguments can't be null");
-        }
+        }        
 
-        if (expectedTypes.Values.Any(type => !typeof(T).IsAssignableFrom(type)))
+        foreach (var type in expectedTypes.Values)
         {
-            throw new ArgumentException("Each type in expectedTypes must use T as a parent type or be the parent type");
+            if (!typeof(T).IsAssignableFrom(type))
+            {
+                throw new ArgumentException("Each type in expectedTypes must use T as a parent type or be the parent type");
+            }
         }
+        
+        logger?.Invoke("Passed argument checks");
 
         string jsonData = await RetrieveJson(expectedTypes);
 
-        logger?.Invoke(jsonData);
+        logger?.Invoke($"found json data: {jsonData}");
 
         Dictionary<string, List<T>> data = await JsonBuildTask<T>.BuildData(jsonData, buildInstance, expectedTypes);
+
+        logger?.Invoke("Built data");
+
         callWhenFoundData?.Invoke(data);
+        logger?.Invoke("Invoked data");
     }
 
     public async Task<string> RetrieveJson(Dictionary<string, Type> expectedTypes)
     {
-        return JsonConvert.SerializeObject(BuildInstances(expectedTypes));
+        if (expectedTypes == null)
+        {
+            throw new ArgumentNullException("Expected types can't be null");
+        }
+
+        logger?.Invoke("Building json string and calling methods to build the data");
+
+        Dictionary<string, List<Dictionary<string, object>>> data = await BuildInstances(expectedTypes);
+
+        return JsonConvert.SerializeObject(data);
     }
 
-    Dictionary<string, List<Dictionary<string, object>>> BuildInstances(Dictionary<string, Type> expectedTypes)
+    public async Task<Dictionary<string, List<Dictionary<string, object>>>> BuildInstances(Dictionary<string, Type> expectedTypes)
     {
+        if (expectedTypes == null)
+        {
+            throw new ArgumentNullException("Expected types can't be null");
+        }
+
+        logger?.Invoke("Building random instance data");
+
         Dictionary<string, List<Dictionary<string, object>>> data = new();
 
         foreach (var table in expectedTypes.Keys)
         {
+            logger?.Invoke($"Building data for {table}");
             List<Dictionary<string, object>> instances = new List<Dictionary<string, object>>();
 
             for (int i = 0; i < amountOfInstancesToCreatePerType; i++)
             {
+                logger?.Invoke($"Building instance ({i}) for {table}");
                 T instance = createRandomInstanceData(expectedTypes[table], $"{table} ({i})");
                 var instanceData = turnInstanceToDictionary(instance);
                 instances.Add(turnInstanceToDictionary(instance));
@@ -80,6 +108,8 @@ public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
             data[table] = instances;
         }
 
-        return data;
+        logger?.Invoke($"Number of different types created: {data.Count}");
+
+        return await Task.FromResult(data);
     }
 }
