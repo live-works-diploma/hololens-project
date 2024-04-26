@@ -48,6 +48,11 @@ public interface IDataHandler
 
     public IDataHandler BuildRandomInstance(string name)
     {
+        if (name == null)
+        {
+            throw new ArgumentException();
+        }
+
         FillData(CreateDefaultData(0, name));
         return this;
     }

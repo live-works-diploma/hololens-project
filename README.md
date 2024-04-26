@@ -46,6 +46,8 @@ Versions of front end include:
 
 ### IDataHandler
 
+**Unit Test Name:** TestsIDataHandler
+
 These classes serve as the foundation for managing data retrieved from Azure databases. They offer essential methods for constructing classes from data, converting instances into dictionaries, and generating dummy data. Naming conventions align these classes directly with the tables they represent in Azure databases, ensuring clarity and consistency.
 
 Examples:
@@ -54,6 +56,8 @@ Examples:
 - [**TelementryData**](#telementrydata)
 
 ### IDRInteractor
+
+**Unit Test Name:** N/A
 
 Prefixed with "Interactor," these classes play a pivotal role as centralized points for other Unity classes to listen for data. By consolidating the listening logic, they eliminate the need for individual classes to set up their listeners, minimizing redundant calls. IDRInteractor classes create their instances of IDataRetrieval and IDRHandler, promoting a modular design that allows for seamless interchangeability without necessitating alterations in other classes.
 
@@ -64,6 +68,8 @@ Examples:
 
 ### IDataRetrieval
 
+**Unit Test Name:** N/A
+
 Classes prefixed with "DR" focus on retrieving and structuring data into the desired format, typically a list of instances. They invoke delegates to which listeners have attached their methods, passing the retrieved data as an argument. IDataRetrieval classes do not loop; instead, they provide methods for data retrieval. They also handle the same listener functionality as IDRInteractor, ensuring efficient and targeted data retrieval, such as in Azure where specific data types are retrieved based on listener type names.
 
 Examples:
@@ -73,12 +79,16 @@ Examples:
 
 ### IDRHandler
 
+**Unit Test Name:** N/A
+
 Designed to work with an IDataRetrieval instance, IDRHandler classes loop at defined intervals. They offer anchors that other classes can use to pause the loop. When these anchors reach or fall below 0, the routine restarts, introducing a delay as needed.
 
 Examples:
 - [**DRInteractor**](#drinteractor)
 
 ### IJsonHandler
+
+**Unit Test Name:** N/A
 
 Forces the class to implement a way of retrieving a json string. It allows the json string to be built in the method itself instead of retrieving it.
 
@@ -91,17 +101,25 @@ Examples:
 
 ### Sensor
 
+**Unit Test Name:** N/A
+
 This class encapsulates data related to sensor information.
 
 ### Plant
+
+**Unit Test Name:** N/A
 
 This class encapsulates data related to plant information.
 
 ### TelemetryData
 
+**Unit Test Name:** N/A
+
 This class holds telemetry-related data.
 
 ### Interactor_AzureDB
+
+**Unit Test Name:** N/A
 
 This class creates an instance of [DR_AzureDB](#dr_azuredb) and an instance of [DRInteractor](#drinteractor). It then feeds the instance of DR_AzureDB into the instance of DRInteractor. This class utilizes [AzureFunctionAccess](#azurefunctionaccess) to retrieve the necessary keys for accessing Azure functions. This design allows for easy switching between functions without the need to rewrite keys, which is particularly useful when dealing with multiple functions or accounts that perform the same task but require different keys.
 
@@ -111,6 +129,8 @@ Interfaces:
 
 ### Interactor_Dummy
 
+**Unit Test Name:** N/A
+
 This class creates an instance of [DR_Dummy](#dr_dummy) and an instance of [DRInteractor](#drinteractor). It then feeds the instance of DR_Dummy into the instance of DRInteractor.
 
 Interfaces:
@@ -118,6 +138,8 @@ Interfaces:
 - [**IDataHandler**](#idatahandler)
 
 ### Interactor_Network
+
+**Unit Test Name:** N/A
 
 This class creates an instance of [DR_Network](#dr_network) and an instance of [DRInteractor](#drinteractor). It then feeds the instance of DR_Network into the instance of DRInteractor.
 
@@ -127,6 +149,8 @@ Interfaces:
 
 ### DR_AzureDB
 
+**Unit Test Name:** N/A
+
 This sends a post request, using [AzureFunctionRequestHandler](#azurefunctionrequesthandler), that retrieves a json string of the needeed data and then converted into the needed structure using [JsonBuildTask](#jsonbuildtask). This data is then passed into a class which implements the [IDRHandler](#idrhandler) interface.
 
 Interfaces:
@@ -134,6 +158,8 @@ Interfaces:
 - [**IJsonHandler**](#ijsonhandler)
 
 ### DR_Dummy
+
+**Unit Test Name:** _TestsDR_Dummy_
 
 This class creates dummy data, converts it into a JSON string, rebuilds it using [JsonBuildTask](#jsonbuildtask), and then passes it into a class that implements the [IDRHandler](#idrhandler) interface.
 
@@ -143,6 +169,8 @@ Interfaces:
 
 ### DR_Network
 
+**Unit Test Name:** N/A
+
 This does nothing currently
 
 Interaces:
@@ -151,6 +179,8 @@ Interaces:
 
 ### DRInteractor
 
+**Unit Test Name:** N/A
+
 This component serves as a mechanism to iterate over the calls provided by classes implementing [IDataRetrieval](#idataretrieval). It offers methods to initiate the data retrieval process, along with 'anchors'. These anchors allow the pausing of the iteration when a listener's method is invoked, ensuring that no further calls are made until the current operation completes. Additionally, this component introduces a configurable delay between calls to limit the frequency of requests. The current delay is set to 500ms, though in practice it tends to be closer to 550ms to allow listeners sufficient time to process each call.
 
 Interfaces:
@@ -158,45 +188,67 @@ Interfaces:
 
 ### JsonBuildTask
 
+**Unit Test Name:** N/A
+
 This class supplies methods for converting JSON strings into the desired data structure.
 
 ### Interactor_AzureCommand
+
+**Unit Test Name:** N/A
 
 This class supplies methods for sending commands to an Azure function.
 
 ### AzureBlobAccess
 
+**Unit Test Name:** N/A
+
 This class currently has no functionality.
 
 ### AzureFunctionAccess
+
+**Unit Test Name:** N/A
 
 This class is a scriptable object that contains the necessary data for interacting with an Azure function.
 
 ### NetworkData
 
+**Unit Test Name:** N/A
+
 This class is a scriptable object that contains the necessary data for sending signals using websockets.
 
 ### ExampleUsage
+
+**Unit Test Name:** N/A
 
 This class is an example of a "DRU" listener. It prints the count of instances.
 
 ### DS_AzureCommands
 
+**Unit Test Name:** N/A
+
 This class acts as a central point of control for other classes in Unity. It provides methods for sending commands, abstracting away the implementation details from other classes. This design allows the functionality to be easily accessed by a canvas button or other components without requiring them to handle the specifics of the command sending process.
 
 ### AzureFunctionRequestHandler
+
+**Unit Test Name:** N/A
 
 This class supplies methods for sending POST and GET requests to Azure functions.
 
 ### SensorControl
 
+**Unit Test Name:** N/A
+
 Supplies methods for adding / altering the data on a canvas. When creating fields on the sensor it creates a new prefab which is parented to the sensor canvas. It then adds each field that is created to a dictionary. Before it adds new fields it checks if that field already exists and if it does then it just alters value on that field instead.
 
 ### DRU_Sensors
 
+**Unit Test Name:** N/A
+
 Acts as a listener. When data is found it is passed back to this class which then passes that data into [SensorControl](#sensorcontrol) which then populates the sensor canvases which display the data to the user.
 
 ### DRU_T
+
+**Unit Test Name:** N/A
 
 Not finished yet
 
