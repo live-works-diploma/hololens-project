@@ -677,7 +677,7 @@ GameObject:
   m_Component:
   - component: {fileID: 968355008}
   - component: {fileID: 968355009}
-  - component: {fileID: 968355011}
+  - component: {fileID: 968355010}
   m_Layer: 0
   m_Name: DataRetrievers
   m_TagString: Untagged
@@ -716,7 +716,7 @@ MonoBehaviour:
   startingLocation: {fileID: 643368552}
   fieldPrefab: {fileID: 8930270098211552320, guid: ba86cdd6ea1a01842be7610d96aa6624, type: 3}
   preCreatedSensors: []
---- !u!114 &968355011
+--- !u!114 &968355010
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -725,15 +725,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 968355005}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3eaa51dbc66f3164f92cb9f4b65652b0, type: 3}
+  m_Script: {fileID: 11500000, guid: 13e04c7b599e0f547916470e8375eace, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  accessBlobStorage: 1
   initialDelay: 500
-  azureAccount: {fileID: 11400000, guid: 3307a9dfebbe8614f8082490369ff637, type: 2}
-  errorText: {fileID: 441799376}
-  logs: 1
-  errorLogs: 1
+  delayInbetweenCalls: 5000
+  numberOfInstancesPerType: 1
 --- !u!1001 &1124562309
 PrefabInstance:
   m_ObjectHideFlags: 0

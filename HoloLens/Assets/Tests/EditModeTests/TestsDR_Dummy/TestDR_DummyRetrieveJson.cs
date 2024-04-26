@@ -96,6 +96,10 @@ public class TestDR_DummyRetrieveJson
         {
             Assert.Fail("Throw argument null exception");
         }
+        catch (ArgumentException)
+        {
+            Assert.Fail("Throw argument exception");
+        }
         catch (TimeoutException)
         {
             Assert.Fail("Operation timed out.");
@@ -149,5 +153,42 @@ public class TestDR_DummyRetrieveJson
         Debug.Log($"Found string: {retrievedJsonString}");
 
         Assert.AreEqual(expectedJsonString, retrievedJsonString, "Json strings were equal");
+    }
+
+    [UnityTest]
+    public IEnumerator InvalidArgument()
+    {
+        Dictionary<string, Type> expectedTypes = new Dictionary<string, Type>()
+        {
+            { "int", typeof(int) },
+        };
+
+        var dummy = new DR_Dummy<IDataHandler>(buildTask, turnIntoDictionary, buildRandomInstance)
+        {
+            amountOfInstancesToCreatePerType = 1,
+
+            logger = message =>
+            {
+                Debug.Log(message);
+            },
+        };
+
+        Task task = dummy.RetrieveJson(expectedTypes);
+
+        yield return new WaitUntil(() => task.IsCompleted || task.IsFaulted || task.IsCanceled);
+
+        try
+        {
+            task.GetAwaiter().GetResult();
+            Assert.Fail("Expected ArgumentException was not thrown.");
+        }
+        catch (ArgumentException)
+        {
+            Assert.Pass("Throw argument null exception");
+        }
+        catch (TimeoutException)
+        {
+            Assert.Fail("Operation timed out.");
+        }
     }
 }

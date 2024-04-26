@@ -24,32 +24,19 @@ public class Interactor_AzureDB : MonoBehaviour, IDRInteractor<IDataHandler>
     public TextMeshProUGUI errorText;
 
     [Header("Debuging")]
-    [SerializeField] bool logs = true;
-    [SerializeField] bool errorLogs = true;
-    Action<string> logger;
-    Action<string> errorLogger;
+    [SerializeField] Logger logger;
+    Action<string> log;
+    Action<string> errorLog;
 
     private void Start()
     {
-        if (logs)
-        {
-            logger = message =>
-            {
-                print(message);
-            };           
-        }
-        if (errorLogs)
-        {
-            errorLogger = message =>
-            {
-                print(message);
-            };
-        }
+        log = message => logger?.Log(message);
+        errorLog = log;
 
         dataRetrieval = new DRInteractor<IDataHandler>(CreateDataRetrieval())
         {
-            logger = logger,
-            errorLogger = errorLogger,
+            logger = log,
+            errorLogger = errorLog,
         };
         dataRetrieval.SearchForData(initialDelay);
     }
@@ -74,8 +61,8 @@ public class Interactor_AzureDB : MonoBehaviour, IDRInteractor<IDataHandler>
                 return instance.BuildTask(data);
             },
 
-            logger = logger,
-            ErrorLogger = errorLogger,
+            logger = log,
+            ErrorLogger = errorLog,
         };
     }
 }

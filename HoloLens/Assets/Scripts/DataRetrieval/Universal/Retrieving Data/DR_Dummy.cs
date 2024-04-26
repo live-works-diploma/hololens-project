@@ -64,24 +64,9 @@ public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
         logger?.Invoke("Built data");
 
         callWhenFoundData?.Invoke(data);
-        logger?.Invoke("Invoked data");
     }
 
     public async Task<string> RetrieveJson(Dictionary<string, Type> expectedTypes)
-    {
-        if (expectedTypes == null)
-        {
-            throw new ArgumentNullException("Expected types can't be null");
-        }
-
-        logger?.Invoke("Building json string and calling methods to build the data");
-
-        Dictionary<string, List<Dictionary<string, object>>> data = await BuildInstances(expectedTypes);
-
-        return JsonConvert.SerializeObject(data);
-    }
-
-    public async Task<Dictionary<string, List<Dictionary<string, object>>>> BuildInstances(Dictionary<string, Type> expectedTypes)
     {
         if (expectedTypes == null)
         {
@@ -92,24 +77,29 @@ public class DR_Dummy<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 
         Dictionary<string, List<Dictionary<string, object>>> data = new();
 
-        foreach (var table in expectedTypes.Keys)
+        foreach (var kvp in expectedTypes)
         {
-            logger?.Invoke($"Building data for {table}");
+            if (!typeof(T).IsAssignableFrom(kvp.Value))
+            {
+                throw new ArgumentException($"{kvp.Key} doesn't implement {typeof(T).Name}");
+            }
+
+            logger?.Invoke($"Building data for {kvp.Key}");
             List<Dictionary<string, object>> instances = new List<Dictionary<string, object>>();
 
             for (int i = 0; i < amountOfInstancesToCreatePerType; i++)
             {
-                logger?.Invoke($"Building instance ({i}) for {table}");
-                T instance = createRandomInstanceData(expectedTypes[table], $"{table} ({i})");
+                logger?.Invoke($"Building instance ({i}) for {kvp.Key}");
+                T instance = createRandomInstanceData(kvp.Value, $"{kvp.Key} ({i})");
                 var instanceData = turnInstanceToDictionary(instance);
                 instances.Add(turnInstanceToDictionary(instance));
             }
 
-            data[table] = instances;
+            data[kvp.Key] = instances;
         }
 
         logger?.Invoke($"Number of different types created: {data.Count}");
 
-        return await Task.FromResult(data);
+        return JsonConvert.SerializeObject(await Task.FromResult(data));
     }
 }

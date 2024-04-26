@@ -30,18 +30,23 @@ public interface IDataHandler
     /// <returns></returns>
     Dictionary<string, object> TurnDataIntoDictionary();
 
-    IDataHandler BuildTask(Dictionary<string, object> data)
+    public IDataHandler BuildTask(Dictionary<string, object> data)
     {
+        if (data == null)
+        {
+            throw new ArgumentNullException();
+        }
+
         FillData(data);
         return this;
     }
 
-    Dictionary<string, object> TurnIntoDictionary()
+    public Dictionary<string, object> TurnIntoDictionary()
     {
         return TurnDataIntoDictionary();
     }
 
-    IDataHandler BuildRandomInstance(string name)
+    public IDataHandler BuildRandomInstance(string name)
     {
         FillData(CreateDefaultData(0, name));
         return this;

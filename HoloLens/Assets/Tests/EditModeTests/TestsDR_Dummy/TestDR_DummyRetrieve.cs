@@ -10,23 +10,9 @@ using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
 public class TestDR_DummyRetrieve
-{
-    Func<Dictionary<string, object>, Type, IDataHandler> buildTask = (data, type) =>
-    {
-        IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
-        return instance;
-    };
-
-    Func<IDataHandler, Dictionary<string, object>> turnIntoDictionary = instance =>
-    {
-        return new();
-    };
-
-    Func<Type, string, IDataHandler> buildRandomInstance = (type, name) =>
-    {
-        IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
-        return instance.BuildRandomInstance(name);
-    };
+{  
+    DR_Dummy<IDataHandler> dummy;
+    int numberOfInstancesPerType = 1;
 
     Dictionary<string, Type> expectedTypes = new Dictionary<string, Type>()
     {
@@ -35,11 +21,37 @@ public class TestDR_DummyRetrieve
         { "TelemetryData", typeof(TelemetryData) },
     };
 
+    [SetUp]
+    public void SetUp()
+    { 
+        Func<Dictionary<string, object>, Type, IDataHandler> buildTask = (data, type) =>
+        {
+            IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
+            return instance;
+        };
+
+        Func<IDataHandler, Dictionary<string, object>> turnIntoDictionary = instance =>
+        {
+            return new();
+        };
+
+        Func<Type, string, IDataHandler> buildRandomInstance = (type, name) =>
+        {
+            IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
+            return instance.BuildRandomInstance(name);
+        };       
+
+        dummy = new DR_Dummy<IDataHandler>(buildTask, turnIntoDictionary, buildRandomInstance)
+        {
+            amountOfInstancesToCreatePerType = numberOfInstancesPerType,
+
+            logger = message => Debug.Log(message),
+        };
+    }
+
     [UnityTest]
     public IEnumerator NullArguments()
     {
-        var dummy = new DR_Dummy<IDataHandler>(buildTask, turnIntoDictionary, buildRandomInstance);
-
         Task retrieveTask = dummy.Retrieve(null, null);
 
         yield return new WaitUntil(() => retrieveTask.IsCompleted || retrieveTask.IsFaulted || retrieveTask.IsCanceled);
@@ -62,8 +74,6 @@ public class TestDR_DummyRetrieve
     [UnityTest]
     public IEnumerator NullExpectedTypes()
     {
-        var dummy = new DR_Dummy<IDataHandler>(buildTask, turnIntoDictionary, buildRandomInstance);
-
         Task retrieveTask = dummy.Retrieve(data => { }, null);
 
         yield return new WaitUntil(() => retrieveTask.IsCompleted || retrieveTask.IsFaulted || retrieveTask.IsCanceled);
@@ -83,8 +93,6 @@ public class TestDR_DummyRetrieve
     [UnityTest]
     public IEnumerator NullDelegate()
     {
-        var dummy = new DR_Dummy<IDataHandler>(buildTask, turnIntoDictionary, buildRandomInstance);
-
         Task retrieveTask = dummy.Retrieve(null, expectedTypes);
 
         yield return new WaitUntil(() => retrieveTask.IsCompleted || retrieveTask.IsFaulted || retrieveTask.IsCanceled);
@@ -108,8 +116,6 @@ public class TestDR_DummyRetrieve
     [UnityTest]
     public IEnumerator ValidArguments()
     {
-        var dummy = new DR_Dummy<IDataHandler>(buildTask, turnIntoDictionary, buildRandomInstance);
-
         Task retrieveTask = dummy.Retrieve(data => Debug.Log("Data found"), expectedTypes);
 
         yield return new WaitUntil(() => retrieveTask.IsCompleted || retrieveTask.IsFaulted || retrieveTask.IsCanceled);
@@ -131,8 +137,6 @@ public class TestDR_DummyRetrieve
             { "string", typeof(string) },
             { "float", typeof(float) },
         };
-
-        var dummy = new DR_Dummy<IDataHandler>(buildTask, turnIntoDictionary, buildRandomInstance);
 
         Task retrieveTask = dummy.Retrieve(data => { }, expectedTypes);
 
@@ -157,16 +161,6 @@ public class TestDR_DummyRetrieve
     [UnityTest]
     public IEnumerator ValidExpectedTypes()
     {
-        var dummy = new DR_Dummy<IDataHandler>(buildTask, turnIntoDictionary, buildRandomInstance)
-        {
-            amountOfInstancesToCreatePerType = 2,
-
-            logger = message =>
-            {
-                // Debug.Log(message);
-            },
-        };
-
         Task retrieveTask = dummy.Retrieve(data => Debug.Log($"different types of data found: {data.Count}"), expectedTypes);
 
         yield return new WaitUntil(() => retrieveTask.IsCompleted || retrieveTask.IsFaulted || retrieveTask.IsCanceled);
@@ -182,18 +176,6 @@ public class TestDR_DummyRetrieve
     [UnityTest]
     public IEnumerator CorrectAmountOfDataReturned()
     {
-        int numberOfInstancesPerType = 1;      
-
-        var dummy = new DR_Dummy<IDataHandler>(buildTask, turnIntoDictionary, buildRandomInstance)
-        {
-            amountOfInstancesToCreatePerType = numberOfInstancesPerType,
-
-            logger = message =>
-            {
-                // Debug.Log(message);
-            },
-        };
-        
         int totalInstancesFound = 0;
 
         IDataRetrieval<IDataHandler>.VoidDelegate dele = null;
