@@ -9,7 +9,7 @@ using UnityEngine.Networking;
 
 public class DR_Network<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
 {
-    public void Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData, Dictionary<string, Type> expectedTypes)
+    public Task Retrieve(IDataRetrieval<T>.VoidDelegate callWhenFoundData, Dictionary<string, Type> expectedTypes)
     {
         throw new NotImplementedException();
     }

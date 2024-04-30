@@ -15,6 +15,11 @@ public class Interactor_AzureCommand : MonoBehaviour
             functionKey = azureAccount.functionKey,
             functionUrl = azureAccount.functionUrl,
             defaultKey = azureAccount.defaultKey,
+
+            logger = message =>
+            {
+                print(message);
+            }
         };
 
         SendCommand("Ping");

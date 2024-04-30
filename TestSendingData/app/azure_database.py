@@ -27,7 +27,7 @@ class AzureFunctions:
             return False
         
 
-    def retrieve_data(self, table_names: str, conditions: str = "") -> dict:
+    def retrieve_data(self, table_names: str, conditions: str = "") -> dict | str:
         """Retrieves data from the database."""
 
         if not table_names:

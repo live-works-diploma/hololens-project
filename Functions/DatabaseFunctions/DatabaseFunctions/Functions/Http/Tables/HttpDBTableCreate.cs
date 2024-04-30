@@ -1,5 +1,5 @@
-using DatabaseFunctions.Models.Database;
-using DatabaseFunctions.Models.Database.Tables;
+using DatabaseFunctions.Models.Information;
+using DatabaseFunctions.Models.Tables;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;

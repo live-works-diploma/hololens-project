@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Microsoft.MixedReality.GraphicsTools.MeshInstancer;
 
 /// <summary>
 /// Says this class is a type to listen for when retrieving data. This interfaces makes the class that implements it implement a method which takes in data and builds the class
@@ -16,34 +15,44 @@ public interface IDataHandler
     /// takes in a list of data needed to be added to the class and allows the class to manually chose where the data goes
     /// </summary>
     /// <param name="dataNeeded"></param>
-    void FillData(Dictionary<string, string> dataNeeded);
+    void FillData(Dictionary<string, object> dataNeeded);
 
     /// <summary>
     /// genereates random data for you to add to an instance of this object
     /// </summary>
     /// <param name="maxDistanceToSpawn"></param>
     /// <returns></returns>
-    Dictionary<string, string> CreateDefaultData(float heightAlter, string name, float maxDistanceToSpawn = 30);
+    Dictionary<string, object> CreateDefaultData(float heightAlter, string name, float maxDistanceToSpawn = 30);
 
     /// <summary>
     /// 
     /// </summary>
     /// <returns></returns>
-    Dictionary<string, string> TurnDataIntoDictionary();
+    Dictionary<string, object> TurnDataIntoDictionary();
 
-    IDataHandler BuildTask(Dictionary<string, string> data)
+    public IDataHandler BuildTask(Dictionary<string, object> data)
     {
+        if (data == null)
+        {
+            throw new ArgumentNullException();
+        }
+
         FillData(data);
         return this;
     }
 
-    Dictionary<string, string> TurnIntoDictionary()
+    public Dictionary<string, object> TurnIntoDictionary()
     {
         return TurnDataIntoDictionary();
     }
 
-    IDataHandler BuildRandomInstance(string name)
+    public IDataHandler BuildRandomInstance(string name)
     {
+        if (name == null)
+        {
+            throw new ArgumentException();
+        }
+
         FillData(CreateDefaultData(0, name));
         return this;
     }

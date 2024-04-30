@@ -1,0 +1,85 @@
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+
+namespace DatabaseFunctions.Models.Connecting
+{
+    public class ModelDBConnect
+    {
+        static void OpenConnection(SqlConnection connection, ILogger logger)
+        {
+            try
+            {
+                connection.Open();
+                logger.LogInformation("Connected to SQL Server.");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error opening connection: {ex.Message}");
+                throw;
+            }
+        }
+
+        static void CloseConnection(SqlConnection connection, ILogger logger)
+        {
+            try
+            {
+                connection.Close();
+                logger.LogInformation("Connection closed.");
+            }
+            catch (Exception ex)
+            {
+                logger.LogError($"Error closing connection: {ex.Message}");
+                throw;
+            }
+        }
+
+        static void LogConnectionError(ILogger logger, string message)
+        {
+            logger.LogError($"Error connecting to database: {message}");
+        }
+
+        public static List<Dictionary<string, object>>? AccessDatabase(ILogger logger, string tableName, SqlConnectionStringBuilder builder, Func<string, SqlConnection, List<Dictionary<string, object>>> whatToDoWithDatabaseConnection)
+        {
+            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            {
+                OpenConnection(connection, logger);
+                try
+                {
+                    var instancesFound = whatToDoWithDatabaseConnection($"[dbo].[{tableName}]", connection);
+                    return instancesFound;
+                }
+                catch (Exception ex)
+                {
+                    LogConnectionError(logger, ex.Message);
+                    return null;
+                }
+                finally
+                {
+                    CloseConnection(connection, logger);
+                }
+            }
+        }
+
+        public static void AccessDatabase(ILogger logger, string input, SqlConnectionStringBuilder builder, Action<string, SqlConnection> whatToDoWithDatabase)
+        {
+            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            {
+                OpenConnection(connection, logger);
+                try
+                {
+                    whatToDoWithDatabase(input, connection);
+                }
+                catch (Exception ex)
+                {
+                    LogConnectionError(logger, ex.Message);
+                }
+                finally
+                {
+                    CloseConnection(connection, logger);
+                }
+            }
+        }
+    }
+}

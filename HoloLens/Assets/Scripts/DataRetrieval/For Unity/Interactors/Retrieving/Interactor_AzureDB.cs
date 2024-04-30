@@ -1,7 +1,9 @@
+using Palmmedia.ReportGenerator.Core.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 /// <summary>
@@ -11,14 +13,32 @@ using UnityEngine;
 public class Interactor_AzureDB : MonoBehaviour, IDRInteractor<IDataHandler>
 {
     public DRInteractor<IDataHandler> dataRetrieval { get; set; }
+
+    [Tooltip("True means will access blob storage to get data and False means will access database")]
+    public bool accessBlobStorage = true;   
+    [Tooltip("Not in seconds, think miliseconds. Used so the other classes have time to add in their own listeners and you don't waste a call. Won't make much different since loops anyway.")]
+    public int initialDelay = 500;
+
+    [Header("Links")]
     public AzureFunctionAccess azureAccount;
     public TextMeshProUGUI errorText;
 
+    [Header("Debuging")]
+    [SerializeField] Logger logger;
+    Action<string> log;
+    Action<string> errorLog;
 
     private void Start()
     {
-        dataRetrieval = new DRInteractor<IDataHandler>(CreateDataRetrieval());
-        dataRetrieval.SearchForData(500);
+        log = message => logger?.Log(message);
+        errorLog = log;
+
+        dataRetrieval = new DRInteractor<IDataHandler>(CreateDataRetrieval())
+        {
+            logger = log,
+            errorLogger = errorLog,
+        };
+        dataRetrieval.SearchForData(initialDelay);
     }
 
     /// <summary>
@@ -33,17 +53,16 @@ public class Interactor_AzureDB : MonoBehaviour, IDRInteractor<IDataHandler>
             functionUrl = azureAccount.functionUrl,
             defaultKey = azureAccount.defaultKey,
 
+            useBlobStorage = accessBlobStorage,
+
             howToBuildTask = (data, type) =>
             {
                 IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
                 return instance.BuildTask(data);
             },
 
-            logger = error =>
-            {
-                errorText.text = error;
-                print(error);
-            },
+            logger = log,
+            ErrorLogger = errorLog,
         };
     }
 }

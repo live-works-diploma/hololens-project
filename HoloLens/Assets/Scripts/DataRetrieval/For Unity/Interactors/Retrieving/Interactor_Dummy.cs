@@ -18,18 +18,19 @@ public class Interactor_Dummy : MonoBehaviour, IDRInteractor<IDataHandler>
         {
             delayBetweenCalls = delayInbetweenCalls
         };
+
         dataRetrieval.SearchForData(initialDelay);
     }
 
     DR_Dummy<IDataHandler> CreateDataRetrieval()
     {
-        Func<Dictionary<string, string>, Type, IDataHandler> buildTask = (data, type) =>
+        Func<Dictionary<string, object>, Type, IDataHandler> buildTask = (data, type) =>
         {
             IDataHandler instance = (IDataHandler)Activator.CreateInstance(type);
             return instance.BuildTask(data);
         };
 
-        Func<IDataHandler, Dictionary<string, string>> turnIntoDictionary = instance =>
+        Func<IDataHandler, Dictionary<string, object>> turnIntoDictionary = instance =>
         {
             return instance.TurnDataIntoDictionary();
         };

@@ -20,8 +20,9 @@ public class DRU_Sensors : MonoBehaviour
     {
         interactor = GetComponent<IDRInteractor<IDataHandler>>();
 
-        interactor.AddListener<TelemetryData>(this, ListenerForData);
-        interactor.AddListener<Sensor>(this, ListenerForData);
+        interactor.AddListener<TelemetryData>(ListenerForData);
+        // interactor.AddListener<Sensor>(ListenerForData);
+        // interactor.AddListener<Plant>(ListenerForData);
 
         for (int i = 0; i < preCreatedSensors.Count; i++)
         {
@@ -31,18 +32,21 @@ public class DRU_Sensors : MonoBehaviour
 
     async void ListenerForData(List<IDataHandler> foundItems)
     {
-        interactor.AlterAnchors(1);
-
         if (!Application.isPlaying)
         {
+            print("application isnt playing");
             return;
         }
+
+        print("Found Data");
+
+        interactor.AlterAnchors(1);
 
         // for (int i = foundItems.Count - 1; i < foundItems.Count; i++)
         for (int i = 0; i < foundItems.Count; i++)
         {
             string sensorName = foundItems[i].name;
-            Dictionary<string, string> sensorData = foundItems[i].TurnDataIntoDictionary();
+            Dictionary<string, object> sensorData = foundItems[i].TurnDataIntoDictionary();
 
             if (sensorsCreated.ContainsKey(sensorName))
             {
@@ -50,16 +54,16 @@ public class DRU_Sensors : MonoBehaviour
                 continue;
             }
 
-            await CreateSensor(sensorName, sensorData);         
+            await CreateSensor(sensorName, sensorData);
         }
 
         interactor.AlterAnchors(-1);
     }
 
-    async Task CreateSensor(string name, Dictionary<string, string> sensorData)
+    async Task CreateSensor(string name, Dictionary<string, object> sensorData)
     {
         Vector3 newStartingLocation = startingLocation.transform.position;
-        newStartingLocation.x = 1.325f * sensorsCreated.Count;
+        newStartingLocation.x = 1.325f * sensorsCreated.Count;  // makes it so the sensors dont overlap
 
         GameObject newSensor = Instantiate(sensorPrefab, newStartingLocation, startingLocation.transform.rotation, startingLocation.transform);
         newSensor.name = name;
@@ -70,7 +74,7 @@ public class DRU_Sensors : MonoBehaviour
         sensorsCreated[name] = newSensor;
     }
 
-    async Task UpdateSensor(string name, Dictionary<string, string> sensorData)
+    async Task UpdateSensor(string name, Dictionary<string, object> sensorData)
     {
         GameObject createdSensor = sensorsCreated[name];
 

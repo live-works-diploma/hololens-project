@@ -1,4 +1,4 @@
-using DatabaseFunctions.Models.Database;
+using DatabaseFunctions.Models.Information;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Devices;

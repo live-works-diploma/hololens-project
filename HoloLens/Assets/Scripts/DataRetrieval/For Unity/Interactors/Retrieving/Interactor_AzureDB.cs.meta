@@ -3,7 +3,10 @@ guid: 3eaa51dbc66f3164f92cb9f4b65652b0
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - azureAccount: {instanceID: 0}
+  - errorText: {instanceID: 0}
+  - logger: {fileID: 11400000, guid: 9b66521d1e9c21f4a98d2ffa7b96c464, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

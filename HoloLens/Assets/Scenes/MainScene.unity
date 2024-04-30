@@ -715,8 +715,7 @@ MonoBehaviour:
   sensorPrefab: {fileID: 4942856195860374894, guid: c36fa145b116c2347bcb5c8439e3e257, type: 3}
   startingLocation: {fileID: 643368552}
   fieldPrefab: {fileID: 8930270098211552320, guid: ba86cdd6ea1a01842be7610d96aa6624, type: 3}
-  preCreatedSensors:
-  - {fileID: 1185083374}
+  preCreatedSensors: []
 --- !u!114 &968355010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -731,7 +730,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialDelay: 500
   delayInbetweenCalls: 5000
-  numberOfInstancesPerType: 5
+  numberOfInstancesPerType: 1
 --- !u!1001 &1124562309
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1023,11 +1022,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c36fa145b116c2347bcb5c8439e3e257, type: 3}
---- !u!1 &1185083374 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4942856195860374894, guid: c36fa145b116c2347bcb5c8439e3e257, type: 3}
-  m_PrefabInstance: {fileID: 1165358016}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1377239009 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5322587410386034069, guid: ba86cdd6ea1a01842be7610d96aa6624, type: 3}

@@ -5,8 +5,8 @@ using UnityEngine;
 public class Plant : IDataHandler
 {
     [Header("Plant Data")]
-    public float scale = 1;
-    public bool fruiting = false;
+    public object scale = 1;
+    public object fruiting = false;
 
     string _name;
     public string name 
@@ -21,16 +21,16 @@ public class Plant : IDataHandler
         }
     }
 
-    public void FillData(Dictionary<string, string> data)
+    public void FillData(Dictionary<string, object> data)
     {
-        name = data.ContainsKey("name") ? data["name"] : "unknown";
-        scale = data.ContainsKey("scale") ? float.Parse(data["scale"]) : 1;
-        fruiting = data.ContainsKey("fruiting") ? bool.Parse(data["fruiting"]) : false;
+        name = data.ContainsKey("name") ? data["name"].ToString() : "unknown";
+        scale = data.ContainsKey("scale") ? float.Parse(data["scale"].ToString()) : 1;
+        fruiting = data.ContainsKey("fruiting") ? bool.Parse(data["fruiting"].ToString()) : false;
     }
 
-    public Dictionary<string, string> CreateDefaultData(float heightAlter, string name, float maxDistanceToSpawn = 30)
+    public Dictionary<string, object> CreateDefaultData(float heightAlter, string name, float maxDistanceToSpawn = 30)
     {
-        Dictionary<string, string> data = new Dictionary<string, string>();
+        Dictionary<string, object> data = new Dictionary<string, object>();
 
         data["name"] = name;
         data["scale"] = Random.Range(1f, 2f).ToString();
@@ -39,13 +39,13 @@ public class Plant : IDataHandler
         return data;
     }
 
-    public Dictionary<string, string> TurnDataIntoDictionary()
+    public Dictionary<string, object> TurnDataIntoDictionary()
     {
-        Dictionary<string, string> data = new Dictionary<string, string>();
+        Dictionary<string, object> data = new Dictionary<string, object>();
 
         data["name"] = name;
-        data["scale"] = scale.ToString();
-        data["fruiting"] = fruiting.ToString();
+        data["scale"] = scale;
+        data["fruiting"] = fruiting;
 
         return data;
     }

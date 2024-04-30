@@ -17,11 +17,10 @@ public interface IDRInteractor<T> where T : class
     /// Allows other classes to say what type of data they are listening for.
     /// </summary>
     /// <typeparam name="type">The type of data you wish to listen for. It needs to have T as a parent type.</typeparam>
-    /// <param name="monoBehaviour">Just used to start the routine. I don't like it but it is what it is</param>
     /// <param name="methodToCall">When there is data found with the same name as the type being passed in, it feeds that data back through this method.</param>
-    public void AddListener<type>(MonoBehaviour monoBehaviour, IDRHandler<T>.VoidDelegate methodToCall) where type : T
+    public async void AddListener<type>(IDRHandler<T>.VoidDelegate methodToCall) where type : T
     {
-        monoBehaviour.StartCoroutine(DelayedAddListener<type>(methodToCall));
+        await DelayedAddListener<type>(methodToCall);
     }
 
     /// <summary>
@@ -30,14 +29,17 @@ public interface IDRInteractor<T> where T : class
     /// <typeparam name="type">The type of data you wish to listen for.</typeparam>
     /// <param name="methodToCall">The method that is called when data is found with the same name.</param>
     /// <returns></returns>
-    IEnumerator DelayedAddListener<type>(IDRHandler<T>.VoidDelegate methodToCall) where type : T
+    async Task DelayedAddListener<type>(IDRHandler<T>.VoidDelegate methodToCall) where type : T
     {
-        while (dataRetrieval == null)
+        await Task.Run(() =>
         {
-            yield return null;
-        }
+            while (dataRetrieval == null)
+            {
+                // yield return null;
+            }
 
-        dataRetrieval.AddListener<type>(methodToCall);
+            dataRetrieval.AddListener<type>(methodToCall);
+        });
     }
 
     /// <summary>

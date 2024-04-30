@@ -26,13 +26,13 @@ public class SensorControl : MonoBehaviour
         }
     }
 
-    public async Task CreateFields(Dictionary<string, string> sensorData, string name)
+    public async Task CreateFields(Dictionary<string, object> sensorData, string name)
     {
         title.text = name;
 
         foreach (var field in sensorData.Keys)
         {
-            await CreateField(field, sensorData[field]);
+            await CreateField(field, sensorData[field].ToString());
         }
     }
 
@@ -43,6 +43,8 @@ public class SensorControl : MonoBehaviour
             return;
         }
 
+        await Task.Yield();
+        
         GameObject createdField = Instantiate(fieldPrefab, Vector3.zero, Quaternion.identity, locationToCreateFields.transform);
 
         createdField.transform.localPosition = Vector3.zero;
@@ -58,21 +60,21 @@ public class SensorControl : MonoBehaviour
         createdChildren[0].text = key;
         createdChildren[1].text = value;
 
-        fieldsCreated[key] = createdChildren[1];
+        fieldsCreated[key] = createdChildren[1];        
     }
 
-    public async Task UpdateFields(Dictionary<string, string> sensorData, string name)
+    public async Task UpdateFields(Dictionary<string, object> sensorData, string name)
     {
         foreach (var field in sensorData.Keys)
         {
             if (!fieldsCreated.ContainsKey(field))
             {
-                await CreateField(field, sensorData[field]);
+                await CreateField(field, sensorData[field].ToString());
             }
             else
             {
                 TextMeshProUGUI textField = fieldsCreated[field];
-                textField.text = sensorData[field];
+                textField.text = sensorData[field].ToString();
             }
         }
     }

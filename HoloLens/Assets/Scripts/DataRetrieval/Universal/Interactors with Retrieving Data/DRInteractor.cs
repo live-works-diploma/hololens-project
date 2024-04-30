@@ -14,6 +14,9 @@ public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandl
     Dictionary<string, IDRHandler<DataHandler>.VoidDelegate> listeners = new();
     Dictionary<string, Type> typesToListenFor = new();
 
+    public Action<string> logger;
+    public Action<string> errorLogger;
+
     int _anchors = 0;
     public int anchors
     {
@@ -97,7 +100,7 @@ public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandl
 
         string query = $"TableNames={Uri.EscapeDataString(JsonConvert.SerializeObject(tableNames))}";
 
-        dataRetrieval.Retrieve(PopulateData, typesToListenFor);   
+        await dataRetrieval.Retrieve(PopulateData, typesToListenFor);   
     }
 
     /// <summary>
@@ -106,18 +109,17 @@ public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandl
     /// </summary>
     /// <param name="foundData"></param>
     /// <exception cref="Exception"></exception>
-    async void PopulateData(Dictionary<string, List<DataHandler>> foundData)
+    void PopulateData(Dictionary<string, List<DataHandler>> foundData)
     {
+        logger?.Invoke("Populating data");
+
+
         anchors++;
         foreach (var key in foundData.Keys)
         {
-            if (!Application.isPlaying)
-            {
-                return;
-            }
-
             if (!listeners.ContainsKey(key))
             {
+                errorLogger?.Invoke($"didn't find listener which used '{key}' key");
                 continue;
             }
 
@@ -128,6 +130,7 @@ public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandl
 
             Type type = typesToListenFor[key];
 
+            logger?.Invoke("passing data into listener");
             listeners[key]?.Invoke(foundData[key]);
         }
         anchors--;
