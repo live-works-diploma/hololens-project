@@ -12,11 +12,14 @@ public class Interactor_Dummy : MonoBehaviour, IDRInteractor<IDataHandler>
     public int delayInbetweenCalls = 5000;
     public int numberOfInstancesPerType = 1;
 
+    public bool loopForData = true;
+
     void Start()
     {
         dataRetrieval = new DRInteractor<IDataHandler>(CreateDataRetrieval())
         {
-            delayBetweenCalls = delayInbetweenCalls
+            delayBetweenCalls = delayInbetweenCalls,
+            loopForData = loopForData
         };
 
         dataRetrieval.SearchForData(initialDelay);

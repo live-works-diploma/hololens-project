@@ -9,6 +9,8 @@ public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandl
 {
     public int delayBetweenCalls = 5000;
 
+    public bool loopForData = true;
+
     IDataRetrieval<DataHandler> dataRetrieval;
 
     Dictionary<string, IDRHandler<DataHandler>.VoidDelegate> listeners = new();
@@ -26,6 +28,11 @@ public class DRInteractor<DataHandler> : IDRHandler<DataHandler> where DataHandl
         }
         set
         {
+            if (!loopForData)
+            {
+                return;
+            }
+
             _anchors = value;
             if (_anchors == 0)
             {
