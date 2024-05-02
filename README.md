@@ -13,6 +13,23 @@ On unity side of things the project routinely pulls down data from the database 
 - [**uml diagram**](#uml-diagram): Illustrates the interaction between classes and components within the project, offering insights into the system's overall architecture and data flow.
 - [**Raspberry Pi**](#raspberry-pi): This device gathers data from the sensors and sends it to Azure, although its code is not contained in this repository.
 
+# **How To Setup**
+
+The only thing that needs to be changed in the project is where its pulling its data from and where the azure functions are hosted. This project is designed so unity never interacts with any device, rather it sends stuff to azure which then does what it needs with that information and vis versa. 
+
+## _Azure_
+
+To switch your own functions over to your own account you will need to:
+1. create an azuure account
+1. create an azure function app
+1. make sure all the permissions are right
+1. open [AzureFunctions](#azure-functions) project
+1. alter [ModelDBAccountInfo](#modeldbaccountinfo) and [ModelBSAccountInfo](#modelbsaccountinfo) so it connects to desired location.
+1. publish to your azure function app
+
+once that is done you will need to find the keys from the azure function app and azure functions. You will need to either replace the current [scriptable object](#azurefunctionaccess) or change the variables on it. If decided to change you will need to assign it to the [interactor](#interactor_azuredb). If you wish to use the [python code](#test-sending-data) to test it all works but you will need to change every key to link to your functions.
+
+
 # **Unity**
 
 This project is designed to interact with azure. It retrieves data, which is converted to information for the user, and it sends commands to an iot device so you can control what is happening remotely. The information this project provides to the user is a constructed scene which resembled the hydroponic area and then sensor canvases which appear above each sensor location, showing their data.
@@ -292,7 +309,7 @@ Different parts of azure functions:
 - **Authorisation Level:** function
 - **Function Name:** HttpDBItemRead
 - **Return Type:** HttpResponseData
-- **Description:** Finds the needed data in the request and retrieves that data from [ModelDBItemRead](#modeldbitemread). Used as the entry point for reading the content of a table in a database. Uses [ModelDBAccountInfo](#modeldbaccountinfo) to build the connection string to pass into the models.
+- **Description:** This doubles up as a way to access json strings from a blob storage or columns from a database table. This classes job is purely to read the request and figure out what it needs to do. It was designed for accessing databases but reused to also allow for blob storage access. It takes a query through a function url to allow whoever calls the http function to decide where it gets it data from. When it pulls from a database it uses [ModelDBAccountInfo](#modeldbaccountinfo) but when it needs to pull from blob storage it uses [ModelBSAccountInfo](#modelbsaccountinfo). Once its broken down the request it passes the needed data into [ModelDBItemRead](#modeldbitemread) which interacts with the needed storage and passed that information back.
 
 ### HttpDBItemUpdate
 
@@ -382,6 +399,10 @@ provides methods for creating new tables in a database. It uses [ModelDBConnect]
 ### ModelDBAccountInfo
 
 Provides the needed details for building an SqlConnectionStringBuilder and has methods for retrieving that builder with the details already added.
+
+### ModelBSAccountInfo
+
+Provides the needed details for connecting to a blob storage such as connection string and blob storage name.
 
 ### ModelDBConnect
 
