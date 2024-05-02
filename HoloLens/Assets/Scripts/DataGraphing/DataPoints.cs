@@ -15,9 +15,11 @@ public class DataPoints : MonoBehaviour
 
     void Start()
     {
-        GenerateDummyTemperature();
-        PopulateDataPoints(temperatures);
-        GraphHandler.UpdateGraph();
+        GraphHandler = GetComponent<GraphHandler>();
+
+        // GenerateDummyTemperature();
+        // PopulateDataPoints(temperatures);
+        // GraphHandler.UpdateGraph();
     }
 
     public void LoadFromJson()
@@ -45,8 +47,10 @@ public class DataPoints : MonoBehaviour
     {
         foreach (Vector2 data in datas)
         {
-            GraphHandler.CreatePoint(data);
+            GraphHandler?.CreatePoint(data);
         }
+
+        GraphHandler?.UpdateGraph();
     }
 
 }

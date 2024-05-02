@@ -34,7 +34,7 @@ public class GraphHandler : MonoBehaviour
 
     private void ExampleFunction()
     {
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < 0; i++)
         {
             {
                 float randomTemp = UnityEngine.Random.Range(5f, 15f);

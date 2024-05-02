@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2381,12 +2381,12 @@ MonoBehaviour:
   yAxisTextColor: {r: 0, g: 0.8, b: 1, a: 1}
   yAxisTextSize: 10
   yAxisTextOffset: 10
-  xGridWidth: 2
+  xGridWidth: 3
   xGridColor: {r: 0, g: 0.8, b: 1, a: 0.6}
   yGridWidth: 2
   yGridColor: {r: 0, g: 0.8, b: 1, a: 0.6}
   zoomSelectionColor: {r: 0, g: 0.8, b: 1, a: 0.2}
-  zoomSelectionOutlineWidth: 5
+  zoomSelectionOutlineWidth: 100
   zoomSelectionOutlineColor: {r: 0, g: 0.8, b: 1, a: 0.6}
   pointSelectionColor: {r: 1, g: 0.35, b: 0, a: 0.2}
   pointSelectionOutlineWidth: 5
@@ -2634,7 +2634,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &968355008
 Transform:
   m_ObjectHideFlags: 0
@@ -5955,13 +5955,14 @@ GameObject:
   - component: {fileID: 2083158472}
   - component: {fileID: 2083158474}
   - component: {fileID: 2083158473}
+  - component: {fileID: 2083158475}
   m_Layer: 0
   m_Name: DataRetrievers Dummy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2083158472
 Transform:
   m_ObjectHideFlags: 0
@@ -6010,6 +6011,19 @@ MonoBehaviour:
   fieldPrefab: {fileID: 8930270098211552320, guid: ba86cdd6ea1a01842be7610d96aa6624, type: 3}
   preCreatedSensors:
   - {fileID: 1483747383}
+--- !u!114 &2083158475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083158471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b53bdce3f79df1d49be5c5e8a99c7270, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dataPoints: {fileID: 936127258}
 --- !u!1 &2093260535
 GameObject:
   m_ObjectHideFlags: 0

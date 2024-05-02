@@ -27,7 +27,7 @@ public class TelemetryData : IDataHandler
         data["TelemetryDataId"] = name;
         data["water Level"] = UnityEngine.Random.Range(0, 10);
         data["ph levels"] = UnityEngine.Random.Range(0, 5);
-        data["temp."] = UnityEngine.Random.Range(-40, 40);
+        data["temp."] = UnityEngine.Random.Range(-1, 1);
 
         return data;
     }
