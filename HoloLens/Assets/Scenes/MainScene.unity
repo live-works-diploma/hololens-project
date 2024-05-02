@@ -1601,7 +1601,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 884082641}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
   m_Name: 
@@ -2333,6 +2333,10 @@ PrefabInstance:
     - target: {fileID: 4942856195860374882, guid: c36fa145b116c2347bcb5c8439e3e257, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4942856195860374892, guid: c36fa145b116c2347bcb5c8439e3e257, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4942856195860374894, guid: c36fa145b116c2347bcb5c8439e3e257, type: 3}
       propertyPath: m_Name
@@ -6861,7 +6865,7 @@ MonoBehaviour:
   trackedHandedness: 3
   trackedHandJoint: 2
   transformOverride: {fileID: 0}
-  additionalOffset: {x: -60, y: -20, z: 70}
+  additionalOffset: {x: -30, y: -20, z: 70}
   additionalRotation: {x: 0, y: 0, z: 0}
   updateSolvers: 1
 --- !u!224 &7209420633742506986
