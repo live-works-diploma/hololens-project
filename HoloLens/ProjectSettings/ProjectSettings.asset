@@ -12,8 +12,8 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
-  productName: HoloLensDummyData
+  companyName: TAFE
+  productName: HoloLens Project
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -716,7 +716,12 @@ PlayerSettings:
   XboxOneOverrideIdentityPublisher: 
   vrEditorSettings: {}
   cloudServicesEnabled:
+    Build: 0
+    Game Performance: 0
+    Purchasing: 0
+    UDP: 0
     UNet: 1
+    Unity Ads: 0
   luminIcon:
     m_Name: 
     m_ModelFolderPath: 
@@ -731,11 +736,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 255f03cb-2149-4f25-819f-da78757a7cd5
+  cloudProjectId: 7089d0b0-bd94-4d03-a581-a3f032462c8f
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: HoloLens
-  organizationId: georgedinn
+  projectName: HoloLens Project
+  organizationId: braden-watson
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   playerDataPath: 
