@@ -13,6 +13,8 @@ public class SensorControl : MonoBehaviour
     public TextMeshProUGUI title;
     public GameObject locationToCreateFields;
 
+
+
     // giving options of whats hidden or shown
     public List<string> fieldsToBeShown = new List<string>();
 
@@ -24,9 +26,30 @@ public class SensorControl : MonoBehaviour
     public float decreasePerField = 25;
     float heightDecrease = 0;
 
+    public List<GameObject> precreatedFields = new();
+
+    void Start()
+    {
+        for (int i = 0; i < precreatedFields.Count; i++)
+        {
+            TextMeshProUGUI[] children = precreatedFields[i].GetComponentsInChildren<TextMeshProUGUI>();
+
+            fieldsCreated[precreatedFields[i].name] = new SensorFieldInfo()
+            {
+                sensorField = precreatedFields[i].transform.parent.gameObject,
+
+                key = children[0],
+                value = children[1],
+            };
+        }
+    }
+
     public async Task CreateFields(Dictionary<string, object> sensorData, string name)
     {
-        title.text = name != null ? name : "No Name";
+        if (title)
+        {
+            title.text = name != null ? name : "No Name";
+        }
 
         fieldData = sensorData;
 
@@ -43,7 +66,7 @@ public class SensorControl : MonoBehaviour
 
     async Task CreateField(string key, string value) 
     {
-        if (fieldsCreated.ContainsKey(key))
+        if (locationToCreateFields == null || fieldPrefab == null || fieldsCreated.ContainsKey(key))
         {
             return;
         }
@@ -89,6 +112,7 @@ public class SensorControl : MonoBehaviour
             else
             {
                 TextMeshProUGUI textField = fieldsCreated[field].value;
+                // print("Updating field");
                 textField.text = sensorData[field].ToString();
             }
         }
@@ -123,13 +147,18 @@ public class SensorControl : MonoBehaviour
             }
         }
 
-        Destroy(fieldToDelete.sensorField);
+        // Destroy(fieldToDelete.sensorField);
+        fieldToDelete.sensorField.SetActive(false);
     }
 
     public async void ShowField(string fieldName)
     {
         if (fieldsCreated.ContainsKey(fieldName))
         {
+            var field = fieldsCreated[fieldName].sensorField;
+
+            field.SetActive(true);
+
             print($"Field already shown: {fieldName}");
             return;
         }
@@ -137,5 +166,17 @@ public class SensorControl : MonoBehaviour
         object newFieldData = fieldData[fieldName];
 
         await CreateField(fieldName, newFieldData.ToString());
+    }
+
+    public void Hide(string name)
+    {
+        var field = fieldsCreated[name].sensorField;
+        field.SetActive(false);
+    }
+
+    public void Show(string name)
+    {
+        var field = fieldsCreated[name].sensorField;
+        field.SetActive(true);
     }
 }

@@ -16,6 +16,7 @@ public class Interactor_AzureDB : MonoBehaviour, IDRInteractor<IDataHandler>
     public bool accessBlobStorage = true;   
     [Tooltip("Not in seconds, think miliseconds. Used so the other classes have time to add in their own listeners and you don't waste a call. Won't make much different since loops anyway.")]
     public int initialDelay = 500;
+    public int deley = 5000;
 
     [Header("Links")]
     public AzureFunctionAccess azureAccount;
@@ -33,6 +34,8 @@ public class Interactor_AzureDB : MonoBehaviour, IDRInteractor<IDataHandler>
 
         dataRetrieval = new DRInteractor<IDataHandler>(CreateDataRetrieval())
         {
+            delayBetweenCalls = deley,
+
             logger = log,
             errorLogger = errorLog,
         };

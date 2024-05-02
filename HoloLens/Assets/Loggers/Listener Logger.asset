@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f19c576f229539849a273852bafae2d4, type: 3}
   m_Name: Listener Logger
   m_EditorClassIdentifier: 
-  allowLogging: 0
+  allowLogging: 1

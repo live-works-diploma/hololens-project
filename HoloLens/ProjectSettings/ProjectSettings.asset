@@ -736,11 +736,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 7089d0b0-bd94-4d03-a581-a3f032462c8f
+  cloudProjectId: 255f03cb-2149-4f25-819f-da78757a7cd5
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: HoloLens Project
-  organizationId: braden-watson
+  projectName: HoloLens
+  organizationId: georgedinn
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   playerDataPath: 

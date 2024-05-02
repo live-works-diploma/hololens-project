@@ -28,7 +28,7 @@ public class DR_AzureDB<T> : IDataRetrieval<T>, IJsonHandler<T> where T : class
         logger?.Invoke("starting the retrieve of data");
 
         string jsonData = await RetrieveJson(expectedTypes);
-        
+
         if (jsonData == null || jsonData == "")
         {
             logger?.Invoke("There was no data found");

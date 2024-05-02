@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TelemetryData : IDataHandler
 {
-    string _name = "Not set";
+    string _name = "Table Setup";
     public string name
     {
         get
@@ -34,7 +34,7 @@ public class TelemetryData : IDataHandler
 
     public void FillData(Dictionary<string, object> dataNeeded)
     {
-        name = dataNeeded.ContainsKey("DeviceSent") ? dataNeeded["DeviceSent"].ToString() : "Not Set";             
+        // name = dataNeeded.ContainsKey("DeviceSent") ? dataNeeded["DeviceSent"].ToString() : "Table Setup";             
         _data = dataNeeded;
     }
 
