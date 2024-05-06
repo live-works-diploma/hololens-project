@@ -12,5 +12,6 @@ namespace DatabaseFunctions.Models.Connecting
     /// </summary>
     public class ModelBSConnect
     {
+
     }
 }

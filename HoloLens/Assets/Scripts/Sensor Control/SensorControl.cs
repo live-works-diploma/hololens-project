@@ -55,11 +55,6 @@ public class SensorControl : MonoBehaviour
 
         foreach (var kvp in fieldData)
         {
-            //if (!fieldsToBeShown.Contains(kvp.Key))
-            //{
-            //    continue;
-            //}
-
             await CreateField(kvp.Key, kvp.Value.ToString());
         }
     }
@@ -68,6 +63,7 @@ public class SensorControl : MonoBehaviour
     {
         if (locationToCreateFields == null || fieldPrefab == null || fieldsCreated.ContainsKey(key))
         {
+            print($"Field couldnt create: {key}:{value}");
             return;
         }
 

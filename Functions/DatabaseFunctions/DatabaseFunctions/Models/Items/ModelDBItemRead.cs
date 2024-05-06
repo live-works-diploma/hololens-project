@@ -1,6 +1,7 @@
 ﻿using Azure.Storage.Blobs;
 using DatabaseFunctions.Models.Connecting;
 using DatabaseFunctions.Models.Information;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -93,7 +94,7 @@ namespace DatabaseFunctions.Models.Items
                 string strippedKey = Regex.Match(tableNames[i], @"\[dbo\]\.\[(.*?)\]").Groups[1].Value;
                 string key = strippedKey == "" ? tableNames[i] : strippedKey;
 
-                logger.LogInformation($"key: {key}, stripped key: {strippedKey}");
+                logger.Log(LogLevel.Information, $"key: {key}, stripped key: {strippedKey}");
                 allData[key] = instancesFound;
             }
 
@@ -116,7 +117,7 @@ namespace DatabaseFunctions.Models.Items
                 {
                     try
                     {
-                        logger.LogInformation($"\nData found: {jsonData}");
+                        logger.Log(LogLevel.Information, $"\nData found: {jsonData}");
 
                         var dataObject = JObject.Parse(jsonData);
                         var bodyData = dataObject["Body"].ToString();
@@ -126,6 +127,8 @@ namespace DatabaseFunctions.Models.Items
                             logger.LogError("Did not contain body");
                             continue;
                         }
+
+                        logger.Log(LogLevel.Information, $"Body data: {bodyData}");
 
                         var decodedBody = DecodeBase64String(bodyData);
 
@@ -138,20 +141,53 @@ namespace DatabaseFunctions.Models.Items
                         body["DeviceSent"] = connectionDeviceId;
                         body["DateSent"] = enqueuedTimeUtc;
 
+                        logger.Log(LogLevel.Information, $"decoded body: {decodedBody}");
+
                         // Flatten the BodyData dictionary
-                        var bodyDataDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(decodedBody);
-                        foreach (var kvp in bodyDataDict)
+                        Dictionary<string, object> bodyDataDict = new();
+
+                        try
                         {
-                            body[kvp.Key] = kvp.Value;
+                            bodyDataDict = JsonConvert.DeserializeObject<Dictionary<string, object>>(decodedBody);
+                        }
+                        catch (JsonException ex)
+                        {
+                            logger.Log(LogLevel.Warning, $"Couldn't deserialize, trying to split");
+
+                            try
+                            {                              
+                                if (bodyDataDict != null)
+                                {
+                                    string[] spl = decodedBody.Split(" ");
+                                    for (int i = 0; i < spl.Length; i++)
+                                    {
+                                        string[] otherSpl = spl[i].Split(":");
+                                        bodyDataDict[otherSpl[0]] = otherSpl[1];
+                                    }
+                                }
+                            }
+                            catch
+                            {
+
+                            }
                         }
 
-                        convertedBlobData.Add(body);
+                        foreach (var kvp in bodyDataDict)
+                        {
+                            logger.Log(LogLevel.Information, $"Body data dict  key: {kvp.Key}, value: {kvp.Value}");
+                            body[kvp.Key] = kvp.Value;
+                        }                       
+
+                        convertedBlobData.Add(body); 
+                        logger.Log(LogLevel.Information, $"Body was correct: {body}");
                     }
                     catch (Exception ex)
                     {
                         logger.LogError($"Error processing data: {ex}");
                     }
                 }
+
+                logger.Log(LogLevel.Information, $"Converted blobs count: {convertedBlobData.Count}");
 
                 allData["TelemetryData"] = convertedBlobData;
             }
@@ -190,10 +226,11 @@ namespace DatabaseFunctions.Models.Items
                         logger.LogInformation($"\nBlob Item Name: {blobItem.Name}, Found string: {foundString}, json list count: {jsonList.Count}");
 
                         // Split the concatenated JSON string into individual JSON objects
-                        List<string> individualJsonStrings = SplitJsonString(foundString);
+                        string individualJsonStrings = SplitJsonString(foundString, logger);
 
                         // Add each individual JSON string to the list
-                        jsonList.AddRange(individualJsonStrings);
+                        jsonList.Add(individualJsonStrings);
+                        logger.Log(LogLevel.Information, $"Averaged out string: {individualJsonStrings}");
                     }
                 }
             }
@@ -205,7 +242,7 @@ namespace DatabaseFunctions.Models.Items
             return jsonList;
         }
 
-        static List<string> SplitJsonString(string concatenatedJson)
+        static string SplitJsonString(string concatenatedJson, ILogger logger)
         {
             List<string> jsonObjects = new List<string>();
             int startIndex = 0;
@@ -224,13 +261,92 @@ namespace DatabaseFunctions.Models.Items
                     {
                         // Found the end of a JSON object
                         int length = i - startIndex + 1;
-                        jsonObjects.Add(concatenatedJson.Substring(startIndex, length));
+                        jsonObjects.Add(concatenatedJson.Substring(startIndex, length));                        
                         startIndex = i + 1;
                     }
                 }
             }
 
-            return jsonObjects;
+            logger.Log(LogLevel.Information, $"Found {jsonObjects.Count} instances in file");
+
+            // return AverageOutJsonString(jsonObjects, logger);
+
+            var last = jsonObjects.Last();
+
+            logger.Log(LogLevel.Warning, last.ToString());
+
+            return last;
         }
+
+        static string AverageOutJsonString(List<string> jsonStrings, ILogger logger)
+        {
+            Dictionary<object, List<double>> intValues = new();
+            Dictionary<object, object> otherValues = new();
+
+            for (int i = 0; i < jsonStrings.Count; i++)
+            {
+                Dictionary<string, object> instanceValue = null;
+
+                try
+                {
+                    instanceValue = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonStrings[i]);
+                }
+                catch (JsonException ex)
+                {
+                    logger.LogError($"Error deserializing json string: {ex}");
+                    continue;
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError($"Uncaught error: {ex}");
+                    continue;
+                }
+
+                if (instanceValue == null)
+                {
+                    logger.Log(LogLevel.Error, "instance wall was null");
+                    continue;
+                }
+
+                foreach (var kvp in instanceValue)
+                {
+                    try
+                    {
+                        if (!intValues.ContainsKey(kvp.Key))
+                        {
+                            intValues[kvp.Key] = new List<double>();
+                        }
+
+                        string valueStr = kvp.Value.ToString();
+
+                        if (valueStr != null)
+                        {
+                            double value = double.Parse(valueStr);
+                            intValues[kvp.Key].Add(value);
+                            logger.Log(LogLevel.Information, "value str wasn't null");
+                            continue;
+                        }
+
+                        logger.Log(LogLevel.Error, "value str was null");
+                    }
+                    catch (Exception ex)
+                    {
+                        // meant to error out if can't turn to int
+                        otherValues[kvp.Key.ToString()] = kvp.Value;
+                    }                    
+                }                
+            }
+
+            logger.Log(LogLevel.Information, $"int value count: {intValues.Count}");
+            logger.Log(LogLevel.Information, $"other value count: {otherValues.Count}");
+
+            foreach (var kvp in intValues)
+            {
+                logger.Log(LogLevel.Warning, $"int values keyy: {kvp.Key}:, count: {kvp.Value.Count}");
+                otherValues[kvp.Key] = kvp.Value.Sum() / kvp.Value.Count;
+            }
+
+            return JsonConvert.SerializeObject(otherValues);
+        }    
     }
 }

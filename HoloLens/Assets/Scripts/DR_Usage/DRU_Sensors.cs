@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -21,8 +22,6 @@ public class DRU_Sensors : MonoBehaviour
         interactor = GetComponent<IDRInteractor<IDataHandler>>();
 
         interactor.AddListener<TelemetryData>(ListenerForData);
-        // interactor.AddListener<Sensor>(ListenerForData);
-        // interactor.AddListener<Plant>(ListenerForData);
 
         for (int i = 0; i < preCreatedSensors.Count; i++)
         {
@@ -42,20 +41,37 @@ public class DRU_Sensors : MonoBehaviour
 
         interactor.AlterAnchors(1);
 
-        // for (int i = foundItems.Count - 1; i < foundItems.Count; i++)
-        for (int i = 0; i < foundItems.Count; i++)
+        // uncheck to just do the last
+        var item = foundItems.Last();
+
+        string sensorName = item.name;
+        Dictionary<string, object> sensorData = item.TurnDataIntoDictionary();
+
+        if (sensorsCreated.ContainsKey(sensorName))
         {
-            string sensorName = foundItems[i].name;
-            Dictionary<string, object> sensorData = foundItems[i].TurnDataIntoDictionary();
-
-            if (sensorsCreated.ContainsKey(sensorName))
-            {
-                await UpdateSensor(sensorName, sensorData);
-                continue;
-            }
-
+            await UpdateSensor(sensorName, sensorData);
+        }
+        else
+        {
             await CreateSensor(sensorName, sensorData);
         }
+
+        // uncheck to do all
+        //for (int i = 0; i < foundItems.Count; i++)
+        //{
+        //    string sensorName = foundItems[i].name;
+        //    Dictionary<string, object> sensorData = foundItems[i].TurnDataIntoDictionary();
+
+        //    if (sensorsCreated.ContainsKey(sensorName))
+        //    {
+        //        await UpdateSensor(sensorName, sensorData);
+        //    }
+        //    else
+        //    {
+        //        await CreateSensor(sensorName, sensorData);
+        //    }
+        //}
+
 
         interactor.AlterAnchors(-1);
     }
