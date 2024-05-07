@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.3069224, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2816,7 +2816,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   accessBlobStorage: 1
   initialDelay: 500
-  deley: 5000
+  deley: 50000
   azureAccount: {fileID: 11400000, guid: 3307a9dfebbe8614f8082490369ff637, type: 2}
   errorText: {fileID: 0}
   logger: {fileID: 11400000, guid: 9b66521d1e9c21f4a98d2ffa7b96c464, type: 2}
@@ -3535,6 +3535,10 @@ PrefabInstance:
     - target: {fileID: 6014525953379462149, guid: c36fa145b116c2347bcb5c8439e3e257, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6967877526621907128, guid: c36fa145b116c2347bcb5c8439e3e257, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7709465798250627361, guid: c36fa145b116c2347bcb5c8439e3e257, type: 3}
       propertyPath: m_AnchorMax.y

@@ -44,6 +44,7 @@ public static class JsonBuildTask<T> where T : class
 
                     for (int i = 0; i < foundData[key].Count; i++)
                     {
+                        // foundData[key][i]["name"] = i;
                         T instance = howToBuildTask(foundData[key][i], expectedTypes[key]);
                         instancesFound.Add(instance);
                     }

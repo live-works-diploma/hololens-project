@@ -36,10 +36,10 @@ public class TelemetryData : IDataHandler
     {
         name = dataNeeded.ContainsKey("DeviceSent") ? dataNeeded["DeviceSent"].ToString() : "Table Setup"; 
         
-        if (name == "pico1")
-        {
-            name = "Table Setup";
-        }
+        //if (name == "pico1")
+        //{
+        //    name = "Table Setup";
+        //}
 
         _data = dataNeeded;
     }

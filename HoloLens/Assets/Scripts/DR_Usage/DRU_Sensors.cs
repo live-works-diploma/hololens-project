@@ -79,7 +79,7 @@ public class DRU_Sensors : MonoBehaviour
     async Task CreateSensor(string name, Dictionary<string, object> sensorData)
     {
         Vector3 newStartingLocation = startingLocation.transform.position;
-        newStartingLocation.x = 1.325f * sensorsCreated.Count;  // makes it so the sensors dont overlap
+        newStartingLocation.x = (1.325f * 3) * sensorsCreated.Count;  // makes it so the sensors dont overlap
 
         GameObject newSensor = Instantiate(sensorPrefab, newStartingLocation, startingLocation.transform.rotation, startingLocation.transform);
         newSensor.name = name;
