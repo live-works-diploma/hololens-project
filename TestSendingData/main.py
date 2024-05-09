@@ -43,8 +43,8 @@ def data_read(key: str):
 
     table_names = [
         "TelemetryData",
-        # "Plant",
-        # "Sensor",
+        "Plant",
+        "Sensor",
     ]
 
     TableNames = json_converter.ConvertToJson(table_names)

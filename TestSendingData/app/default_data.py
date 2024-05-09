@@ -34,8 +34,9 @@ class Default:
     def create_default_instance(self):
         tables = {}
 
-        # tables["Sensor"] = ["Name", "WaterLevel", "PhLevel"]
-        tables["Plant"] = ["Name", "Scale", "Fruiting"]
+        tables["Sensor"] = ["Name", "WaterLevel", "PhLevel", "Humidity"]
+        tables["Plant"] = ["Name", "TimeToFruit", "PhLevelOptimum", "OperatorId", "TimePlanted"]
+
         tables["TelemetryData"] = ["Name", "Temperature", "Humidity", "WaterLevel", "OverHeating"]
 
         return tables
