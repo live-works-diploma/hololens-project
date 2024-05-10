@@ -411,4 +411,15 @@ void loop()
     sendTelemetry();
     next_telemetry_send_time_ms = millis() + TELEMETRY_FREQUENCY_MILLISECS;
   }
+
+  if (Serial.available() > 0) {
+    float phValue = Serial.parseFloat();
+
+    if (phValue == 0.00){
+      return;
+    }
+
+    Serial.print("Received pH level: ");
+    Serial.println(phValue);
+  }
 }
