@@ -14,4 +14,14 @@ public class SceneLoader : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
+
+    public void LoadOnSiteScene()
+    {
+        SceneManager.LoadScene("OnSite");
+    }
+
+    public void LoadOffSiteScene()
+    {
+        SceneManager.LoadScene("OffSite");
+    }
 }

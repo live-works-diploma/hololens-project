@@ -24,7 +24,7 @@ MonoBehaviour:
     shareRecordingsInITunes: 0
     logLevel: 0
     version: 10.22.5
-    eulaAcceptedVersions: 
+    eulaAcceptedVersions: '{"Values":["10.22"]}'
   database:
     disableModelExtraction: 0
   shaders:
