@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<QCARInfo>
+    <TargetSet version="3.4">
+        <AreaTarget version="5.2" bbox="-13.5615 -9.5472 -7.4787 8.0934 4.3990 12.5906" area="103" targetId="54785bc895094ad68c53bee2dd0c807d" name="Hydro_Setup_v1" pathAuthoring="54785bc895094ad68c53bee2dd0c807d_authoring.glb" pathOcclusion="54785bc895094ad68c53bee2dd0c807d_occlusion.3dt" pathNavMesh="54785bc895094ad68c53bee2dd0c807d_navmesh.glb" cloudTarget="false" />
+    </TargetSet>
+</QCARInfo>
