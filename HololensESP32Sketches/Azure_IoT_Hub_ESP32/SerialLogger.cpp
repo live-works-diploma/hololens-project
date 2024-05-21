@@ -11,6 +11,9 @@ static void writeTime()
   struct tm* ptm;
   time_t now = time(NULL);
 
+  // Apply timezone offset for AWST (UTC+8)
+  now += 8 * 3600; // Add 8 hours in seconds
+
   ptm = gmtime(&now);
 
   Serial.print(ptm->tm_year + UNIX_EPOCH_START_YEAR);

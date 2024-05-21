@@ -1,3 +1,56 @@
+#include <Adafruit_MQTT.h>
+#include <Adafruit_MQTT_Client.h>
+#include <Adafruit_MQTT_FONA.h>
+//Define Adafruit
+
+#define AIO_SERVER      "io.adafruit.com"
+//#define AIO_SERVERPORT  1883
+// Using port 8883 for MQTTS
+#define AIO_SERVERPORT  8883
+
+#define AIO_USERNAME  "xcal18r"
+#define AIO_KEY       "aio_pNQi34Cm5tsZImsUdBGJOULNnFly"
+
+// Setup the MQTT client class by passing in the WiFi client and MQTT server and login details.
+Adafruit_MQTT_Client mqtt(ssid, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY);
+
+// io.adafruit.com root CA
+const char* adafruitio_root_ca = \
+      "-----BEGIN CERTIFICATE-----\n"
+      "MIIEjTCCA3WgAwIBAgIQDQd4KhM/xvmlcpbhMf/ReTANBgkqhkiG9w0BAQsFADBh\n"
+      "MQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYDVQQLExB3\n"
+      "d3cuZGlnaWNlcnQuY29tMSAwHgYDVQQDExdEaWdpQ2VydCBHbG9iYWwgUm9vdCBH\n"
+      "MjAeFw0xNzExMDIxMjIzMzdaFw0yNzExMDIxMjIzMzdaMGAxCzAJBgNVBAYTAlVT\n"
+      "MRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5j\n"
+      "b20xHzAdBgNVBAMTFkdlb1RydXN0IFRMUyBSU0EgQ0EgRzEwggEiMA0GCSqGSIb3\n"
+      "DQEBAQUAA4IBDwAwggEKAoIBAQC+F+jsvikKy/65LWEx/TMkCDIuWegh1Ngwvm4Q\n"
+      "yISgP7oU5d79eoySG3vOhC3w/3jEMuipoH1fBtp7m0tTpsYbAhch4XA7rfuD6whU\n"
+      "gajeErLVxoiWMPkC/DnUvbgi74BJmdBiuGHQSd7LwsuXpTEGG9fYXcbTVN5SATYq\n"
+      "DfbexbYxTMwVJWoVb6lrBEgM3gBBqiiAiy800xu1Nq07JdCIQkBsNpFtZbIZhsDS\n"
+      "fzlGWP4wEmBQ3O67c+ZXkFr2DcrXBEtHam80Gp2SNhou2U5U7UesDL/xgLK6/0d7\n"
+      "6TnEVMSUVJkZ8VeZr+IUIlvoLrtjLbqugb0T3OYXW+CQU0kBAgMBAAGjggFAMIIB\n"
+      "PDAdBgNVHQ4EFgQUlE/UXYvkpOKmgP792PkA76O+AlcwHwYDVR0jBBgwFoAUTiJU\n"
+      "IBiV5uNu5g/6+rkS7QYXjzkwDgYDVR0PAQH/BAQDAgGGMB0GA1UdJQQWMBQGCCsG\n"
+      "AQUFBwMBBggrBgEFBQcDAjASBgNVHRMBAf8ECDAGAQH/AgEAMDQGCCsGAQUFBwEB\n"
+      "BCgwJjAkBggrBgEFBQcwAYYYaHR0cDovL29jc3AuZGlnaWNlcnQuY29tMEIGA1Ud\n"
+      "HwQ7MDkwN6A1oDOGMWh0dHA6Ly9jcmwzLmRpZ2ljZXJ0LmNvbS9EaWdpQ2VydEds\n"
+      "b2JhbFJvb3RHMi5jcmwwPQYDVR0gBDYwNDAyBgRVHSAAMCowKAYIKwYBBQUHAgEW\n"
+      "HGh0dHBzOi8vd3d3LmRpZ2ljZXJ0LmNvbS9DUFMwDQYJKoZIhvcNAQELBQADggEB\n"
+      "AIIcBDqC6cWpyGUSXAjjAcYwsK4iiGF7KweG97i1RJz1kwZhRoo6orU1JtBYnjzB\n"
+      "c4+/sXmnHJk3mlPyL1xuIAt9sMeC7+vreRIF5wFBC0MCN5sbHwhNN1JzKbifNeP5\n"
+      "ozpZdQFmkCo+neBiKR6HqIA+LMTMCMMuv2khGGuPHmtDze4GmEGZtYLyF8EQpa5Y\n"
+      "jPuV6k2Cr/N3XxFpT3hRpt/3usU/Zb9wfKPtWpoznZ4/44c1p9rzFcZYrWkj3A+7\n"
+      "TNBJE0GmP2fhXhP1D/XVfIW/h0yCJGEiV9Glm/uGOa3DXHlmbAcxSyCRraG+ZBkA\n"
+      "7h4SeM6Y8l/7MBRpPCz6l8Y=\n"
+      "-----END CERTIFICATE-----\n";
+
+/****************************** Feeds ***************************************/
+
+// Setup a feed called 'test' for publishing.
+// Notice MQTT paths for AIO follow the form: <username>/feeds/<feedname>
+Adafruit_MQTT_Publish test = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/test");
+
+
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // SPDX-License-Identifier: MIT
 
@@ -44,10 +97,24 @@
 #include "SerialLogger.h"
 #include "iot_configs.h"
 
-#include <DHT.h>
-#define DHTPIN 15    //D15 of ESP32 DevKit
+// Sensor Headers & Libraries
+#include "DHTSensor.h"
+#include "MoistureSensor.h"
+
+//#include <DHT.h>
+#define DHTPIN 15    //set pin for DHT11
 #define DHTTYPE DHT11
-DHT dht(DHTPIN, DHTTYPE);
+//DHT dht(DHTPIN, DHTTYPE);
+
+//Translate DHTSensor.h defines into local variables
+DHTSensor dhtSensor(DHTPIN, DHTTYPE);
+
+#define MOISTUREPIN_LOW 34 // set pin for Low level water sensor
+#define MOISTUREPIN_HIGH 35 //set pin for high level water sensor
+
+//Translate MostureSensor.h defines into local variables
+MoistureSensor moistureSensorLow(MOISTUREPIN_LOW);
+MoistureSensor moistureSensorHigh(MOISTUREPIN_HIGH);
 
 // When developing for your own Arduino-based platform,
 // please follow the format '(ard;<platform>)'.
@@ -61,13 +128,15 @@ DHT dht(DHTPIN, DHTTYPE);
 #define SAS_TOKEN_DURATION_IN_MINUTES 60
 #define UNIX_TIME_NOV_13_2017 1510592825
 
-#define PST_TIME_ZONE -8
-#define PST_TIME_ZONE_DAYLIGHT_SAVINGS_DIFF 1
+// Perth, Australia timezone (AWST) is UTC+8, no daylight savings time
+#define AWST_TIME_ZONE 8
+#define AWST_TIME_ZONE_DAYLIGHT_SAVINGS_DIFF 0
 
-#define GMT_OFFSET_SECS (PST_TIME_ZONE * 3600)
-#define GMT_OFFSET_SECS_DST ((PST_TIME_ZONE + PST_TIME_ZONE_DAYLIGHT_SAVINGS_DIFF) * 3600)
+#define GMT_OFFSET_SECS (AWST_TIME_ZONE * 3600)
+#define GMT_OFFSET_SECS_DST ((AWST_TIME_ZONE_DAYLIGHT_SAVINGS_DIFF) * 3600)
 
-// Translate iot_configs.h defines into variables used by the sample
+
+// Translate iot_configs.h defines into local variables
 static const char* ssid = IOT_CONFIG_WIFI_SSID;
 static const char* password = IOT_CONFIG_WIFI_PASSWORD;
 static const char* host = IOT_CONFIG_IOTHUB_FQDN;
@@ -100,8 +169,7 @@ static AzIoTSasToken sasToken(
     AZ_SPAN_FROM_BUFFER(mqtt_password));
 #endif // IOT_CONFIG_USE_X509_CERT
 
-static void connectToWiFi()
-{
+static void connectToWiFi(){
   Logger.Info("Connecting to WIFI SSID " + String(ssid));
 
   WiFi.mode(WIFI_STA);
@@ -119,8 +187,7 @@ static void connectToWiFi()
   Logger.Info("WiFi connected, IP address: " + WiFi.localIP().toString());
 }
 
-static void initializeTime()
-{
+static void initializeTime(){
   Logger.Info("Setting time using SNTP");
 
   configTime(GMT_OFFSET_SECS, GMT_OFFSET_SECS_DST, NTP_SERVERS);
@@ -135,8 +202,16 @@ static void initializeTime()
   Logger.Info("Time initialized!");
 }
 
-void receivedCallback(char* topic, byte* payload, unsigned int length)
-{
+void printLocalTime() {
+  struct tm timeinfo;
+  if (!getLocalTime(&timeinfo)) {
+    Serial.println("Failed to obtain time");
+    return;
+  }
+  Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
+}
+
+void receivedCallback(char* topic, byte* payload, unsigned int length){
   Logger.Info("Received [");
   Logger.Info(topic);
   Logger.Info("]: ");
@@ -147,8 +222,7 @@ void receivedCallback(char* topic, byte* payload, unsigned int length)
   Serial.println("");
 }
 
-static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
-{
+static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event){
   switch (event->event_id)
   {
     int i, r;
@@ -211,8 +285,7 @@ static esp_err_t mqtt_event_handler(esp_mqtt_event_handle_t event)
   return ESP_OK;
 }
 
-static void initializeIoTHubClient()
-{
+static void initializeIoTHubClient(){
   az_iot_hub_client_options options = az_iot_hub_client_options_default();
   options.user_agent = AZ_SPAN_FROM_STR(AZURE_SDK_CLIENT_USER_AGENT);
 
@@ -245,8 +318,7 @@ static void initializeIoTHubClient()
   Logger.Info("Username: " + String(mqtt_username));
 }
 
-static int initializeMqttClient()
-{
+static int initializeMqttClient(){
 #ifndef IOT_CONFIG_USE_X509_CERT
   if (sasToken.Generate(SAS_TOKEN_DURATION_IN_MINUTES) != 0)
   {
@@ -305,51 +377,116 @@ static int initializeMqttClient()
  */
 static uint32_t getEpochTimeInSecs() { return (uint32_t)time(NULL); }
 
-static void establishConnection()
-{
+static void establishConnection(){
   connectToWiFi();
   initializeTime();
   initializeIoTHubClient();
   (void)initializeMqttClient();
 }
 
-String FetchSensorData()
-{
-  dht.begin();
-  float h = dht.readHumidity(); //Get Humidity
-  float t = dht.readTemperature(); // Get Temperature (Celcius)
+String FetchSensorData(){
+  // THIS FUNCTION TO CALL FUNCTIONS FOR EACH SENSOR AND RECIEVE BACK READINGS TO ADD TO THE TELEMETRY
+  //Initialise Strings
+  String TempAndHumdity = "";
+  String WaterSensor = "";
   
-  // Check for any failure to read Sensor and Exit
-  if (isnan(h) || isnan(t)) 
-  {
-    Serial.println("Failed to read from DHT sensor!");
-    String MQTTPayload = "";
-    return MQTTPayload;
-  }
-  
-  //String MQTTPayload = "Humidity: " + String(h, 1) + " %   Temperature: " + String(t, 1) + " C";
-  String MQTTPayload = "Humidity:" + String(h, 1) + " Temperature:" + String(t, 1);
-  
-  
+  TempAndHumdity = FetchTempAndHumidityData();
+  WaterSensor = FetchWaterLevelData();
+  Serial.println(WaterSensor);
+  //String PHLevel = FetchPHLevelData();
+  //String WaterPresssure = FetchWaterPressureData();
+
+  //Build MQTT string from recieved Sensor Data - if None or Nan return "" or an error code TBA
+  //String MQTTPayload = "Humidity:" + String(h, 1) + " Temperature:" + String(t, 1);
+  String MQTTPayload = TempAndHumdity + WaterSensor;
   return MQTTPayload;
 
 }
 
-static void generateTelemetryPayload(String MQTTPayload)
-{
-  // You can generate the JSON using any lib you want. Here we're showing how to do it manually, for simplicity.
-  // This sample shows how to generate the payload using a syntax closer to regular delevelopment for Arduino, with
-  // String type instead of az_span as it might be done in other samples. Using az_span has the advantage of reusing the 
-  // same char buffer instead of dynamically allocating memory each time, as it is done by using the String type below.
-  //telemetry_payload = "{ \"msgCount\": " + String(telemetry_send_count++) + " }";
-  
-  //telemetry_payload = "{ \"message\": " + String(MQTTPayload) + " }";
-  telemetry_payload = String(MQTTPayload);
 
+String FetchTempAndHumidityData(){
+  
+  // Fetch temperature and humidity data
+  String tempAndHumidityData = dhtSensor.fetchTempAndHumidityData();
+  Serial.println(tempAndHumidityData);
+
+  // //Start reading from DHT11 Sensor
+  // dht.begin();
+  // String TempAndHumdity = "";
+  // float h = dht.readHumidity(); //Get Humidity
+  // float t = dht.readTemperature(); // Get Temperature (Celcius)
+  
+  // // Check for any failure to read Sensor and Exit
+  // if (isnan(h) || isnan(t)) 
+  // {
+  //   Serial.println("Failed to read from DHT sensor!");
+  //   return TempAndHumdity;
+  // }
+  // TempAndHumdity = " Humidity:" + String(h, 1) + " Temperature: " + String(t, 1);
+  
+  // return TempAndHumdity;
+  return tempAndHumidityData;
 }
 
-static void sendTelemetry()
-{
+String FetchWaterLevelData(){
+  int moisturePercentageLow = moistureSensorLow.readMoisturePercentage(); // the sensor positioned lowest to the pump the danger low warning
+  int moisturePercentageHigh = moistureSensorHigh.readMoisturePercentage(); // the sensor position higher up ie the refill reminder
+  
+  Serial.print("Low Level Moisture: ");
+  Serial.println(moisturePercentageLow);
+
+  Serial.print("High Level Moisture: ");
+  Serial.println(moisturePercentageHigh);
+
+  String WaterLevel = "";
+  bool dangerLevelReached = false;
+
+  // Logic for different moisture levels
+    if (moisturePercentageHigh <= 0) {
+    if (moisturePercentageLow <= 0) {
+      dangerLevelReached = true;
+      Serial.println("DANGER!!! ZERO LEVEL Water %: ");
+    } else if (moisturePercentageLow > 0 && moisturePercentageLow < 20) {
+      dangerLevelReached = true;
+      Serial.println("PRIORITY !!! LOW LEVEL Water % : ");
+    } else if (moisturePercentageLow > 80 && moisturePercentageLow < 100) {
+      dangerLevelReached = true;
+      Serial.println("Reached LOW LEVEL Water % : OK");
+    }
+    WaterLevel = " Water Level " + String(moisturePercentageLow) + " DangerLevelReached: " + String(dangerLevelReached);
+  } else if (moisturePercentageHigh > 0 && moisturePercentageHigh < 20) {
+    Serial.println("PRIORITY !!! REFILL LEVEL LOW Water % : ");
+    WaterLevel = " Water Level " + String(moisturePercentageHigh) + " DangerLevelReached: " + String(dangerLevelReached);
+  } else if (moisturePercentageHigh > 80) {
+    WaterLevel = " Water Level " + String(moisturePercentageHigh) + " DangerLevelReached: " + String(dangerLevelReached);
+  } else {
+    WaterLevel = " Water Level " + String(moisturePercentageHigh) + " DangerLevelReached: " + String(dangerLevelReached);
+  }
+
+  delay(2000);
+  return WaterLevel;
+}
+
+String FetchPHLevelData(){
+  //PHLevel TBA
+}
+
+String FetchWaterPressureData(){
+  //WaterPresssure TBA
+}
+
+static void generateTelemetryPayload(String MQTTPayload){
+  // You can generate the JSON using any lib you want. Here we're showing how to do it manually, for simplicity.
+  // This sample shows how to generate the payload using a syntax closer to regular development for Arduino, with
+  // String type instead of az_span as it might be done in other samples. Using az_span has the advantage of reusing the 
+  // same char buffer instead of dynamically allocating memory each time, as it is done by using the String type below.
+  // telemetry_payload = "{ \"msgCount\": " + String(telemetry_send_count++) + " }";
+  
+  // telemetry_payload = "{ \"message\": " + String(MQTTPayload) + " }";
+  telemetry_payload = String(MQTTPayload);
+}
+
+static void sendTelemetry(){
   Logger.Info("Sending telemetry ...");
 
   // The topic could be obtained just once during setup,
@@ -385,19 +522,59 @@ static void sendTelemetry()
 }
 
 // Arduino setup and loop main functions.
-
-void setup() 
-{ 
+void setup() { 
   establishConnection(); 
   Serial.begin(115200); //Set Baud Rate
+
+  // Initialize the DHT sensor
+  dhtSensor.begin();
+
+  // Set Adafruit IO's root CA
+  client.setCACert(adafruitio_root_ca);
+
+  // Print the local time to verify
+  printLocalTime();
+
 }
 
-void loop()
-{
+//Adafruit connection MQTT
+// Function to connect and reconnect as necessary to the MQTT server.
+// Should be called in the loop function and it will take care if connecting.
+void MQTT_connect() {
+  int8_t ret;
+
+  // Stop if already connected.
+  if (mqtt.connected()) {
+    return;
+  }
+
+  Serial.print("Connecting to MQTT... ");
+
+  uint8_t retries = 3;
+  while ((ret = mqtt.connect()) != 0) { // connect will return 0 for connected
+       Serial.println(mqtt.connectErrorString(ret));
+       Serial.println("Retrying MQTT connection in 5 seconds...");
+       mqtt.disconnect();
+       delay(5000);  // wait 5 seconds
+       retries--;
+       if (retries == 0) {
+         // basically die and wait for WDT to reset me
+         while (1);
+       }
+  }
+
+  Serial.println("MQTT Connected!");
+}
+
+void loop(){
   if (WiFi.status() != WL_CONNECTED)
   {
     connectToWiFi();
   }
+
+  //adafruit mqtt call
+  MQTT_connect();
+
 #ifndef IOT_CONFIG_USE_X509_CERT
   else if (sasToken.IsExpired())
   {
