@@ -1,13 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
-    public void LoadSceneByName()
+    public void LoadSceneByName(string name)
     {
-        SceneManager.LoadScene("Main");
+        if (string.IsNullOrEmpty(name) || string.IsNullOrWhiteSpace(name))
+        {
+            return;
+        }
+
+        SceneManager.LoadScene(name);
     }
 
     public void LoadNextScene()

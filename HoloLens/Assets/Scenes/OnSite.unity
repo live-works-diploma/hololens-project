@@ -3518,6 +3518,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   offText: {fileID: 1876191856}
   onText: {fileID: 1117680147}
+  startToggled: 1
   tipRect: {fileID: 1248832103}
 --- !u!1001 &917442081
 PrefabInstance:
@@ -4323,6 +4324,7 @@ GameObject:
   - component: {fileID: 968667089}
   - component: {fileID: 968667088}
   - component: {fileID: 968667087}
+  - component: {fileID: 968667095}
   m_Layer: 5
   m_Name: Site Switch
   m_TagString: Untagged
@@ -4584,16 +4586,16 @@ MonoBehaviour:
   <OnClicked>k__BackingField:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 908851545}
-        m_TargetAssemblyTypeName: SiteToggle, Project
-        m_MethodName: Toggle
-        m_Mode: 1
+      - m_Target: {fileID: 968667095}
+        m_TargetAssemblyTypeName: SceneLoader, Project
+        m_MethodName: LoadSceneByName
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: OffSite
           m_BoolArgument: 0
         m_CallState: 2
   <OnEnabled>k__BackingField:
@@ -4987,6 +4989,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 0}
   movableAxes: 0
   onMoveDelta: 0.01
+--- !u!114 &968667095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 968667083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 075278ee56f6bf04c90f5952135a7c7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &971436723
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19971,7 +19985,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &2804598800504338125
 GameObject:
   m_ObjectHideFlags: 0
@@ -34436,7 +34450,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 84, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8132349725783388224

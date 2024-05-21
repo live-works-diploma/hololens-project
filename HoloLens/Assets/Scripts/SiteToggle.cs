@@ -6,18 +6,28 @@ public class SiteToggle : MonoBehaviour
     [SerializeField] GameObject offText;
     [SerializeField] GameObject onText;
 
+    [Header("Status")]
+    public bool startToggled = false;
     bool isToggled = false;
 
-    private readonly Vector2 _min = new(0, 0.5f);
-    private readonly Vector2 _max = new(1, 0.5f);
-    private readonly Vector2 _middle = new(0.5f, 0.5f);
-
-    [SerializeField] private RectTransform tipRect;
+    [Header("Position")]
+    [SerializeField] RectTransform tipRect;
+    readonly Vector2 _min = new(0, 0.5f);
+    readonly Vector2 _max = new(1, 0.5f);
+    readonly Vector2 _middle = new(0.5f, 0.5f);
 
     void Start()
     {
-        isToggled = false;
-        SetOff();
+        if (startToggled)
+        {
+            isToggled = true;
+            SetOn();
+        }
+        else
+        {
+            isToggled = false;
+            SetOff();
+        }
     }
 
     public void Toggle()
