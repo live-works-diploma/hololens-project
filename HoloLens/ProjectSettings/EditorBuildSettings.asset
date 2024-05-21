@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/OffSite.unity
+    path: Assets/Scenes/Main.unity
     guid: ba775f0f161efdc4aa34d31690e5e43e
   m_configObjects:
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 0e6cd2b2461cb3c488b89a4d51ba3d55, type: 2}
