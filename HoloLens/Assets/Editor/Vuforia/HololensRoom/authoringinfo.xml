@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<QCARInfo>
-    <TargetSet version="3.4">
-        <AreaTarget version="5.2" bbox="-3.6227 -3.5226 -5.7881 6.5955 11.7993 7.6046" area="0" targetId="264ee16e2dc9409bac11c5e12e8a1b5f" name="HololensRoom" pathAuthoring="264ee16e2dc9409bac11c5e12e8a1b5f_authoring.glb" pathOcclusion="264ee16e2dc9409bac11c5e12e8a1b5f_occlusion.3dt" pathNavMesh="264ee16e2dc9409bac11c5e12e8a1b5f_navmesh.glb" cloudTarget="false" />
-    </TargetSet>
-</QCARInfo>
