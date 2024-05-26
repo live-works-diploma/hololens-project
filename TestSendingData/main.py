@@ -174,8 +174,8 @@ def main():
     try:
         # table_create(master_key)
 
-        # data_create(default_key)
-        data_read(default_key)        
+        data_create(default_key)
+        # data_read(default_key)        
         # data_update(default_key)  
         # data_delete(default_key)   
 

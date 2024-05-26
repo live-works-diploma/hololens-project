@@ -13,10 +13,10 @@ namespace DatabaseFunctions.Models.Information
         //static string Password = "Bullet66!";
         //static string InitialCatalog = "hololensSQLdb";
         
-        static string DataSource = "tcp:databasefunctionsdbserver.database.windows.net,1433";
-        static string UserID = "GeorgeAdmin";
-        static string Password = "Sponge2002!";
-        static string InitialCatalog = "DatabaseFunctions_db";
+        static string DataSource = "northmetro-tafe-server.database.windows.net,1433";
+        static string UserID = "northmetrotafe-sensors";
+        static string Password = "VeryGoodPassword!*";
+        static string InitialCatalog = "HololensDatabase";
 
         // Server=tcp:databasefunctionsdbserver.database.windows.net,1433;
         // Initial Catalog = DatabaseFunctions_db; Encrypt=True;
