@@ -37,7 +37,10 @@ void loop() {
         // stops next if statement from running since ph pump code is finished. firstReading starts off true and switches when 
         // finds ph levels are out of safe zone and then goes back when it gets a reading of it in the safe zone. Can be triggered to put device to sleep when
         // this if statement is entered
-    }
+        // firstLoop = true;
+        logger.log(LogLevel::INFO, "Finished with pump", "\n");
+        logger.log(LogLevel::INFO, "Ph Sensor First Reading:", phSensor.firstReading);
+    }    
 
     else if (currentTime - lastRunTime >= interval) {
         lastRunTime = currentTime;
@@ -49,6 +52,8 @@ void loop() {
         pump.flowPump(100);
 
         ph += 1;
+
+        firstLoop = false;
     }
 }
 
@@ -59,24 +64,3 @@ float findPhLevelRandom() {
     logger.log(LogLevel::INFO, "Ph Level:", phLevel);
     return phLevel;
 }
-
-//#include "GravityPump.h"
-//
-//GravityPump pump;
-//bool run = true;
-//int debug = 0;
-//
-//void setup()
-//{
-//    pump.setPin(9);
-//    Serial.begin(9600);
-//    pump.getFlowRateAndSpeed();
-//
-//    Serial.println(pump.timerPump(120000));
-//    Serial.println(pump.flowPump(100));
-//}
-//
-//void loop()
-//{
-//    pump.update();
-//}
