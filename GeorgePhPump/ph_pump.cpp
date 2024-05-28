@@ -28,6 +28,7 @@ float PhSensor::levelOutPhLevel(float phLevel) {
 
         if (!firstReading && pastChange <= 0) {
             logger.log(LogLevel::ERROR, "Last pump didn't increase ph levels\n");
+            phLevelError = true;
             return 0;
         }
 
@@ -43,6 +44,7 @@ float PhSensor::levelOutPhLevel(float phLevel) {
 
         if (!firstReading && pastChange <= 0) {
             logger.log(LogLevel::ERROR, "Last pump didn't decrease ph levels\n");
+            phLevelError = true;
             return 0;
         }
 

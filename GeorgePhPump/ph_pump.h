@@ -11,7 +11,8 @@ public:
 
     float minPhLevel = 5.8;
     float maxPhLevel = 6.4;
-    bool firstReading = true;
+    bool firstReading = true;   // gets set to true on start or when the ph levels are correct
+    bool phLevelError = false;
 
     PhSensor(int pinNumber, Logger& logger, float speed, float maxTime, float maxIncreaseInTime, float defaultTimeToRun, GravityPump& pump)
     : pin(pinNumber), logger(logger), maxTimeToRun(maxTime), maxTimeIncreaseToRun(maxIncreaseInTime), defaultTimeToRun(defaultTimeToRun) {

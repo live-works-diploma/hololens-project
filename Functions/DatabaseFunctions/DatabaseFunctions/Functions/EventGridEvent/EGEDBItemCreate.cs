@@ -60,7 +60,7 @@ namespace DatabaseFunctions.Functions.GridEventTrigger
                     _logger.LogInformation($"Body key: {key}, value: {body[key]}");
                 }
 
-                ModelDBItemCreate.InsertRecord(_logger, ModelDBAccountInfo.builder, "Sensor", body);
+                ModelDBItemCreate.InsertRecord(_logger, ModelDBAccountInfo.builder, "TelemetryData", body);
 
                 return new OkResult();
             }

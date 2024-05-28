@@ -31,9 +31,13 @@ except Exception as e:
 # Define the message payload using the wanted_message data
 message_content = {
     "Name": "New Raspberry Pi",
+    "Temperature": "1",
+    "Humidity": "5",
     "WaterLevel": "1",
-    "PhLevel": "5"
+    "OverHeating": "1",
 }
+
+["Name", "Temperature", "Humidity", "WaterLevel", "OverHeating"]
 
 # Convert the wanted_message dictionary to a JSON string
 message_payload = json.dumps(message_content)

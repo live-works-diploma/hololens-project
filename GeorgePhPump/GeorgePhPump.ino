@@ -24,7 +24,7 @@ void setup() {
     pump.getFlowRateAndSpeed();    
     Serial.begin(9600); // Initialize serial communication    
     
-    logger.setLogLevel(LogLevel::INFO);
+    logger.setLogLevel(LogLevel::ERROR);
     logger.enableLogging(true);
 }
 
@@ -33,15 +33,18 @@ void loop() {
     pump.update();
     unsigned long currentTime = millis(); // Get the current time in milliseconds
 
-    if (!firstLoop && phSensor.firstReading) {
+    if (phSensor.phLevelError) {
+        // was an error with leveling out ph levels
+        logger.log(LogLevel::ERROR, "Error Leveling out pH levels");
+    }
+    else if (!firstLoop && phSensor.firstReading) {
         // stops next if statement from running since ph pump code is finished. firstReading starts off true and switches when 
         // finds ph levels are out of safe zone and then goes back when it gets a reading of it in the safe zone. Can be triggered to put device to sleep when
         // this if statement is entered
         // firstLoop = true;
         logger.log(LogLevel::INFO, "Finished with pump", "\n");
-        logger.log(LogLevel::INFO, "Ph Sensor First Reading:", phSensor.firstReading);
-    }    
-
+        logger.log(LogLevel::INFO, "pH Sensor First Reading:", phSensor.firstReading);
+    }   
     else if (currentTime - lastRunTime >= interval) {
         lastRunTime = currentTime;
 
