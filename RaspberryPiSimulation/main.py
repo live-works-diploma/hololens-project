@@ -31,9 +31,9 @@ except Exception as e:
 # Define the message payload using the wanted_message data
 message_content = {
     "Name": "New Raspberry Pi",
-    "Temperature": "1",
-    "Humidity": "5",
-    "WaterLevel": "1",
+    "Temperature": "26",
+    "Humidity": "67",
+    "WaterLevel": "high",
     "OverHeating": "1",
 }
 

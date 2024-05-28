@@ -172,9 +172,9 @@ def main():
 
     # Call the function with logging
     try:
-        table_create(master_key)
+        # table_create(master_key)
 
-        #data_create(default_key)
+        data_create(default_key)
         # data_read(default_key)        
         # data_update(default_key)  
         # data_delete(default_key)   

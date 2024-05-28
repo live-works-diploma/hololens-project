@@ -1,9 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\",
+  "WorkspaceRootPath": "C:\\Users\\dinnig\\Desktop\\hololens-project\\Functions\\DatabaseFunctions\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|d:\\dip stage 2\\hololens-project\\functions\\databasefunctions\\databasefunctions\\functions\\eventgridevent\\egedbitemcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|c:\\users\\dinnig\\desktop\\hololens-project\\functions\\databasefunctions\\databasefunctions\\functions\\eventgridevent\\egedbitemcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|solutionrelative:databasefunctions\\functions\\eventgridevent\\egedbitemcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -14,21 +14,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
-            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "EGEDBItemCreate.cs",
-              "DocumentMoniker": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Functions\\EventGridEvent\\EGEDBItemCreate.cs",
+              "DocumentMoniker": "C:\\Users\\dinnig\\Desktop\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Functions\\EventGridEvent\\EGEDBItemCreate.cs",
               "RelativeDocumentMoniker": "DatabaseFunctions\\Functions\\EventGridEvent\\EGEDBItemCreate.cs",
-              "ToolTip": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Functions\\EventGridEvent\\EGEDBItemCreate.cs",
+              "ToolTip": "C:\\Users\\dinnig\\Desktop\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Functions\\EventGridEvent\\EGEDBItemCreate.cs",
               "RelativeToolTip": "DatabaseFunctions\\Functions\\EventGridEvent\\EGEDBItemCreate.cs",
-              "ViewState": "AQIAABkAAAAAAAAAAAAgwD4AAABrAAAA",
+              "ViewState": "AQIAABsAAAAAAAAAAAA5wCMAAAAwAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-28T05:42:03.326Z",
               "EditorCaption": ""

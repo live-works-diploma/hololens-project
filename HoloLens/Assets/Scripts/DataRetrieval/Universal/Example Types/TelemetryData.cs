@@ -34,7 +34,7 @@ public class TelemetryData : IDataHandler
 
     public void FillData(Dictionary<string, object> dataNeeded)
     {
-        name = dataNeeded.ContainsKey("DeviceSent") ? dataNeeded["DeviceSent"].ToString() : "Table Setup"; 
+        name = dataNeeded.ContainsKey("Name") ? dataNeeded["Name"].ToString() : "Table Setup"; 
         
         //if (name == "pico1")
         //{
