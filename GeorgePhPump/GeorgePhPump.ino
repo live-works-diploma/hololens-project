@@ -1,6 +1,14 @@
 #include "ph_pump.h"
 #include "logger.h"
 
+#include "DFRobot_PH.h"
+#include <EEPROM.h>
+
+#define TEMP_PIN A0
+#define PH_PIN A1
+float voltage,phValue,temperature = 25;
+DFRobot_PH phSensorDF;
+
 // Define the logger globally
 Logger logger;
 int phSensorPin = 9;
@@ -24,8 +32,10 @@ void setup() {
     pump.getFlowRateAndSpeed();    
     Serial.begin(9600); // Initialize serial communication    
     
-    logger.setLogLevel(LogLevel::ERROR);
+    logger.setLogLevel(LogLevel::INFO);
     logger.enableLogging(true);
+
+    phSensorDF.begin();
 }
 
 float ph = 1;
@@ -33,11 +43,11 @@ void loop() {
     pump.update();
     unsigned long currentTime = millis(); // Get the current time in milliseconds
 
-    if (phSensor.phLevelError) {
-        // was an error with leveling out ph levels
-        logger.log(LogLevel::ERROR, "Error Leveling out pH levels");
-    }
-    else if (!firstLoop && phSensor.firstReading) {
+    // if (phSensor.phLevelError) {
+    //     // was an error with leveling out ph levels
+    //     logger.log(LogLevel::ERROR, "Error Leveling out pH levels");
+    // }
+    if (!firstLoop && phSensor.firstReading) {
         // stops next if statement from running since ph pump code is finished. firstReading starts off true and switches when 
         // finds ph levels are out of safe zone and then goes back when it gets a reading of it in the safe zone. Can be triggered to put device to sleep when
         // this if statement is entered
@@ -47,8 +57,10 @@ void loop() {
     }   
     else if (currentTime - lastRunTime >= interval) {
         lastRunTime = currentTime;
+        voltage = analogRead(PH_PIN) / 1024.0 * 5000;
+        phValue = phSensorDF.readPH(voltage, temperature);
 
-        unsigned long value = (unsigned long)phSensor.levelOutPhLevel(ph);
+        unsigned long value = (unsigned long)phSensor.levelOutPhLevel(phValue);
         logger.log(LogLevel::WARNING, "value entered to pump:", value);
 
         pump.timerPump(value);
