@@ -82,6 +82,13 @@ DHT dht(DHTPIN, DHTTYPE);
 #define GMT_OFFSET_SECS (PST_TIME_ZONE * 3600)
 #define GMT_OFFSET_SECS_DST ((PST_TIME_ZONE + PST_TIME_ZONE_DAYLIGHT_SAVINGS_DIFF) * 3600)
 
+// Loop delay
+unsigned long previousMillis = 0;
+
+// Ardunio Nano
+float waterTemp = 0;
+float phValue = 0;
+
 // Translate iot_configs.h defines into variables used by the sample
 static const char* ssid = IOT_CONFIG_WIFI_SSID;
 static const char* password = IOT_CONFIG_WIFI_PASSWORD;
@@ -398,14 +405,17 @@ String FetchSensorData()
 
   temperature.publish(t);
   humidity.publish(h);
-  phLevel.publish(5.8);
+
+  if (phValue != 0) {
+    phLevel.publish(phValue);
+  }
+
   waterLevel.publish(70);
   waterFlow.publish(0.36);
   
   // { "waterLevel": 1, "Humidity": 4, "OverHeating": true }
   
   return MQTTPayload;
-
 }
 
 static void generateTelemetryPayload(String MQTTPayload)
@@ -500,40 +510,53 @@ uint32_t x=0;
 
 void loop()
 {
-  if (WiFi.status() != WL_CONNECTED)
-  {
-    connectToWiFi();
-  }
-#ifndef IOT_CONFIG_USE_X509_CERT
-  else if (sasToken.IsExpired())
-  {
-    Logger.Info("SAS token expired; reconnecting with a new one.");
-    (void)esp_mqtt_client_destroy(mqtt_client);
-    initializeMqttClient();
-  }
-#endif
-  else if (millis() > next_telemetry_send_time_ms)
-  {
-    sendTelemetry();
-    next_telemetry_send_time_ms = millis() + TELEMETRY_FREQUENCY_MILLISECS;
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis >= 15000)) {
+    previousMillis = currentMillis;
+
+    if (WiFi.status() != WL_CONNECTED)
+    {
+      connectToWiFi();
+    }
+    #ifndef IOT_CONFIG_USE_X509_CERT
+    else if (sasToken.IsExpired())
+    {
+      Logger.Info("SAS token expired; reconnecting with a new one.");
+      (void)esp_mqtt_client_destroy(mqtt_client);
+      initializeMqttClient();
+    }
+    #endif
+    else if (millis() > next_telemetry_send_time_ms)
+    {
+      sendTelemetry();
+      next_telemetry_send_time_ms = millis() + TELEMETRY_FREQUENCY_MILLISECS;
+    }
+
+    // Ensure the connection to the MQTT server is alive (this will make the first
+    // connection and automatically reconnect when disconnected).  See the MQTT_connect
+    // function definition further below.
+    MQTT_connect();
+
+    // Now we can publish stuff!
+    // Serial.print(F("\nSending val "));
+    // Serial.print(x);
+    // Serial.print(F(" to test feed..."));
+    // if (! test.publish(x++)) {
+    //   Serial.println(F("Failed"));
+    // } else {
+    //   Serial.println(F("OK!"));
+    // }
+
+    // wait a couple seconds to avoid rate limit
+    //delay(2000);
+    //delay(15000);
   }
 
-  // Ensure the connection to the MQTT server is alive (this will make the first
-  // connection and automatically reconnect when disconnected).  See the MQTT_connect
-  // function definition further below.
-  MQTT_connect();
+  if (Serial.available() >= (sizeof(float) * 2)) {
+    byte *receivedData = (byte*)malloc(sizeof(float) * 2);
+    Serial.readBytes(receivedData, sizeof(float) * 2);
 
-  // Now we can publish stuff!
-  // Serial.print(F("\nSending val "));
-  // Serial.print(x);
-  // Serial.print(F(" to test feed..."));
-  // if (! test.publish(x++)) {
-  //   Serial.println(F("Failed"));
-  // } else {
-  //   Serial.println(F("OK!"));
-  // }
-
-  // wait a couple seconds to avoid rate limit
-  //delay(2000);
-  delay(15000);
+    waterTemp = *(float*)&receivedData[0];
+    phValue = *(float*)&receivedData[1];
+  }
 }
