@@ -1,16 +1,19 @@
 #include "ph_pump.h"
 #include "logger.h"
 
+#include <OneWire.h>
+
 #include "DFRobot_PH.h"
 #include <EEPROM.h>
 
 #define PH_PIN A1
-#define LED_PIN 1
 float voltage, phValue, temperature = 25;
+
 DFRobot_PH phSensorDF;
 
 // Define the logger globally
 Logger logger;
+int tempSensorPin = 8;
 int phSensorPin = 9;
 float wantedSpeed = 10;
 
@@ -26,11 +29,10 @@ GravityPump pump;
 bool firstLoop = true;
 
 PhSensor phSensor(phSensorPin, logger, wantedSpeed, maxTime, maxIncrease, defaultTime, pump);
+OneWire ds(tempSensorPin);
 
 void setup() {
   Serial.begin(9600);
-
-  pinMode(LED_PIN, OUTPUT);
   phSensorDF.begin();
 
   pump.setPin(9);
@@ -59,12 +61,13 @@ void loop() {
     }   
     else if (currentTime - lastRunTime >= interval) {
         lastRunTime = currentTime;
+
+        temperature = 20.0f;
         voltage = analogRead(PH_PIN) / 1024.0 * 5000;
         phValue = phSensorDF.readPH(voltage, temperature);
 
         Serial.println(temperature);
         Serial.println(phValue);
-        digitalWrite(LED_PIN, HIGH);
 
         unsigned long value = (unsigned long)phSensor.levelOutPhLevel(phValue);
         logger.log(LogLevel::WARNING, "value entered to pump:", value);
@@ -76,4 +79,51 @@ void loop() {
 
         firstLoop = false;
     }
+}
+
+float getTemp(){
+  //returns the temperature from one DS18S20 in DEG Celsius
+
+  byte data[12];
+  byte addr[8];
+
+  if ( !ds.search(addr)) {
+      //no more sensors on chain, reset search
+      ds.reset_search();
+      return -1000;
+  }
+
+  if ( OneWire::crc8( addr, 7) != addr[7]) {
+      Serial.println("CRC is not valid!");
+      return -1000;
+  }
+
+  if ( addr[0] != 0x10 && addr[0] != 0x28) {
+      Serial.print("Device is not recognized");
+      return -1000;
+  }
+
+  ds.reset();
+  ds.select(addr);
+  ds.write(0x44,1); // start conversion, with parasite power on at the end
+
+  byte present = ds.reset();
+  ds.select(addr);    
+  ds.write(0xBE); // Read Scratchpad
+
+  
+  for (int i = 0; i < 9; i++) { // we need 9 bytes
+    data[i] = ds.read();
+  }
+  
+  ds.reset_search();
+  
+  byte MSB = data[1];
+  byte LSB = data[0];
+
+  float tempRead = ((MSB << 8) | LSB); //using two's compliment
+  float TemperatureSum = tempRead / 16;
+  
+  return TemperatureSum;
+  
 }
