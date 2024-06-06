@@ -15,6 +15,8 @@ public:
 
     template <typename T, typename... Args>
     void log(LogLevel level, T first, Args... args) {
+        return;
+
         if (!logEnabled || level < logLevel) {
             return;
         }

@@ -32,13 +32,13 @@ PhSensor phSensor(phSensorPin, logger, wantedSpeed, maxTime, maxIncrease, defaul
 OneWire ds(tempSensorPin);
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
   phSensorDF.begin();
 
   pump.setPin(9);
   pump.getFlowRateAndSpeed();  
 
-  logger.setLogLevel(LogLevel::INFO);
+  logger.setLogLevel(LogLevel::ERROR);
   logger.enableLogging(true);
 }
 
