@@ -501,6 +501,7 @@ void setup()
 { 
   establishConnection(); 
   Serial.begin(115200); //Set Baud Rate
+  Serial1.begin(9600);
   
   // Set Adafruit IO's root CA
   wificlient.setCACert(adafruitio_root_ca);
@@ -552,11 +553,21 @@ void loop()
     //delay(15000);
   }
 
-  if (Serial.available() >= (sizeof(float) * 2)) {
-    byte *receivedData = (byte*)malloc(sizeof(float) * 2);
-    Serial.readBytes(receivedData, sizeof(float) * 2);
+  if (Serial1.available() > 0) {
+    String data = Serial1.readStringUntil('\n');
+    int separatorIndex = data.indexOf(',');
 
-    waterTemp = *(float*)&receivedData[0];
-    phValue = *(float*)&receivedData[1];
+    if (separatorIndex != -1) {
+      String tempString = data.substring(0, separatorIndex);
+      String phString = data.substring(separatorIndex + 1);
+
+      waterTemp = tempString.toFloat();
+      phValue = phString.toFloat();
+
+      Serial.print("Received Water Temp: ");
+      Serial.println(temperature);
+      Serial.print("Received pH Value: ");
+      Serial.println(phValue);
+    }
   }
 }

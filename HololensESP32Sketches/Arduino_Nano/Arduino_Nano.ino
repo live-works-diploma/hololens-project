@@ -66,7 +66,8 @@ void loop() {
         voltage = analogRead(PH_PIN) / 1024.0 * 5000;
         phValue = phSensorDF.readPH(voltage, temperature);
 
-        Serial.println(temperature);
+        Serial.print(temperature);
+        Serial.print(", ");
         Serial.println(phValue);
 
         unsigned long value = (unsigned long)phSensor.levelOutPhLevel(phValue);
