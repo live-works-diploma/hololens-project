@@ -61,11 +61,14 @@
 #endif // IOT_CONFIG_USE_X509_CERT
 
 // Azure IoT
-#define IOT_CONFIG_IOTHUB_FQDN "IoTHub-wolf66.azure-devices.net"
-#define IOT_CONFIG_DEVICE_ID "pico1"
+//#define IOT_CONFIG_IOTHUB_FQDN "IoTHub-wolf66.azure-devices.net" // my iothub & blob storage
+//#define IOT_CONFIG_DEVICE_ID "pico1" // my iothub & blob storage
+#define IOT_CONFIG_IOTHUB_FQDN "iot-sensor-iot-hub.azure-devices.net" // georges iothub & database
+#define IOT_CONFIG_DEVICE_ID "sim-raspberry-pi" // georges iothub & database
 // Use device key if not using certificates
 #ifndef IOT_CONFIG_USE_X509_CERT
-#define IOT_CONFIG_DEVICE_KEY "UzDxUyoMYQHcPj4rXd3K9k9Mcui9FPw4v0ImyEBg6eg="
+//#define IOT_CONFIG_DEVICE_KEY "UzDxUyoMYQHcPj4rXd3K9k9Mcui9FPw4v0ImyEBg6eg=" // my iothub & blob storage
+#define IOT_CONFIG_DEVICE_KEY "TXWwqyQu6Bx3zUl5dvgOIv/5+EJASYz5iAIoTI7Cu/E="  // georges iothub & database
 #endif // IOT_CONFIG_USE_X509_CERT
 
 // Publish 1 message every 15 seconds (15 = 4 per minute, which is 240 per hour, which is 5760 per day (LIMIT is 8000 messaegs per day for FREE TIER))

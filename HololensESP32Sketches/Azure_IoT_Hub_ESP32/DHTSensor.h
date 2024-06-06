@@ -11,6 +11,9 @@ public:
     DHTSensor(int pin, int type);
     void begin();
     String fetchTempAndHumidityData();
+    String fetchTemperatureData();
+    String fetchHumidityData();
+
   
 private:
     DHT dht;
