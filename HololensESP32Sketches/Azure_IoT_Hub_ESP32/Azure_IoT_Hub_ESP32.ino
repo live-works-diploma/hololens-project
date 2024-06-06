@@ -59,6 +59,13 @@
 #include "SerialLogger.h"
 #include "iot_configs.h"
 
+// Water Flow Parameters
+#include "flowMeter.h"
+const int flowMeterPin = 2;
+const float pulsesPerLiter = 35.0;
+FlowMeter flowMeter (flowMeterPin, pulsesPerLiter);
+
+// DHT
 #include <DHT.h>
 #define DHTPIN 15    //D15 of ESP32 DevKit
 #define DHTTYPE DHT11
@@ -399,9 +406,19 @@ String FetchSensorData()
     String MQTTPayload = "";
     return MQTTPayload;
   }
+
+  // Water Flow Sensor logic
+  // Update flow meter readings
+  flowMeter.update();
+
+  // Get current flow rate
+  float currentFlowRate = flowMeter.getFlowRate();
+
+  // Check if current flow rate is under threshold (0.3)
+  bool isUnderThreshold = flowMeter.isUnderThreshold(0.3);
   
   //String MQTTPayload = "Humidity: " + String(h, 1) + " %   Temperature: " + String(t, 1) + " C";
-  String MQTTPayload = "{ Humidity:" + String(h, 1) +", " + " Temperature:" + String(t, 1) + " }";
+  String MQTTPayload = "{ Humidity:" + String(h, 1) +", " + " Temperature:" + String(t, 1) + "Water Flow:" + String(currentFlowRate, 1) + " }";
 
   temperature.publish(t);
   humidity.publish(h);
@@ -411,7 +428,13 @@ String FetchSensorData()
   }
 
   waterLevel.publish(70);
-  waterFlow.publish(0.36);
+
+  if (!isnan(currentFlowRate))
+  {
+    waterFlow.publish(currentFlowRate);
+  }
+  else {waterFlow.publish(0.36);}
+  
   
   // { "waterLevel": 1, "Humidity": 4, "OverHeating": true }
   
@@ -505,6 +528,9 @@ void setup()
   
   // Set Adafruit IO's root CA
   wificlient.setCACert(adafruitio_root_ca);
+
+  //Set flow meter pin as input with internal pull up resistor
+  pinMode(flowMeterPin, INPUT_PULLUP)
 }
 
 uint32_t x=0;
