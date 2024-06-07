@@ -13,7 +13,7 @@ DFRobot_PH phSensorDF;
 
 // Define the logger globally
 Logger logger;
-int tempSensorPin = 8;
+int tempSensorPin = 2;
 int phSensorPin = 9;
 float wantedSpeed = 10;
 
@@ -62,7 +62,7 @@ void loop() {
     else if (currentTime - lastRunTime >= interval) {
         lastRunTime = currentTime;
 
-        temperature = 20.0f;
+        temperature = getTemp();
         voltage = analogRead(PH_PIN) / 1024.0 * 5000;
         phValue = phSensorDF.readPH(voltage, temperature);
 
@@ -126,5 +126,4 @@ float getTemp(){
   float TemperatureSum = tempRead / 16;
   
   return TemperatureSum;
-  
 }
