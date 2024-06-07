@@ -10,6 +10,10 @@ FlowMeter::FlowMeter(int pin, float pulsesPerLiter) {
 }
 
 void FlowMeter::update() {
+  
+}
+
+float FlowMeter::getFlowRate() {
   unsigned long currentTime = millis();
 
   _flowState = digitalRead(_flowMeterPin);
@@ -42,9 +46,6 @@ void FlowMeter::update() {
 
     _pulseCount = 0; // Reset pulse count for the next interval
   }
-}
-
-float FlowMeter::getFlowRate() {
   // Calculate flow rate in liters per minute
   float flowRate = 0.0;
   if (_pulseCount > 0) {
