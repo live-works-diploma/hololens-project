@@ -60,7 +60,7 @@
 #include "iot_configs.h"
 
 // Water Flow Parameters
-#include "flowMeter.h"
+#include "WaterFlowSensor.h"
 const int flowMeterPin = 2;
 const float pulsesPerLiter = 35.0;
 FlowMeter flowMeter (flowMeterPin, pulsesPerLiter);
@@ -530,7 +530,7 @@ void setup()
   wificlient.setCACert(adafruitio_root_ca);
 
   //Set flow meter pin as input with internal pull up resistor
-  pinMode(flowMeterPin, INPUT_PULLUP)
+  pinMode(flowMeterPin, INPUT_PULLUP);
 }
 
 uint32_t x=0;
@@ -538,7 +538,7 @@ uint32_t x=0;
 void loop()
 {
   unsigned long currentMillis = millis();
-  if (currentMillis - previousMillis >= 15000)) {
+  if (currentMillis - previousMillis >= 15000) {
     previousMillis = currentMillis;
 
     if (WiFi.status() != WL_CONNECTED)
@@ -591,7 +591,7 @@ void loop()
       phValue = phString.toFloat();
 
       Serial.print("Received Water Temp: ");
-      Serial.println(temperature);
+      Serial.println(waterTemp);
       Serial.print("Received pH Value: ");
       Serial.println(phValue);
     }
