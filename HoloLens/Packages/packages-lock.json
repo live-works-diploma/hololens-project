@@ -11,6 +11,14 @@
         "com.unity.xr.core-utils": "2.1.0"
       }
     },
+    "com.microsoft.mixedreality.webview.unity": {
+      "version": "file:MixedReality/com.microsoft.mixedreality.webview.unity-0.18.0-pre.4.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {
+        "com.unity.inputsystem": "1.4.4"
+      }
+    },
     "com.microsoft.mrtk.graphicstools.unity": {
       "version": "file:MixedReality/com.microsoft.mrtk.graphicstools.unity-0.6.7.tgz",
       "depth": 0,
