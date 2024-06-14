@@ -7,13 +7,13 @@
 #include <EEPROM.h>
 
 #define PH_PIN A1
-float voltage, phValue, temperature = 25;
+float voltage, phValue, temperature = 20;
 
 DFRobot_PH phSensorDF;
 
 // Define the logger globally
 Logger logger;
-int tempSensorPin = 8;
+int tempSensorPin = 2;
 int phSensorPin = 9;
 float wantedSpeed = 10;
 
@@ -21,9 +21,9 @@ unsigned long lastRunTime = 0;
 unsigned long interval = 15000; // 15 seconds in milliseconds
 
 // time is in miliseconds
-const float maxTime = 5;
+const float maxTime = 10;
 const float maxIncrease = 0.5; 
-const float defaultTime = 1;
+const float defaultTime = 5;
 
 GravityPump pump;
 bool firstLoop = true;
@@ -59,26 +59,27 @@ void loop() {
         logger.log(LogLevel::INFO, "Finished with pump", "\n");
         logger.log(LogLevel::INFO, "pH Sensor First Reading:", phSensor.firstReading);
     }   
-    else if (currentTime - lastRunTime >= interval) {
-        lastRunTime = currentTime;
+    if (firstLoop || currentTime - lastRunTime >= interval) {
+      lastRunTime = currentTime;
 
-        temperature = 20.0f;
-        voltage = analogRead(PH_PIN) / 1024.0 * 5000;
-        phValue = phSensorDF.readPH(voltage, temperature);
+      temperature = getTemp();
+      voltage = analogRead(PH_PIN) / 1024.0 * 5000;
+      phValue = phSensorDF.readPH(voltage, temperature);
 
-        Serial.print(temperature);
-        Serial.print(", ");
-        Serial.println(phValue);
+      Serial.print(temperature);
+      Serial.print(", ");
+      Serial.println(phValue);
 
-        unsigned long value = (unsigned long)phSensor.levelOutPhLevel(phValue);
-        logger.log(LogLevel::WARNING, "value entered to pump:", value);
+      unsigned long value = (unsigned long)phSensor.levelOutPhLevel(phValue);
+      logger.log(LogLevel::WARNING, "value entered to pump:", value);
 
-        pump.timerPump(value);
-        pump.flowPump(100);
+      pump.timerPump(value);
+      pump.flowPump(100);
 
-        ph += 1;
+      ph += 1;
 
-        firstLoop = false;
+      firstLoop = false;
+      phSensor.firstReading = true;
     }
 }
 
