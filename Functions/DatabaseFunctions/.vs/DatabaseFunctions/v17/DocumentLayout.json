@@ -3,16 +3,8 @@
   "WorkspaceRootPath": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|d:\\dip stage 2\\hololens-project\\functions\\databasefunctions\\databasefunctions\\models\\items\\modeldbitemread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|solutionrelative:databasefunctions\\models\\items\\modeldbitemread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|d:\\dip stage 2\\hololens-project\\functions\\databasefunctions\\databasefunctions\\models\\information\\modeldbaccountinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|solutionrelative:databasefunctions\\models\\information\\modeldbaccountinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|d:\\dip stage 2\\hololens-project\\functions\\databasefunctions\\databasefunctions\\functions\\http\\items\\httpdbitemread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|solutionrelative:databasefunctions\\functions\\http\\items\\httpdbitemread.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|d:\\dip stage 2\\hololens-project\\functions\\databasefunctions\\databasefunctions\\functions\\eventgridevent\\egedbitemcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CFA9F808-89FB-4466-9038-80A502290174}|DatabaseFunctions\\DatabaseFunctions.csproj|solutionrelative:databasefunctions\\functions\\eventgridevent\\egedbitemcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,7 +14,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -30,41 +22,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ModelDBAccountInfo.cs",
-              "DocumentMoniker": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Models\\Information\\ModelDBAccountInfo.cs",
-              "RelativeDocumentMoniker": "DatabaseFunctions\\Models\\Information\\ModelDBAccountInfo.cs",
-              "ToolTip": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Models\\Information\\ModelDBAccountInfo.cs",
-              "RelativeToolTip": "DatabaseFunctions\\Models\\Information\\ModelDBAccountInfo.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAtAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-24T05:30:18.753Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "HttpDBItemRead.cs",
-              "DocumentMoniker": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Functions\\Http\\Items\\HttpDBItemRead.cs",
-              "RelativeDocumentMoniker": "DatabaseFunctions\\Functions\\Http\\Items\\HttpDBItemRead.cs",
-              "ToolTip": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Functions\\Http\\Items\\HttpDBItemRead.cs",
-              "RelativeToolTip": "DatabaseFunctions\\Functions\\Http\\Items\\HttpDBItemRead.cs",
-              "ViewState": "AQIAACoAAAAAAAAAAAAYwD0AAAAWAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-24T04:17:35.805Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ModelDBItemRead.cs",
-              "DocumentMoniker": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Models\\Items\\ModelDBItemRead.cs",
-              "RelativeDocumentMoniker": "DatabaseFunctions\\Models\\Items\\ModelDBItemRead.cs",
-              "ToolTip": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Models\\Items\\ModelDBItemRead.cs",
-              "RelativeToolTip": "DatabaseFunctions\\Models\\Items\\ModelDBItemRead.cs",
-              "ViewState": "AQIAAIYAAAAAAAAAAAAkwJsAAAAfAAAA",
+              "Title": "EGEDBItemCreate.cs",
+              "DocumentMoniker": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Functions\\EventGridEvent\\EGEDBItemCreate.cs",
+              "RelativeDocumentMoniker": "DatabaseFunctions\\Functions\\EventGridEvent\\EGEDBItemCreate.cs",
+              "ToolTip": "D:\\dip stage 2\\hololens-project\\Functions\\DatabaseFunctions\\DatabaseFunctions\\Functions\\EventGridEvent\\EGEDBItemCreate.cs",
+              "RelativeToolTip": "DatabaseFunctions\\Functions\\EventGridEvent\\EGEDBItemCreate.cs",
+              "ViewState": "AQIAABsAAAAAAAAAAAA5wD4AAAAuAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-23T12:51:07.92Z",
+              "WhenOpened": "2024-06-18T06:34:36.98Z",
               "EditorCaption": ""
             }
           ]
