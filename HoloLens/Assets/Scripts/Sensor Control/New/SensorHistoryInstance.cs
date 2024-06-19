@@ -75,7 +75,7 @@ public class SensorHistoryInstance : MonoBehaviour
 
         // location = new Vector3(location.x, location.y - ((distanceBetweenEachData * shownDataInstances.Count) * 0.0018485f), location.z);
 
-        GameObject dataInstance = Instantiate(dataPrefab, location, Quaternion.identity, spawnLocation.transform);
+        GameObject dataInstance = Instantiate(dataPrefab, location, spawnLocation.transform.rotation, spawnLocation.transform);
 
         RectTransform rectTransform = dataInstance.GetComponent<RectTransform>();
         rectTransform.anchorMin = new Vector2(0.5f, 1);
